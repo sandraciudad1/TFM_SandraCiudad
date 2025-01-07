@@ -10,9 +10,9 @@ public class charactersController : MonoBehaviour
     float speed = 2f;
     float rotationSpeed = 5f;
 
-    [SerializeField] GameObject presenter;
-    Vector3 presenterPosition = new Vector3(-1f, 0f, 0f);
-    Vector3 presenterRotation = new Vector3(0f, 140f, 0f);
+    
+    //Vector3 presenterPosition = new Vector3(-1f, 0f, 0f);
+    //Vector3 presenterRotation = new Vector3(0f, 140f, 0f);
 
     [SerializeField] GameObject madison;
     Vector3 madisonPosition = new Vector3(-1f, 0f, 1.8f);

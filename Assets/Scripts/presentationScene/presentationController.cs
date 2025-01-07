@@ -5,6 +5,9 @@ using UnityEngine.Video;
 
 public class presentationController : MonoBehaviour
 {
+    [SerializeField] GameObject presenter;
+    Animator animator;
+
     [SerializeField] GameObject initialCanvas;
     [SerializeField] VideoPlayer videoPlayer;
 
@@ -60,6 +63,8 @@ public class presentationController : MonoBehaviour
     {
         videoPlayer.gameObject.SetActive(false);
         videoFinished = true;
+        animator = presenter.GetComponent<Animator>();
+        animator.SetBool("talk", true);
     }
 
     bool isWaitingForAudio = false; 
@@ -75,8 +80,6 @@ public class presentationController : MonoBehaviour
    
     void Update()
     {
-        Debug.Log("current audio index " + currentAudioIndex);
-
         if (videoFinished && !isWaitingForAudio)
         {
             StartCoroutine(initialWait());
