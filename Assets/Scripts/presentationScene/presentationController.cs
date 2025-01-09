@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
+using UnityEngine.UI;
 
 public class presentationController : MonoBehaviour
 {
@@ -25,6 +26,9 @@ public class presentationController : MonoBehaviour
     bool isPlaying = false;   
     int currentAudioIndex = 0;
     bool videoFinished = false;
+
+    [SerializeField] Image fadeImage; 
+    float fadeDuration = 1f;
 
     void Start()
     {
@@ -110,6 +114,9 @@ public class presentationController : MonoBehaviour
                 else if (currentAudioIndex == 7)
                 {
                     controller.counter = 5;
+                } else if (currentAudioIndex >= 9)
+                {
+                    StartCoroutine(FadeIn());
                 }
 
                 StartCoroutine(initialWait());
@@ -158,4 +165,20 @@ public class presentationController : MonoBehaviour
         currentAudioIndex++;
     }
 
+    public IEnumerator FadeIn()
+    {
+        float elapsedTime = 0f;  // Comienza desde 0 para que el fade funcione desde el principio
+        Color color = fadeImage.color;
+
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;  // Aumenta el tiempo pasado
+            color.a = Mathf.Lerp(0f, 1f, elapsedTime / fadeDuration);  // Lerp desde 0 a 1 (negro completamente)
+            fadeImage.color = color;
+            yield return null;
+        }
+
+        color.a = 1f; // Asegura que la pantalla quede completamente negra
+        fadeImage.color = color;
+    }
 }
