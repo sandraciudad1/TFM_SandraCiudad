@@ -10,10 +10,6 @@ public class charactersController : MonoBehaviour
     float speed = 0.2f;
     float rotationSpeed = 50f;
 
-    
-    //Vector3 presenterPosition = new Vector3(-1f, 0f, 0f);
-    //Vector3 presenterRotation = new Vector3(0f, 140f, 0f);
-
     [SerializeField] GameObject madison;
     Vector3 madisonPosition = new Vector3(-1f, 0.015f, 1.8f);
     Vector3 madisonRotation = new Vector3(0f, -195f, 0f);
@@ -34,7 +30,7 @@ public class charactersController : MonoBehaviour
     Vector3 cooperPosition = new Vector3(2.4f, 0.015f, 1.8f);
     Vector3 cooperRotation = new Vector3(0f, -140f, 0f);
 
-
+    // Moves each character to their target position and rotation.
     void Update()
     {
         if (counter == 1)
@@ -58,59 +54,25 @@ public class charactersController : MonoBehaviour
         }
     }
 
-    /*void moveToTarget(GameObject character, Vector3 targetPosition, Vector3 targetRotation)
-    {
-        animator = character.GetComponent<Animator>();
-        Vector3 currentPosition = character.transform.position;
-        Vector3 newPosition = Vector3.MoveTowards(currentPosition, targetPosition, speed * Time.deltaTime);
-
-        newPosition.y = targetPosition.y;
-
-        // Aplicar la nueva posición
-        character.transform.position = newPosition;
-
-        if (character.transform.position.x <= (targetPosition.x))
-        {
-            character.transform.position = targetPosition;
-            animator.SetBool("walk", false);
-
-            Quaternion targetQuatRotation = Quaternion.Euler(targetRotation);
-            character.transform.rotation = Quaternion.RotateTowards(character.transform.rotation, targetQuatRotation, rotationSpeed * Time.deltaTime);
-        }
-        else
-        {
-            animator.SetBool("walk", true);
-        }
-    }*/
-
+    // Moves and rotates the specified character to its final position.
     void moveToTarget(GameObject character, Vector3 targetPosition, Vector3 targetRotation)
     {
         animator = character.GetComponent<Animator>();
 
-        // Mover el personaje solo en los ejes X y Z
         Vector3 currentPosition = character.transform.position;
         Vector3 newPosition = Vector3.MoveTowards(currentPosition, targetPosition, speed * Time.deltaTime);
-
-        // Mantener el valor de Y constante (usar el valor de Y de la posición objetivo)
         newPosition.y = targetPosition.y;
-
-        // Aplicar la nueva posición
         character.transform.position = newPosition;
 
-        // Comprobar si el personaje está cerca del objetivo (usando distancia con tolerancia)
-        if (Vector3.Distance(new Vector3(character.transform.position.x, 0.015f, character.transform.position.z),
-                             new Vector3(targetPosition.x, 0.015f, targetPosition.z)) < 0.5f)
+        if (Vector3.Distance(new Vector3(character.transform.position.x, 0.015f, character.transform.position.z), new Vector3(targetPosition.x, 0.015f, targetPosition.z)) < 0.5f)
         {
-            // Detener la animación de caminar
             animator.SetBool("walk", false);
 
-            // Ajustar la rotación final hacia el ángulo deseado
             Quaternion targetQuatRotation = Quaternion.Euler(targetRotation);
             character.transform.rotation = Quaternion.RotateTowards(character.transform.rotation, targetQuatRotation, rotationSpeed * Time.deltaTime);
         }
         else
         {
-            // Activar la animación de caminar
             animator.SetBool("walk", true);
         }
     }
