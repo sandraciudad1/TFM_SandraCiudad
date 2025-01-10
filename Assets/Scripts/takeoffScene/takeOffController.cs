@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
+using UnityEngine.SceneManagement;
 
 public class takeOffController : MonoBehaviour
 {
     [SerializeField] CinemachineVirtualCamera vcam0;
     [SerializeField] CinemachineVirtualCamera vcam1;
-    [SerializeField] CinemachineVirtualCamera vcam2;
 
     [SerializeField] GameObject spaceship;
     [SerializeField] GameObject smoke;
@@ -29,6 +29,8 @@ public class takeOffController : MonoBehaviour
 
     [SerializeField] Image fadeImage;
     float fadeDuration = 3f;
+
+    [SerializeField] AudioSource takeoffSound;
 
     // Fades the screen and set camera priority.
     void Start()
@@ -60,13 +62,14 @@ public class takeOffController : MonoBehaviour
         if (finish.activeInHierarchy)
         {
             StartCoroutine(fadeIn(0f, 1f));
+            StartCoroutine(changeScene());
         }
     }
 
     // Sets camera priority.
     void camPriority(int cam)
     {
-        CinemachineVirtualCamera[] cameras = { vcam0, vcam1, vcam2 };
+        CinemachineVirtualCamera[] cameras = { vcam0, vcam1 };
         
         for(int i = 0; i < cameras.Length; i++)
         {
@@ -102,9 +105,9 @@ public class takeOffController : MonoBehaviour
     {
         animator = spaceship.GetComponent<Animator>();
         animator.SetBool("takeoff", true);
-        StartCoroutine(changeCam());
-        StartCoroutine(waitAnim(3f, "rotateAngle"));
-        StartCoroutine(waitAnim(8f, "takeoff"));
+        StartCoroutine(waitAnim(16f, "takeoff"));
+        changeCamAnim();
+        takeoffSound.Play();
     }
 
     // Waits until the animation ends.
@@ -114,17 +117,16 @@ public class takeOffController : MonoBehaviour
         animator.SetBool(name, false);
     }
 
-    // Changes camera priority and starts camera rotation.
-    IEnumerator changeCam()
+    // Charges camera animation.
+    void changeCamAnim()
     {
-        yield return new WaitForSeconds(4f);
-        camPriority(2);
-        animator = vcam2.GetComponent<Animator>();
-        animator.SetBool("rotateAngle", true);
+        animator = vcam1.GetComponent<Animator>();
+        animator.SetBool("move", true);
+        StartCoroutine(waitAnim(16f, "move"));
     }
 
     // Fades the screen.
-    public IEnumerator fadeIn(float init, float finish)
+    IEnumerator fadeIn(float init, float finish)
     {
         float elapsedTime = 0f;
         Color color = fadeImage.color;
@@ -139,5 +141,19 @@ public class takeOffController : MonoBehaviour
 
         color.a = finish;
         fadeImage.color = color;
+    }
+
+    // Changes scene after 3 seconds.
+    IEnumerator changeScene()
+    {
+        yield return new WaitForSeconds(3f);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.LoadScene("spaceScene");
+    }
+
+    // Unsubscribes from the scene load event.
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

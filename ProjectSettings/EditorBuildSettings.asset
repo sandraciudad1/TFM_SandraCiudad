@@ -4,5 +4,17 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/presentationScene.unity
+    guid: 25a90206012ac3049b380e8c6225acc5
+  - enabled: 1
+    path: Assets/Scenes/takeoffScene.unity
+    guid: 3ea34c218bf1ede4a88b561bf1a0c9c9
+  - enabled: 1
+    path: Assets/Scenes/spaceScene.unity
+    guid: 9832cab2f963d724bbe99f6e7932d069
+  - enabled: 1
+    path: Assets/Scenes/gameplayScene.unity
+    guid: 8f1a01e4b1a374aa6bfe472517a8a56e
   m_configObjects: {}

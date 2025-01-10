@@ -5136,6 +5136,7 @@ MonoBehaviour:
   austin: {fileID: 8300000, guid: 75a14179daaf533429580ce5df37160b, type: 3}
   cooper: {fileID: 8300000, guid: 33306ccc7d3b0834a97f88da45e9a1d7, type: 3}
   fin: {fileID: 8300000, guid: e56a04f978d4cb24a80c91ed68b523fe, type: 3}
+  fadeCanvas: {fileID: 930833960}
   fadeImage: {fileID: 588431128}
   vcam1: {fileID: 359965499}
   vcam2: {fileID: 1861561952}
@@ -9046,7 +9047,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &930833961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9076,7 +9077,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 800, y: 600}
@@ -9939,6 +9940,7 @@ MonoBehaviour:
   austin: {fileID: 8300000, guid: 75a14179daaf533429580ce5df37160b, type: 3}
   cooper: {fileID: 8300000, guid: 33306ccc7d3b0834a97f88da45e9a1d7, type: 3}
   fin: {fileID: 8300000, guid: e56a04f978d4cb24a80c91ed68b523fe, type: 3}
+  fadeCanvas: {fileID: 930833960}
   fadeImage: {fileID: 588431128}
   vcam1: {fileID: 359965499}
   vcam2: {fileID: 1861561952}

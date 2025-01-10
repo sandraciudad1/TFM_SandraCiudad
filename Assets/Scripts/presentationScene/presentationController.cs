@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Video;
 using UnityEngine.UI;
 using Cinemachine;
+using UnityEngine.SceneManagement;
 
 public class presentationController : MonoBehaviour
 {
@@ -29,6 +30,7 @@ public class presentationController : MonoBehaviour
     bool videoFinished = false;
     bool isWaitingForAudio = false;
 
+    [SerializeField] GameObject fadeCanvas;
     [SerializeField] Image fadeImage; 
     float fadeDuration = 3.5f;
 
@@ -131,7 +133,9 @@ public class presentationController : MonoBehaviour
                 } 
                 else if (currentAudioIndex >= 9)
                 {
+                    fadeCanvas.SetActive(true);
                     StartCoroutine(FadeIn());
+                    StartCoroutine(changeScene());
                 }
 
                 StartCoroutine(initialWait());
@@ -198,7 +202,7 @@ public class presentationController : MonoBehaviour
     }
 
     // Fades the screen to black.
-    public IEnumerator FadeIn()
+    IEnumerator FadeIn()
     {
         float elapsedTime = 0f; 
         Color color = fadeImage.color;
@@ -213,5 +217,19 @@ public class presentationController : MonoBehaviour
 
         color.a = 1f; 
         fadeImage.color = color;
+    }
+
+    // Changes scene after 3 seconds.
+    IEnumerator changeScene()
+    {
+        yield return new WaitForSeconds(3f);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.LoadScene("takeoffScene");
+    }
+
+    // Unsubscribes from the scene load event.
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }
