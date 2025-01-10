@@ -24,22 +24,21 @@ public class takeOffController : MonoBehaviour
     [SerializeField] ParticleSystem flames4;
     [SerializeField] ParticleSystem flames5;
     [SerializeField] GameObject finish;
-    
 
     Animator animator;
 
     [SerializeField] Image fadeImage;
     float fadeDuration = 3f;
 
+    // Fades the screen and set camera priority.
     void Start()
     {
         StartCoroutine(fadeIn(1f, 0f));
         camPriority(0);
         camera0Animation();
-        
     }
 
-    
+    // Plays particle systems
     void Update()
     {
         if (smoke.activeInHierarchy)
@@ -64,6 +63,7 @@ public class takeOffController : MonoBehaviour
         }
     }
 
+    // Sets camera priority.
     void camPriority(int cam)
     {
         CinemachineVirtualCamera[] cameras = { vcam0, vcam1, vcam2 };
@@ -80,6 +80,7 @@ public class takeOffController : MonoBehaviour
         }
     }
 
+    // Manages camera 0 animation. 
     void camera0Animation()
     {
         animator = vcam0.GetComponent<Animator>();
@@ -87,6 +88,7 @@ public class takeOffController : MonoBehaviour
         StartCoroutine(waitCam0Anim());
     }
 
+    // Manages camera priority.
     IEnumerator waitCam0Anim()
     {
         yield return new WaitForSeconds(13f);
@@ -95,6 +97,7 @@ public class takeOffController : MonoBehaviour
         spaceshipAnimation();
     }
 
+    // Manages spaceship animation.
     void spaceshipAnimation()
     {
         animator = spaceship.GetComponent<Animator>();
@@ -104,12 +107,14 @@ public class takeOffController : MonoBehaviour
         StartCoroutine(waitAnim(8f, "takeoff"));
     }
 
+    // Waits until the animation ends.
     IEnumerator waitAnim(float time, string name)
     {
         yield return new WaitForSeconds(time);
         animator.SetBool(name, false);
     }
 
+    // Changes camera priority and starts camera rotation.
     IEnumerator changeCam()
     {
         yield return new WaitForSeconds(4f);
@@ -117,8 +122,6 @@ public class takeOffController : MonoBehaviour
         animator = vcam2.GetComponent<Animator>();
         animator.SetBool("rotateAngle", true);
     }
-
-    
 
     // Fades the screen.
     public IEnumerator fadeIn(float init, float finish)
