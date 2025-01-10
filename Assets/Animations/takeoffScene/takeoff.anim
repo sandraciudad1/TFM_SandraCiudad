@@ -36,7 +36,7 @@ AnimationClip:
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
-        time: 4
+        time: 6
         value: {x: 0, y: 195.568, z: 0}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
@@ -45,7 +45,7 @@ AnimationClip:
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
-        time: 8
+        time: 16
         value: {x: 0, y: 195.568, z: 0}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
@@ -80,7 +80,7 @@ AnimationClip:
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
-        time: 4
+        time: 6
         value: {x: 1761, y: 90, z: 1436.1609}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
@@ -89,7 +89,7 @@ AnimationClip:
         inWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
-        time: 8
+        time: 16
         value: {x: 1761, y: 743, z: 1436.1609}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
@@ -134,7 +134,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 4
+        time: 6
         value: 0
         inSlope: Infinity
         outSlope: Infinity
@@ -143,7 +143,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 8
+        time: 16
         value: 0
         inSlope: Infinity
         outSlope: Infinity
@@ -180,7 +180,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 4
+        time: 6
         value: 0
         inSlope: Infinity
         outSlope: Infinity
@@ -189,7 +189,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 4.016667
+        time: 6.016667
         value: 1
         inSlope: Infinity
         outSlope: Infinity
@@ -198,7 +198,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 8
+        time: 16
         value: 0
         inSlope: Infinity
         outSlope: Infinity
@@ -226,7 +226,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 7
+        time: 15
         value: 1
         inSlope: Infinity
         outSlope: Infinity
@@ -235,7 +235,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 8
+        time: 16
         value: 0
         inSlope: Infinity
         outSlope: Infinity
@@ -299,7 +299,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 8
+    m_StopTime: 16
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -337,7 +337,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 4
+        time: 6
         value: 1761
         inSlope: 0
         outSlope: 0
@@ -346,7 +346,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 8
+        time: 16
         value: 1761
         inSlope: 0
         outSlope: 0
@@ -383,7 +383,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 4
+        time: 6
         value: 90
         inSlope: 0
         outSlope: 0
@@ -392,7 +392,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 8
+        time: 16
         value: 743
         inSlope: 0
         outSlope: 0
@@ -429,7 +429,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 4
+        time: 6
         value: 1436.1609
         inSlope: 0
         outSlope: 0
@@ -438,7 +438,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 8
+        time: 16
         value: 1436.1609
         inSlope: 0
         outSlope: 0
@@ -475,7 +475,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 4
+        time: 6
         value: 0
         inSlope: 0
         outSlope: 0
@@ -484,7 +484,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 8
+        time: 16
         value: 0
         inSlope: 0
         outSlope: 0
@@ -521,7 +521,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 4
+        time: 6
         value: 195.568
         inSlope: 0
         outSlope: 0
@@ -530,7 +530,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 8
+        time: 16
         value: 195.568
         inSlope: 0
         outSlope: 0
@@ -567,7 +567,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 4
+        time: 6
         value: 0
         inSlope: 0
         outSlope: 0
@@ -576,7 +576,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 8
+        time: 16
         value: 0
         inSlope: 0
         outSlope: 0
@@ -622,7 +622,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 4
+        time: 6
         value: 0
         inSlope: Infinity
         outSlope: Infinity
@@ -631,7 +631,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 8
+        time: 16
         value: 0
         inSlope: Infinity
         outSlope: Infinity
@@ -668,7 +668,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 4
+        time: 6
         value: 0
         inSlope: Infinity
         outSlope: Infinity
@@ -677,7 +677,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 4.016667
+        time: 6.016667
         value: 1
         inSlope: Infinity
         outSlope: Infinity
@@ -686,7 +686,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 8
+        time: 16
         value: 0
         inSlope: Infinity
         outSlope: Infinity
@@ -714,7 +714,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 7
+        time: 15
         value: 1
         inSlope: Infinity
         outSlope: Infinity
@@ -723,7 +723,7 @@ AnimationClip:
         inWeight: 0
         outWeight: 0
       - serializedVersion: 3
-        time: 8
+        time: 16
         value: 0
         inSlope: Infinity
         outSlope: Infinity
