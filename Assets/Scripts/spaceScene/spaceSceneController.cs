@@ -13,6 +13,12 @@ public class spaceSceneController : MonoBehaviour
     [SerializeField] GameObject spaceship;
     [SerializeField] GameObject earth;
 
+    [SerializeField] GameObject lightsOff;
+    [SerializeField] GameObject emergencyLights;
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip alertMsg;
+    [SerializeField] AudioClip alarm;
+
     // Fades screen and activates animations.
     void Start()
     {
@@ -20,6 +26,31 @@ public class spaceSceneController : MonoBehaviour
         enableAnimation(spaceship, "move");
         enableAnimation(earth, "scale");
         StartCoroutine(waitUntilEnd());
+    }
+
+    bool alertPlay = false;
+    bool alarmPlay = false;
+
+    // Activates the corresponding audios and configures the lights.
+    void Update()
+    {
+        if (lightsOff.activeInHierarchy && !alertPlay)
+        {
+            GameObject[] lights = GameObject.FindGameObjectsWithTag("light");
+            foreach (GameObject lightObject in lights)
+            {
+                lightObject.SetActive(false);
+            }
+            audioSource.clip = alertMsg;
+            audioSource.Play();
+            alertPlay = true;
+        }
+        if (emergencyLights.activeInHierarchy && !alarmPlay)
+        {
+            audioSource.clip = alarm;
+            audioSource.Play();
+            alarmPlay = true;
+        }
     }
 
     // Fades the screen.
@@ -50,7 +81,7 @@ public class spaceSceneController : MonoBehaviour
     // Waits for the animations to finish.
     IEnumerator waitUntilEnd()
     {
-        yield return new WaitForSeconds(18f);
+        yield return new WaitForSeconds(25f);
         StartCoroutine(fadeIn(0f, 1f));
         StartCoroutine(changeScene());
     }
