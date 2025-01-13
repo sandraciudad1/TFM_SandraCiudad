@@ -91,7 +91,7 @@ public class spaceSceneController : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         SceneManager.sceneLoaded += OnSceneLoaded;
-        SceneManager.LoadScene("gameplayScene");
+        SceneManager.LoadScene("transitionScene");
     }
 
     // Unsubscribes from the scene load event.
