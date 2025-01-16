@@ -15,7 +15,8 @@ public class record1Controller : MonoBehaviour
     {
         setCamPriority(1, 0);
         StartCoroutine(waitToPlayAudio());
-        StartCoroutine(waitUntilChange());
+        StartCoroutine(waitUntilChange(4.15f, 0, 1));
+        StartCoroutine(waitUntilChange(17f, 1, 0));
     }
 
     // Sets camera priority.
@@ -26,10 +27,10 @@ public class record1Controller : MonoBehaviour
     }
 
     // Waits until camera priority changes.
-    IEnumerator waitUntilChange()
+    IEnumerator waitUntilChange(float time, int cam1, int cam2)
     {
-        yield return new WaitForSeconds(4.15f);
-        setCamPriority(0, 1);
+        yield return new WaitForSeconds(time);
+        setCamPriority(cam1, cam2);
     }
 
     // Waits 0.8 seconds to play Cooper's voice audio.
