@@ -10,29 +10,30 @@ public class record1Controller : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam2;
     [SerializeField] AudioSource audio;
 
-    [SerializeField] VideoPlayer videoPlayer;
-
+    // Initializes camera priority and calls coroutines.
     void Start()
     {
-        videoPlayer.Play();
         setCamPriority(1, 0);
-        StartCoroutine(waitToReproduceAudio());
+        StartCoroutine(waitToPlayAudio());
         StartCoroutine(waitUntilChange());
     }
 
+    // Sets camera priority.
     void setCamPriority(int cam1, int cam2)
     {
         vcam1.Priority = cam1;
         vcam2.Priority = cam2;
     }
 
+    // Waits until camera priority changes.
     IEnumerator waitUntilChange()
     {
         yield return new WaitForSeconds(4.15f);
         setCamPriority(0, 1);
     }
 
-    IEnumerator waitToReproduceAudio()
+    // Waits 0.8 seconds to play Cooper's voice audio.
+    IEnumerator waitToPlayAudio()
     {
         yield return new WaitForSeconds(0.8f);
         audio.Play();
