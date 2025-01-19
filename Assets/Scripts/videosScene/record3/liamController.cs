@@ -11,17 +11,17 @@ public class liamController : MonoBehaviour
     AudioSource liamAudio;
     AudioSource cooperAudio;
 
-    float moveSpeed = 0.07f;
+    float moveSpeed = 0.02f;
     float rotationSpeed = 0.8f;
     float stoppingDistance = 0.1f;
     bool move = true;
-    bool move2 = false;
     bool rotateCooper = false;
     bool rotate2Cooper = false;
     bool rotate3Cooper = false;
+    bool rotate4Cooper = false;
 
     [SerializeField] GameObject cooper;
-    Vector3 targetPosition = new Vector3(113f, 20.65819f, 64.36f);
+    Vector3 targetPosition = new Vector3(113.2f, 20.65819f, 64.36f);
     Vector3 secondtargetPosition = new Vector3(113f, 20.65819f, 69f);
     Quaternion targetRotationCooper = Quaternion.Euler(new Vector3(0f, -32f, 0f));
     Quaternion secondRotationCooper = Quaternion.Euler(new Vector3(0f, 0f, 0f));
@@ -29,12 +29,13 @@ public class liamController : MonoBehaviour
 
     [SerializeField] CinemachineVirtualCamera vcam3;
     [SerializeField] CinemachineVirtualCamera vcam4;
+    [SerializeField] VideoPlayer videoplayer;
 
     bool rotateLiam = false;
     Quaternion targetRotationLiam = Quaternion.Euler(new Vector3(0f, 106.48f, 0f));
+    
 
-    [SerializeField] VideoPlayer videoplayer;
-
+    // Initializes variables and sets the starting state
     void Start()
     {
         liamAnimator = GetComponent<Animator>();
@@ -44,21 +45,65 @@ public class liamController : MonoBehaviour
 
         setCamPriority(1, 0);
         cooperAnimator.SetBool("walk", true);
-        
     }
 
-    
+    // Updates positions, rotations, and triggers states
     void Update()
     {
-        if (move)
+        if (move) moveCooper(targetPosition, 0);
+
+        if (rotateCooper) characterRotation(cooper, targetRotationCooper, 100f, "cooper1");
+
+        if (rotateLiam)characterRotation(gameObject, targetRotationLiam, 200f, "liam1");
+
+        if (rotate2Cooper) characterRotation(cooper, secondRotationCooper, 100f, "cooper2");
+
+        if (rotate3Cooper)characterRotation(cooper, thirdRotationCooper, 100f, "cooper3");
+
+        if (rotate4Cooper) characterRotation(cooper, secondRotationCooper, 100f, "cooper4");
+    }
+
+    // Handles character rotation based on target rotation and ID
+    void characterRotation(GameObject character, Quaternion targetRotation, float num, string id)
+    {
+        character.transform.rotation = Quaternion.RotateTowards(character.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime * num);
+        if (character.transform.rotation == targetRotation)
         {
-            float distance = Vector3.Distance(cooper.transform.position, targetPosition);
-            if (distance > stoppingDistance)
+            if (id.Equals("cooper1"))
             {
-                Vector3 direction = (targetPosition - cooper.transform.position).normalized;
-                cooper.transform.position += direction * moveSpeed * Time.deltaTime;
+                rotateCooper = false;
+            } 
+            else if (id.Equals("liam1"))
+            {
+                liamAnimator.SetBool("walk", true);
+                rotateLiam = false;
+            } 
+            else if (id.Equals("cooper2"))
+            {
+                stoppingDistance = 1.2f;
+                moveSpeed = 0.05f;
+                moveCooper(secondtargetPosition, 1);
             }
-            else
+            else if (id.Equals("cooper3"))
+            {
+                StartCoroutine(waitToManipulate());
+                rotate3Cooper = false;
+            }
+            else if (id.Equals("cooper4"))
+            {
+                cooperAnimator.SetBool("walk", true);
+                rotate4Cooper = false;
+            }
+        }
+    }
+
+    // Handles Cooper's movement and triggers animations based on distance
+    void moveCooper(Vector3 targetPos, int id)
+    {
+        float distance = Vector3.Distance(cooper.transform.position, targetPos);
+        if (distance <= stoppingDistance)
+        {
+            if (id == 0)
             {
                 rotateCooper = true;
                 cooperAnimator.SetBool("walk", false);
@@ -67,77 +112,36 @@ public class liamController : MonoBehaviour
                 liamAudio.Play();
                 StartCoroutine(waitToTalk());
                 move = false;
-            }
-        }
-
-        if (rotateCooper)
-        {
-            cooper.transform.rotation = Quaternion.RotateTowards(cooper.transform.rotation, targetRotationCooper, rotationSpeed * Time.deltaTime * 100f);
-            if(cooper.transform.rotation == targetRotationCooper)
-            {
-                rotateCooper = false;
-            }
-        }
-
-        if (rotateLiam)
-        {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotationLiam, rotationSpeed * Time.deltaTime * 100f);
-            if (transform.rotation == targetRotationLiam)
-            {
-                liamAnimator.SetBool("walk", true);
-                rotateLiam = false;
-            }
-        }
-
-        if (rotate2Cooper)
-        {
-            cooper.transform.rotation = Quaternion.RotateTowards(cooper.transform.rotation, secondRotationCooper, rotationSpeed * Time.deltaTime * 100f);
-            if (cooper.transform.rotation == secondRotationCooper)
-            {
-                stoppingDistance = 1.2f;
-                moveSpeed = 0.05f;
-                float distance = Vector3.Distance(cooper.transform.position, secondtargetPosition);
-                if (distance <= stoppingDistance)
-                {
-                    cooperAnimator.SetBool("walk", false);
-                    
-                    rotate3Cooper = true;
-                    rotate2Cooper = false;
-                }
-                else
-                {
-                    Vector3 direction = (secondtargetPosition - cooper.transform.position).normalized;
-                    cooper.transform.position += direction * moveSpeed * Time.deltaTime;
-                }
             } 
-        }
-
-        if (rotate3Cooper)
-        {
-            cooper.transform.rotation = Quaternion.RotateTowards(cooper.transform.rotation, thirdRotationCooper, rotationSpeed * Time.deltaTime * 100f);
-            if (cooper.transform.rotation == thirdRotationCooper)
+            else if (id == 1)
             {
-                StartCoroutine(waitToManipulate());
-                rotate3Cooper = false;
-            }
+                cooperAnimator.SetBool("walk", false);
+                rotate3Cooper = true;
+                rotate2Cooper = false;
+            }   
+        }
+        else
+        {
+            Vector3 direction = (targetPos - cooper.transform.position).normalized;
+            cooper.transform.position += direction * moveSpeed * Time.deltaTime;
         }
     }
 
-
+    // Sets camera priorities
     void setCamPriority(int cam1, int cam2)
     {
         vcam3.Priority = cam1;
         vcam4.Priority = cam2;
     }
 
-    
+    // Waits and changes Liam's animation to idle
     IEnumerator waitToIdle()
     {
         yield return new WaitForSeconds(2.05f);
         liamAnimator.SetBool("dimiss", false);
     }
 
-
+    // Waits, triggers Cooper's talk animation, and audio
     IEnumerator waitToTalk()
     {
         yield return new WaitForSeconds(5.25f);
@@ -149,28 +153,31 @@ public class liamController : MonoBehaviour
         StartCoroutine(waitToLeave());
     }
 
-
+    // Waits and triggers Liam and Cooper's leaving sequence
     IEnumerator waitToLeave()
     {
         yield return new WaitForSeconds(2f);
         rotateLiam = true;
         yield return new WaitForSeconds(2f);
         setCamPriority(0, 1);
-        //cooper rot
         rotate2Cooper = true;
         yield return new WaitForSeconds(2f);
         liamAnimator.SetBool("walk", false);
         cooperAnimator.SetBool("walk", true);
     }
 
-
+    // Waits and triggers Cooper's manipulation and video play
     IEnumerator waitToManipulate()
     {
         yield return new WaitForSeconds(1.5f);
         cooperAnimator.SetBool("press", true);
         yield return new WaitForSeconds(0.85f);
         videoplayer.Play();
-
-
+        yield return new WaitForSeconds(2.15f);
+        cooperAnimator.SetBool("press", false);
+        yield return new WaitForSeconds(10f);
+        cooperAnimator.SetBool("look", true);
+        yield return new WaitForSeconds(4.10f);
+        rotate4Cooper = true;
     }
 }
