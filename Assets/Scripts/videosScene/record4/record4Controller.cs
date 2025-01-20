@@ -20,7 +20,7 @@ public class record4Controller : MonoBehaviour
     float rotationSpeed = 0.8f;
     Quaternion targetRotation = Quaternion.Euler(new Vector3(0f, 180f, 0f));
 
-    // 
+    // Initializes components and sets initial animator state
     void Start()
     {
         audioSystem = GetComponent<AudioSource>();
@@ -30,7 +30,7 @@ public class record4Controller : MonoBehaviour
         animator.SetBool("touch", true);
     }
 
-    // 
+    // Updates audio and triggers rotation when conditions are met
     void Update()
     {
         if (audioSystemObj.activeInHierarchy && !systemPlayed)
@@ -51,7 +51,7 @@ public class record4Controller : MonoBehaviour
         }
     }
 
-    //
+    // Rotates Cooper towards a target and starts walking animation
     void cooperRotation()
     {
         cooper.transform.rotation = Quaternion.RotateTowards(cooper.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime * 100f);
@@ -61,5 +61,4 @@ public class record4Controller : MonoBehaviour
             rotate = true;
         }
     }
-
 }
