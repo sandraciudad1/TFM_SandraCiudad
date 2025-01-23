@@ -7,6 +7,7 @@ public class record8Controller : MonoBehaviour
 {
     [SerializeField] CinemachineVirtualCamera vcam9;
     [SerializeField] CinemachineVirtualCamera vcam10;
+    [SerializeField] CinemachineVirtualCamera vcam11;
 
     Quaternion nicoleRotation = Quaternion.Euler(new Vector3(0f, -63.2f, 0f));
     Quaternion nicoleRotation2 = Quaternion.Euler(new Vector3(0f, 92f, 0f));
@@ -18,6 +19,7 @@ public class record8Controller : MonoBehaviour
     bool pressBtn = false;
 
     Vector3 targetPosition = new Vector3(118.848f, 20.66516f, 50.796f);
+    Quaternion cooperRotation = Quaternion.Euler(new Vector3(0f, -90f, 0f));
     [SerializeField] GameObject cooper;
     Animator cooperAnimator;
     AudioSource cooperAudio;
@@ -26,6 +28,7 @@ public class record8Controller : MonoBehaviour
     float stoppingDistance = 0.4f;
     bool enableAnim = false;
     bool stop = false;
+    bool rotateCooper = false;
 
     [SerializeField] GameObject door;
     Animator doorAnimator;
@@ -38,8 +41,8 @@ public class record8Controller : MonoBehaviour
     Animator lightAnimator;
     AudioSource lightAudio;
     bool activeAlarm = false;
-    
-    // 
+
+    // Initialize components and set initial camera priority.
     void Start()
     {
         nicoleAnimator = nicole.GetComponent<Animator>();
@@ -51,11 +54,11 @@ public class record8Controller : MonoBehaviour
         doorAudio = door.GetComponent<AudioSource>();
         lightAudio = light.GetComponent<AudioSource>();
 
-        setCamPriority(1, 0);
+        setCamPriority(1, 0, 0);
         StartCoroutine(waitToStart());
     }
 
-    // 
+    // Update logic for animations and character movement.
     void Update()
     {
         if (open.activeInHierarchy && !enableAnim)
@@ -77,53 +80,63 @@ public class record8Controller : MonoBehaviour
             else
             {
                 cooperAnimator.SetBool("walk", false);
-
-                // cooper libera un gas y duerme a nicole
-
                 stop = true;
             }
         }
 
-        if (rotateNicole && nicole.transform.rotation != nicoleRotation)
-        {
-            nicole.transform.rotation = Quaternion.RotateTowards(nicole.transform.rotation, nicoleRotation, rotationSpeed * Time.deltaTime * 100f);
-        } else if (nicole.transform.rotation == nicoleRotation)
-        {
-            rotateNicole = false;
-        }
-
-        if (rotateNicole2 && nicole.transform.rotation != nicoleRotation2)
-        {
-            nicole.transform.rotation = Quaternion.RotateTowards(nicole.transform.rotation, nicoleRotation2, rotationSpeed * Time.deltaTime * 100f);
-        } else if (nicole.transform.rotation == nicoleRotation2 && !pressBtn)
-        {
-            nicoleAnimator.SetBool("push", true);
-            rotateNicole2 = false;
-            pressBtn = true;
-        }
+        characterRotation(ref rotateNicole, nicole, nicoleRotation, 0);
+        characterRotation(ref rotateNicole2, nicole, nicoleRotation2, 1);
+        characterRotation(ref rotateCooper, cooper, cooperRotation, 2);
 
         if (alarm.activeInHierarchy && !activeAlarm)
         {
             lightAnimator.SetBool("alarm", true);
             lightAudio.Play();
+            StartCoroutine(cooperActions());
             activeAlarm = true;
         }
-
     }
 
+    // Handle character rotation logic.
+    void characterRotation(ref bool rotate, GameObject character, Quaternion targetRotation, int id)
+    {
+        if (rotate && character.transform.rotation != targetRotation)
+        {
+            character.transform.rotation = Quaternion.RotateTowards(character.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime * 100f);
+        }
+        else if (character.transform.rotation == targetRotation)
+        {
+            if (id == 1)
+            {
+                if (!pressBtn)
+                {
+                    nicoleAnimator.SetBool("push", true);
+                    pressBtn = true;
+                }
+            } 
+            else if(id == 2)
+            {
+                cooperAnimator.SetBool("walk", true);
+            }
+
+            rotate = false;
+        }
+    }
+
+    // Initial animations and camera transitions.
     IEnumerator waitToStart()
     {
         yield return new WaitForSeconds(2f);
         nicoleAnimator.SetBool("look", true);
         yield return new WaitForSeconds(4.2f);
         nicoleAnimator.SetBool("look", false);
-        setCamPriority(0, 1);
+        setCamPriority(0, 1, 0);
         yield return new WaitForSeconds(3f);
         doorAnimator.SetBool("up", true);
         doorAudio.Play();
     }
 
-    //
+    // Nicole's sequence of actions.
     IEnumerator nicoleActions()
     {
         yield return new WaitForSeconds(2f);
@@ -132,15 +145,33 @@ public class record8Controller : MonoBehaviour
         yield return new WaitForSeconds(3f);
         rotateNicole2 = true;
         yield return new WaitForSeconds(0.2f);
+        nicoleAnimator.SetBool("focus", false);
         nicoleAnimator.SetBool("push", true);
+        yield return new WaitForSeconds(3f);
+        nicoleAnimator.SetBool("push", false);
+    }
 
-        //nicole activa una alarma
+    // Cooper's sequence of actions.
+    IEnumerator cooperActions()
+    {
+        yield return new WaitForSeconds(0.5f);
+        cooperAnimator.SetBool("reach", true);
+        cooperAudio.Play();
+        setCamPriority(0, 0, 1);
+        yield return new WaitForSeconds(3f);
+        nicoleAnimator.SetBool("spat", true);
+        yield return new WaitForSeconds(2.15f);
+        nicoleAnimator.SetBool("pain", true);
+        cooperAnimator.SetBool("reach", false); 
+        yield return new WaitForSeconds(1f);
+        rotateCooper = true;
     }
 
     // Sets camera priority.
-    void setCamPriority(int cam1, int cam2)
+    void setCamPriority(int cam1, int cam2, int cam3)
     {
         vcam9.Priority = cam1;
         vcam10.Priority = cam2;
+        vcam11.Priority = cam3;
     }
 }
