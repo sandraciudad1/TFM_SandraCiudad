@@ -32,22 +32,22 @@ public class PlayerMovement : MonoBehaviour
         Vector3 move = transform.right * moveX + transform.forward * moveZ;
         controller.Move(move * speed * Time.deltaTime);
 
-        if (moveX != 0 || moveZ != 0)
+        /*if (moveX != 0 || moveZ != 0)
         {
             animator.SetBool("walk", true);
         }
         else
         {
             animator.SetBool("walk", false);  
-        }
+        }*/
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-            animator.SetBool("jump", true);
+            //animator.SetBool("jump", true);
         } else
         {
-            animator.SetBool("jump", false);
+            //animator.SetBool("jump", false);
         }
 
         velocity.y += gravity * Time.deltaTime;
