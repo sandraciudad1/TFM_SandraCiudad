@@ -13,7 +13,7 @@ public class DoorTriggerController : MonoBehaviour
     Image[] doorImages;
 
     int doorNum = -1;
-    bool[] doorsOpen;  // Estado de apertura de cada puerta
+    bool[] doorsOpen;  
 
     [SerializeField] GameObject door1;
     [SerializeField] GameObject door2;
@@ -28,6 +28,7 @@ public class DoorTriggerController : MonoBehaviour
     Animator door5Anim;
     Animator[] doorsAnim;
 
+    // Initialize arrays and get door animators
     void Start()
     {
         doorImages = new Image[] { doorImg1, doorImg2, doorImg3, doorImg4, doorImg5 };
@@ -39,31 +40,31 @@ public class DoorTriggerController : MonoBehaviour
         door5Anim = door5.GetComponent<Animator>();
         doorsAnim = new Animator[] { door1Anim, door2Anim, door3Anim, door4Anim, door5Anim };
 
-        doorsOpen = new bool[5];  // Inicializar el array de puertas abiertas
+        doorsOpen = new bool[doorsAnim.Length];  
     }
 
+    // Toggle door animation when pressing 'E'
     void Update()
     {
-        if (doorNum >= 0)  // Asegurarse de que hay una puerta válida
+        if (doorNum >= 0)  
         {
             if (Input.GetKeyDown(KeyCode.E) && !doorsOpen[doorNum])
             {
-                // Abrir la puerta
                 Animator anim = doorsAnim[doorNum];
                 anim.SetBool("open", true);
-                doorsOpen[doorNum] = true;  // Marcar como abierta
+                doorsOpen[doorNum] = true;  
             }
             else if (Input.GetKeyDown(KeyCode.E) && doorsOpen[doorNum])
             {
-                // Cerrar la puerta
                 Animator anim = doorsAnim[doorNum];
                 anim.SetBool("open", false);
-                doorsOpen[doorNum] = false;  // Marcar como cerrada
+                doorsOpen[doorNum] = false;  
             }
         }
     }
 
-    private void OnTriggerStay(Collider other)
+    // Detects when the player enters a door trigger
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("door1"))
         {
@@ -96,6 +97,7 @@ public class DoorTriggerController : MonoBehaviour
         }
     }
 
+    // Activates the corresponding door image
     void activateImg(int index)
     {
         for (int i = 0; i < doorImages.Length; i++)
@@ -111,6 +113,7 @@ public class DoorTriggerController : MonoBehaviour
         }
     }
 
+    // Detects when the player exits a door trigger
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("door1"))
@@ -136,6 +139,7 @@ public class DoorTriggerController : MonoBehaviour
         doorNum = -1;
     }
 
+    // Deactivates the corresponding door image
     void desactivateImg(int index)
     {
         doorImages[index].gameObject.SetActive(false);
