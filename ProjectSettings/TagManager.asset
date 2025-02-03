@@ -10,6 +10,7 @@ TagManager:
   - door3
   - door4
   - door5
+  - collectable
   layers:
   - Default
   - TransparentFX

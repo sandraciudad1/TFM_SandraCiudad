@@ -13,7 +13,7 @@ public class DoorTriggerController : MonoBehaviour
     Image[] doorImages;
 
     int doorNum = -1;
-    bool[] doorsOpen;  
+    public bool[] doorsOpen;  
 
     [SerializeField] GameObject door1;
     [SerializeField] GameObject door2;
