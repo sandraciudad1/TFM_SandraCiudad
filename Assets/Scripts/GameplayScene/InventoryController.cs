@@ -34,6 +34,9 @@ public class inventoryController : MonoBehaviour
     bool[] unlockedObjects;
     bool[] unlockedRecords;
 
+    // 3d objects
+    [SerializeField] GameObject[] collectable3dObjects;
+
     void Start()
     {
         inventoryBg.SetActive(false);
@@ -174,7 +177,8 @@ public class inventoryController : MonoBehaviour
             int index = selectedRow * cols + selectedCol;
             if (index >= 0 && index < currentBubbles.Length && unlockedItems[index])
             {
-                Debug.Log("Mostrar información de: " + currentBubbles[index].name);
+                //Debug.Log("Mostrar información de: " + currentBubbles[index].name);
+                equipPlayer(index);
             }
         }
 
@@ -185,6 +189,21 @@ public class inventoryController : MonoBehaviour
             objectsContainer.SetActive(false);
             recordsBubble.SetActive(true);
             objectsBubble.SetActive(true);
+        }
+    }
+
+    void equipPlayer(int index)
+    {
+        for(int i = 0; i < collectable3dObjects.Length; i++)
+        {
+            if (i == index)
+            {
+                collectable3dObjects[i].SetActive(true);
+            } 
+            else
+            {
+                collectable3dObjects[i].SetActive(false);
+            }
         }
     }
 
