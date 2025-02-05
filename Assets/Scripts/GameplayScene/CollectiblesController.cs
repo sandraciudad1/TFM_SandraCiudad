@@ -33,12 +33,8 @@ public class CollectiblesController : MonoBehaviour
                 {
                     if (other.name.Equals("crowbar") && doorController.doorsOpen[1])
                     {
-                        CrowbarController crowbarCont = crowbar.GetComponent<CrowbarController>();
-                        if (crowbarCont != null)
-                        {
-                            crowbarCont.collect();
-                            addToInventory(0);
-                        }
+                        crowbar.SetActive(false);
+                        addToInventory(0);
                     }
                     else if (!doorController.doorsOpen[1])
                     {

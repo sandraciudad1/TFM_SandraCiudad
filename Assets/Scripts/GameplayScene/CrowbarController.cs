@@ -6,6 +6,7 @@ public class CrowbarController : MonoBehaviour
 {
     [SerializeField] Camera mainCamera;
     [SerializeField] GameObject player;
+    [SerializeField] ParticleSystem particles;
 
     float fadeDuration = 2f; 
     Renderer objectRenderer;
@@ -22,11 +23,15 @@ public class CrowbarController : MonoBehaviour
 
     public void collect()
     {
-        StartCoroutine(FadeOut());
+        
+        /*particles.gameObject.SetActive(true);
+        particles.Play();
+        StartCoroutine(FadeOut());*/
     }
 
     IEnumerator FadeOut()
     {
+        yield return new WaitForSeconds(0.2f);
         float elapsedTime = 0f;
         Vector3 originalScale = transform.localScale;
 

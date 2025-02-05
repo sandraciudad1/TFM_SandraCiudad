@@ -11,6 +11,7 @@ public class inventoryController : MonoBehaviour
     [SerializeField] GameObject[] recordBubbles;  
     [SerializeField] GameObject[] objectBubbles;
     [SerializeField] TextMeshProUGUI objectsText;
+    [SerializeField] TextMeshProUGUI recordsText;
 
     int selectedBubble = 0;
     bool isBrowsingSection = false;
@@ -24,6 +25,7 @@ public class inventoryController : MonoBehaviour
     [SerializeField] GameObject crowbar;
     GameObject[] collectableItems;
     string[] itemsNames;
+    string[] recordsNames;
 
     public bool playerMov = true;
 
@@ -33,13 +35,14 @@ public class inventoryController : MonoBehaviour
         recordsContainer.SetActive(false);
         objectsContainer.SetActive(false);
         collectableItems = new GameObject[] { crowbar };
-        itemsNames = new string[] { "Palanca" };
+        itemsNames = new string[] { "Palanca", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20" };
+        recordsNames = new string[] { "Grabacion 1: Zona de Observacion", "Grabacion 2: Laboratorio cientifico", "Grabacion 3: Sala de Comunicaciones", "Grabacion 4: Zona de Inteligencia Artificial",
+                                      "Grabacion 5: Sala de Comunicaciones", "Grabacion 6: Zona de Despresurizacion", "Grabacion 7: Puente de Mando", "Grabacion 8: Bahía de Mantenimiento Tecnológico",
+                                      "Grabacion 9: Pasillos Centrales", "Grabacion 10: Zona de Observacion" };
     }
 
     void Update()
     {
-        Debug.Log("player mov " + playerMov);
-
         if (inventoryBg.activeInHierarchy)
         {
             playerMov = false;
@@ -129,6 +132,8 @@ public class inventoryController : MonoBehaviour
         if (index >= 0 && index < bubbles.Length)
         {
             bubbles[index].transform.localScale = Vector3.one * 1.2f;
+            objectsText.text = itemsNames[index];
+            recordsText.text = recordsNames[index];
         }
     }
 
@@ -148,8 +153,8 @@ public class inventoryController : MonoBehaviour
             int index = selectedRow * cols + selectedCol;
             if (index >= 0 && index < currentBubbles.Length)
             {
-                Debug.Log("index " + index);
                 ShowItemInfo(currentBubbles[index]);
+
             }
         }
 
@@ -173,7 +178,7 @@ public class inventoryController : MonoBehaviour
         collectableItems[id].SetActive(true);
         //objectsText.text = itemsNames[id];
     }
-
+    
     /*void ShowItemInfo(GameObject selectedBubble)
     {
         string infoRecords = "";
