@@ -6,23 +6,48 @@ public class CrowbarController : MonoBehaviour
 {
     [SerializeField] Camera mainCamera;
     [SerializeField] GameObject player;
-    Animator animator; 
+
+    float fadeDuration = 2f; 
+    Renderer objectRenderer;
+    Color originalColor;
 
     void Start()
     {
-        animator = GetComponent<Animator>();    
+        objectRenderer = GetComponent<Renderer>();
+        if (objectRenderer != null)
+        {
+            originalColor = objectRenderer.material.color;
+        }
     }
 
-    void Update()
+    public void collect()
     {
-
+        StartCoroutine(FadeOut());
     }
 
-    public void centerObject()
+    IEnumerator FadeOut()
     {
-        Vector3 targetPosition = new Vector3(player.transform.position.x - 0.5f, player.transform.position.y + 1.8f, player.transform.position.z + 1f); 
+        float elapsedTime = 0f;
+        Vector3 originalScale = transform.localScale;
 
-        transform.position = targetPosition;
-        animator.SetBool("collect", true); 
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float progress = elapsedTime / fadeDuration; // Valor entre 0 y 1
+
+            // Cambiar la transparencia
+            float alpha = Mathf.Lerp(1f, 0f, progress);
+            Color newColor = originalColor;
+            newColor.a = alpha;
+            objectRenderer.material.color = newColor;
+
+            // Hacer más pequeño el objeto
+            transform.localScale = Vector3.Lerp(originalScale, Vector3.zero, progress);
+
+            yield return null;
+        }
+
+        gameObject.SetActive(false);
     }
+
 }

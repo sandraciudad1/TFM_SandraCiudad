@@ -8,26 +8,47 @@ public class inventoryController : MonoBehaviour
     [SerializeField] GameObject inventoryBg;
     [SerializeField] GameObject recordsBubble, objectsBubble;
     [SerializeField] GameObject recordsContainer, objectsContainer;
-    [SerializeField] GameObject[] recordBubbles;  // Arreglo para las burbujas de grabaciones
-    [SerializeField] GameObject[] objectBubbles;  // Arreglo para las burbujas de objetos
+    [SerializeField] GameObject[] recordBubbles;  
+    [SerializeField] GameObject[] objectBubbles;
+    [SerializeField] TextMeshProUGUI objectsText;
 
     int selectedBubble = 0;
     bool isBrowsingSection = false;
     int rows, cols;
     GameObject currentContainer;
 
-    int selectedRow = 0; // Fila seleccionada en la matriz
-    int selectedCol = 0; // Columna seleccionada en la matriz
+    int selectedRow = 0; 
+    int selectedCol = 0;
+
+    // items
+    [SerializeField] GameObject crowbar;
+    GameObject[] collectableItems;
+    string[] itemsNames;
+
+    public bool playerMov = true;
 
     void Start()
     {
         inventoryBg.SetActive(false);
         recordsContainer.SetActive(false);
         objectsContainer.SetActive(false);
+        collectableItems = new GameObject[] { crowbar };
+        itemsNames = new string[] { "Palanca" };
     }
 
     void Update()
     {
+        Debug.Log("player mov " + playerMov);
+
+        if (inventoryBg.activeInHierarchy)
+        {
+            playerMov = false;
+        }
+        else
+        {
+            playerMov = true;
+        }
+
         if (Input.GetKeyDown(KeyCode.I))
         {
             inventoryBg.SetActive(!inventoryBg.activeSelf);
@@ -53,11 +74,9 @@ public class inventoryController : MonoBehaviour
 
     void HandleBubbleSelection()
     {
-        // Selección entre burbujas principales
         if (Input.GetKeyDown(KeyCode.LeftArrow)) selectedBubble = 0;
         if (Input.GetKeyDown(KeyCode.RightArrow)) selectedBubble = 1;
 
-        // Ampliar la burbuja seleccionada
         if (selectedBubble == 0)
         {
             recordsBubble.transform.localScale = Vector3.one * 1.2f;
@@ -69,7 +88,6 @@ public class inventoryController : MonoBehaviour
             objectsBubble.transform.localScale = Vector3.one * 1.2f;
         }
 
-        // Acceder a la sección seleccionada
         if (Input.GetKeyDown(KeyCode.Return))
         {
             recordsBubble.SetActive(false);
@@ -80,22 +98,19 @@ public class inventoryController : MonoBehaviour
             {
                 recordsContainer.SetActive(true);
                 currentContainer = recordsContainer;
-                rows = 2; cols = 5;  // Estructura de la matriz de grabaciones
-                // Asumimos que tienes las burbujas dentro de un arreglo 'recordBubbles'
+                rows = 2; cols = 5; 
                 SetInitialSelection(recordBubbles);
             }
             else
             {
                 objectsContainer.SetActive(true);
                 currentContainer = objectsContainer;
-                rows = 3; cols = 5;  // Estructura de la matriz de objetos
-                // Asumimos que tienes las burbujas dentro de un arreglo 'objectBubbles'
+                rows = 3; cols = 5;  
                 SetInitialSelection(objectBubbles);
             }
         }
     }
 
-    // Configurar la selección inicial de la matriz (por ejemplo, seleccionando el primer elemento)
     void SetInitialSelection(GameObject[] bubbles)
     {
         selectedRow = 0;
@@ -103,16 +118,13 @@ public class inventoryController : MonoBehaviour
         UpdateBubbleSelection(bubbles);
     }
 
-    // Actualizar el tamaño de la burbuja seleccionada
     void UpdateBubbleSelection(GameObject[] bubbles)
     {
-        // Restablecer el tamaño de todas las burbujas
         foreach (var bubble in bubbles)
         {
             bubble.transform.localScale = Vector3.one;
         }
 
-        // Aumentar el tamaño de la burbuja seleccionada
         int index = selectedRow * cols + selectedCol;
         if (index >= 0 && index < bubbles.Length)
         {
@@ -124,26 +136,23 @@ public class inventoryController : MonoBehaviour
     {
         GameObject[] currentBubbles = (currentContainer == recordsContainer) ? recordBubbles : objectBubbles;
 
-        // Moverse por las filas y columnas
         if (Input.GetKeyDown(KeyCode.UpArrow)) selectedRow = Mathf.Max(0, selectedRow - 1);
         if (Input.GetKeyDown(KeyCode.DownArrow)) selectedRow = Mathf.Min(rows - 1, selectedRow + 1);
         if (Input.GetKeyDown(KeyCode.LeftArrow)) selectedCol = Mathf.Max(0, selectedCol - 1);
         if (Input.GetKeyDown(KeyCode.RightArrow)) selectedCol = Mathf.Min(cols - 1, selectedCol + 1);
 
-        // Actualizar selección visual
         UpdateBubbleSelection(currentBubbles);
 
-        // Seleccionar un elemento
         if (Input.GetKeyDown(KeyCode.Return))
         {
             int index = selectedRow * cols + selectedCol;
             if (index >= 0 && index < currentBubbles.Length)
             {
+                Debug.Log("index " + index);
                 ShowItemInfo(currentBubbles[index]);
             }
         }
 
-        // Volver a la sección principal
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             isBrowsingSection = false;
@@ -154,12 +163,15 @@ public class inventoryController : MonoBehaviour
         }
     }
 
-    // Mostrar la información del objeto seleccionado
     void ShowItemInfo(GameObject selectedBubble)
     {
-        // Aquí puedes mostrar la información del objeto de acuerdo a tu lógica,
-        // ya sea mostrando un panel con detalles, un texto, etc.
-        Debug.Log("Mostrar información de: " + selectedBubble.name);
+        Debug.Log("Mostrar información de: " + selectedBubble.name );
+    }
+
+    public void addItem(int id)
+    {
+        collectableItems[id].SetActive(true);
+        //objectsText.text = itemsNames[id];
     }
 
     /*void ShowItemInfo(GameObject selectedBubble)
@@ -208,6 +220,4 @@ public class inventoryController : MonoBehaviour
         }
         textRecords.text = infoRecords;
     }*/
-
-
 }

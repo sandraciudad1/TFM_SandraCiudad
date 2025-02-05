@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class CollectiblesController : MonoBehaviour
 {
-    DoorTriggerController doorController;
-    CrowbarController crowbarCont;
+    [SerializeField] GameObject inventory;
+    
 
     [SerializeField] GameObject crowbar;
 
     // Start is called before the first frame update
     void Start()
     {
-        doorController = gameObject.GetComponent<DoorTriggerController>();
-        crowbarCont = crowbar.GetComponent<CrowbarController>();
+        
+        
     }
 
     // Update is called once per frame
@@ -28,14 +28,16 @@ public class CollectiblesController : MonoBehaviour
         {
             if (other.CompareTag("object"))
             {
+                DoorTriggerController doorController = GetComponent<DoorTriggerController>();
                 if (doorController != null)
                 {
                     if (other.name.Equals("crowbar") && doorController.doorsOpen[1])
                     {
-                        
+                        CrowbarController crowbarCont = crowbar.GetComponent<CrowbarController>();
                         if (crowbarCont != null)
                         {
-                            crowbarCont.centerObject();
+                            crowbarCont.collect();
+                            addToInventory(0);
                         }
                     }
                     else if (!doorController.doorsOpen[1])
@@ -53,6 +55,15 @@ public class CollectiblesController : MonoBehaviour
 
             
             
+        }
+    }
+
+    public void addToInventory(int id)
+    {
+        inventoryController inventoryController = inventory.GetComponent<inventoryController>();
+        if (inventoryController != null)
+        {
+            inventoryController.addItem(id);
         }
     }
 }

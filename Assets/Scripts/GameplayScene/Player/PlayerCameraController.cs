@@ -8,22 +8,31 @@ public class PlayerCameraController : MonoBehaviour
     
     float mouseSensitivity = 100f;  
     float verticalClamp = 80f;  
-    float xRotation = 0f;  
+    float xRotation = 0f;
+
+    [SerializeField] GameObject inventory;
+    inventoryController inventoryCont;
 
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;  
-        Cursor.visible = false; 
+        Cursor.visible = false;
+        inventoryCont = inventory.GetComponent<inventoryController>();
     }
 
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        if (inventoryCont != null && inventoryCont.playerMov)
+        {
+            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+            float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -verticalClamp, verticalClamp);  
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        playerBody.Rotate(Vector3.up * mouseX);  
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, -verticalClamp, verticalClamp);
+            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+            playerBody.Rotate(Vector3.up * mouseX);
+        }
+
+        
     }
 }

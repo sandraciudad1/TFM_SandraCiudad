@@ -91,10 +91,6 @@ public class DoorTriggerController : MonoBehaviour
             activateImg(4);
             doorNum = 4;
         }
-        else
-        {
-            doorNum = -1;
-        }
     }
 
     // Activates the corresponding door image
