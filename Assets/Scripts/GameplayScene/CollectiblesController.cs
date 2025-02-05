@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class CollectiblesController : MonoBehaviour
 {
+    DoorTriggerController doorController;
+    CrowbarController crowbarCont;
+
     [SerializeField] GameObject crowbar;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        doorController = gameObject.GetComponent<DoorTriggerController>();
+        crowbarCont = crowbar.GetComponent<CrowbarController>();
     }
 
     // Update is called once per frame
@@ -20,28 +24,34 @@ public class CollectiblesController : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("collectable") && Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            Debug.Log("collectible");
-            if (other.name.Equals("crowbar"))
+            if (other.CompareTag("object"))
             {
-                Debug.Log("crowboar");
-                DoorTriggerController doorController = gameObject.GetComponent<DoorTriggerController>();
-                if (doorController != null && doorController.doorsOpen[1])
+                if (doorController != null)
                 {
-                    Debug.Log("doorcontroller");
-                    CrowbarController crowbarCont = crowbar.GetComponent<CrowbarController>();
-                    if (crowbarCont != null)
+                    if (other.name.Equals("crowbar") && doorController.doorsOpen[1])
                     {
-                        Debug.Log("crowbarcontroller");
-                        crowbarCont.centerObject();
+                        
+                        if (crowbarCont != null)
+                        {
+                            crowbarCont.centerObject();
+                        }
                     }
-                } 
-                else if (!doorController.doorsOpen[1])
-                {
-                    Debug.Log("puerta cerrada");
+                    else if (!doorController.doorsOpen[1])
+                    {
+                        Debug.Log("puerta cerrada");
+                    }
                 }
             }
+
+            if (other.CompareTag("record"))
+            {
+
+            }
+
+
+            
             
         }
     }

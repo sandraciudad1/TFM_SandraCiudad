@@ -11,6 +11,8 @@ TagManager:
   - door4
   - door5
   - collectable
+  - object
+  - record
   layers:
   - Default
   - TransparentFX
