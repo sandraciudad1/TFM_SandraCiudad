@@ -20,7 +20,7 @@ public class PlayerCameraController : MonoBehaviour
         inventoryCont = inventory.GetComponent<inventoryController>();
     }
 
-    void Update()
+    void LateUpdate()
     {
         if (inventoryCont != null && inventoryCont.playerMov)
         {

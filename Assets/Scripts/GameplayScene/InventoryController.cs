@@ -5,6 +5,9 @@ using TMPro;
 
 public class inventoryController : MonoBehaviour
 {
+    Animator playerAnim;
+    [SerializeField] GameObject player;
+
     [SerializeField] GameObject inventoryBg;
     [SerializeField] GameObject recordsBubble, objectsBubble;
     [SerializeField] GameObject recordsContainer, objectsContainer;
@@ -39,6 +42,8 @@ public class inventoryController : MonoBehaviour
 
     void Start()
     {
+        playerAnim = player.GetComponent<Animator>();
+
         inventoryBg.SetActive(false);
         recordsContainer.SetActive(false);
         objectsContainer.SetActive(false);
@@ -179,6 +184,7 @@ public class inventoryController : MonoBehaviour
             {
                 //Debug.Log("Mostrar información de: " + currentBubbles[index].name);
                 equipPlayer(index);
+                playerAnim.SetBool("closeHand", true);
             }
         }
 

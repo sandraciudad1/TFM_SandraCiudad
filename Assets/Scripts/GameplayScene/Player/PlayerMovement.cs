@@ -54,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                //animator.SetBool("jump", false);
+                //nimator.SetBool("jump", false);
             }
 
             velocity.y += gravity * Time.deltaTime;

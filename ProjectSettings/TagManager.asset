@@ -13,6 +13,7 @@ TagManager:
   - collectable
   - object
   - record
+  - metallicDoor
   layers:
   - Default
   - TransparentFX
