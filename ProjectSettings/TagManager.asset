@@ -14,6 +14,7 @@ TagManager:
   - object
   - record
   - metallicDoor
+  - swichtboard
   layers:
   - Default
   - TransparentFX
