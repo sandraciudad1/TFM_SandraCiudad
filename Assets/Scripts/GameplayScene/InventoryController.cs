@@ -53,10 +53,10 @@ public class inventoryController : MonoBehaviour
     // 3d objects
     [SerializeField] GameObject[] collectable3dObjects;
 
+    // Initializes inventory variables
     void Start()
     {
         playerAnim = player.GetComponent<Animator>();
-
         inventoryBg.SetActive(false);
         recordsContainer.SetActive(false);
         objectsContainer.SetActive(false);
@@ -64,14 +64,15 @@ public class inventoryController : MonoBehaviour
         collectableItemsImgs = new GameObject[] { crowbarImg };
         collectableRecordsImgs = new GameObject[] { record1Img, record2Img, record3Img, record4Img, record5Img, record6Img, record7Img, record8Img, record9Img, record10Img };
         itemsNames = new string[] { "Palanca", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20" };
-        recordsNames = new string[] { "Grabacion 1: Zona de Observacion", "Grabacion 2: Laboratorio cientifico", "Grabacion 3: Sala de Comunicaciones", "Grabacion 4: Zona de Inteligencia Artificial",
-                                      "Grabacion 5: Sala de Comunicaciones", "Grabacion 6: Zona de Despresurizacion", "Grabacion 7: Puente de Mando", "Grabacion 8: Bahía de Mantenimiento Tecnológico",
+        recordsNames = new string[] { "Grabacion 5: Sala de Comunicaciones", "Grabacion 2: Laboratorio cientifico", "Grabacion 3: Sala de Comunicaciones", "Grabacion 4: Zona de Inteligencia Artificial",
+                                      "Grabacion 1: Zona de Observacion", "Grabacion 6: Zona de Despresurizacion", "Grabacion 7: Puente de Mando", "Grabacion 8: Bahía de Mantenimiento Tecnológico",
                                       "Grabacion 9: Pasillos Centrales", "Grabacion 10: Zona de Observacion" };
 
         unlockedObjects = new bool[objectBubbles.Length];
         unlockedRecords = new bool[recordBubbles.Length];
     }
 
+    // Handles inventory visibility and section navigation
     void Update()
     {
         if (inventoryBg.activeInHierarchy)
@@ -85,13 +86,19 @@ public class inventoryController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.I))
         {
-            inventoryBg.SetActive(!inventoryBg.activeSelf);
-            if (!inventoryBg.activeSelf)
-            {
-                isBrowsingSection = false;
-                recordsContainer.SetActive(false);
-                objectsContainer.SetActive(false);
-            }
+            inventoryBg.SetActive(true);
+            playerMov = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            inventoryBg.SetActive(false);
+            isBrowsingSection = false;
+            recordsContainer.SetActive(false);
+            objectsContainer.SetActive(false);
+            recordsBubble.SetActive(true);
+            objectsBubble.SetActive(true);
+            playerMov = true;
         }
 
         if (!inventoryBg.activeSelf) return;
@@ -106,6 +113,7 @@ public class inventoryController : MonoBehaviour
         }
     }
 
+    // Handles selection between records and objects sections
     void HandleBubbleSelection()
     {
         if (Input.GetKeyDown(KeyCode.LeftArrow)) selectedBubble = 0;
@@ -145,6 +153,7 @@ public class inventoryController : MonoBehaviour
         }
     }
 
+    // Sets the initial selection for a section
     void SetInitialSelection(GameObject[] bubbles)
     {
         selectedRow = 0;
@@ -152,6 +161,7 @@ public class inventoryController : MonoBehaviour
         UpdateBubbleSelection(bubbles);
     }
 
+    // Updates the selection visual effect
     void UpdateBubbleSelection(GameObject[] bubbles)
     {
         foreach (var bubble in bubbles)
@@ -168,6 +178,7 @@ public class inventoryController : MonoBehaviour
         }
     }
 
+    // Handles navigation inside a section
     void HandleItemSelection()
     {
         GameObject[] currentBubbles;
@@ -196,7 +207,6 @@ public class inventoryController : MonoBehaviour
             int index = selectedRow * cols + selectedCol;
             if (index >= 0 && index < currentBubbles.Length && unlockedItems[index])
             {
-                //Debug.Log("Mostrar información de: " + currentBubbles[index].name);
                 equipPlayer(index);
                 playerAnim.SetBool("closeHand", true);
             }
@@ -212,6 +222,7 @@ public class inventoryController : MonoBehaviour
         }
     }
 
+    // Equips a selected item to the player
     void equipPlayer(int index)
     {
         for(int i = 0; i < collectable3dObjects.Length; i++)
@@ -227,6 +238,7 @@ public class inventoryController : MonoBehaviour
         }
     }
 
+    // Moves selection inside the grid 
     void MoveSelection(int rowChange, int colChange, bool[] unlockedItems)
     {
         int newRow = Mathf.Clamp(selectedRow + rowChange, 0, rows - 1);
@@ -240,17 +252,20 @@ public class inventoryController : MonoBehaviour
         }
     }
 
+    // Checks if an item is unlocked
     bool IsUnlocked(int index)
     {
         return (currentContainer == recordsContainer) ? unlockedRecords[index] : unlockedObjects[index];
     }
 
+    // Adds an item to the inventory
     public void addItem(int id)
     {
         collectableItemsImgs[id].SetActive(true);
         unlockedObjects[id] = true; 
     }
 
+    // Adds a record to the inventory
     public void addRecord(int id)
     {
         collectableRecordsImgs[id].SetActive(true);

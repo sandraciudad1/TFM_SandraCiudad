@@ -18,6 +18,7 @@ public class mission1Controller : MonoBehaviour
     Quaternion initialRot = Quaternion.Euler(new Vector3(0f, 0f, 0f));
     Quaternion finalRot = Quaternion.Euler(new Vector3(95f, 0f, 0f));
     float rotationSpeed = 100f;
+    float rotationLerpTime = 0f;
 
     [SerializeField] GameObject btn0;
     [SerializeField] GameObject btn1;
@@ -27,8 +28,10 @@ public class mission1Controller : MonoBehaviour
     [SerializeField] GameObject btn5;
     GameObject[] buttons;
 
-    [SerializeField] GameObject crate1Top;
+    [SerializeField] GameObject crate1;
+    Animator crateAnim;
 
+    // Initializes variables and sets up the button states
     void Start()
     {
         doorController = triggerDetector.GetComponent<DoorTriggerController>();
@@ -41,9 +44,11 @@ public class mission1Controller : MonoBehaviour
         {
             buttons[i].transform.rotation = initialRot;
         }
+
+        crateAnim = crate1.GetComponent<Animator>();
     }
 
-    
+    // Checks for player interaction with the switchboard
     void Update()
     {
         if (doorController != null && doorController.swichtInteraction)
@@ -54,24 +59,28 @@ public class mission1Controller : MonoBehaviour
             }
             checkButtons();
         }
-        
     }
 
+    // Locks player movement and sets a fixed position and rotation
     void lockPlayerMov()
     {
         if (playerMov != null)
         {
             playerMov.canMove = false;
-            Debug.Log(playerMov.canMove);
         }
-        
 
-        player.transform.position = new Vector3(151.3f, 25.74f, 51.5f);
-        player.transform.rotation = Quaternion.Euler(0, -175, 0);
+        CharacterController cc = player.GetComponent<CharacterController>();
+        if (cc != null)
+        {
+            cc.enabled = false; 
+        }
+        player.transform.position = new Vector3(151.441f, 25.74532f, 52.121f);
+        player.transform.rotation = Quaternion.Euler(0, -180, 0);
 
         lockMov = true;
     }
 
+    // Checks for key presses to change button states
     void checkButtons()
     {
         if (Input.GetKeyDown(KeyCode.X))
@@ -100,12 +109,10 @@ public class mission1Controller : MonoBehaviour
         }
     }
 
-    float rotationLerpTime = 0f;
-
+    // Changes the state of a button and rotates it accordingly
     void changeState(int index)
     {
         swichtboardState[index] = !swichtboardState[index];
-
         rotationLerpTime = 0f;
 
         if (swichtboardState[index]) 
@@ -120,11 +127,10 @@ public class mission1Controller : MonoBehaviour
         checkWinCondition();
     }
 
+    // Rotates a button smoothly to a target rotation
     IEnumerator RotateButton(int index, Quaternion targetRot)
     {
         Quaternion startRot = buttons[index].transform.rotation;
-
-
         while (rotationLerpTime < 1f)
         {
             rotationLerpTime += Time.deltaTime * rotationSpeed; 
@@ -134,7 +140,7 @@ public class mission1Controller : MonoBehaviour
         buttons[index].transform.rotation = targetRot;
     }
 
-
+    // Checks if all buttons are pressed and triggers the next phase
     void checkWinCondition()
     {
         if (!firstPhaseComplete && swichtboardState.All(state => state == false))
@@ -144,14 +150,13 @@ public class mission1Controller : MonoBehaviour
         else if (firstPhaseComplete && swichtboardState.All(state => state == true))
         {
             doorController.closeSwitchboardDoor(6);
-            crate1Top.transform.position = new Vector3(0.305f, 0, 0.995f);
-            crate1Top.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
+            crateAnim.SetBool("open", true);
             collectiblesController.recordsUnlocked[4] = true;
             StartCoroutine(waitToUnlock());
-
         }
     }
 
+    // Waits before unlocking player movement again
     IEnumerator waitToUnlock()
     {
         yield return new WaitForSeconds(3f);

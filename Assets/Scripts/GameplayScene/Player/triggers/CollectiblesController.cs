@@ -12,19 +12,13 @@ public class CollectiblesController : MonoBehaviour
 
     public bool[] recordsUnlocked;
 
-    // Start is called before the first frame update
+    // Initializes the recordsUnlocked array with default values
     void Start()
     {
         recordsUnlocked = new bool[] { false, false, false, false, false, false, false, false, false, false };
-        
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    // Handles object collection when the player interacts with an object within the trigger zone
     private void OnTriggerStay(Collider other)
     {
         if (Input.GetKeyDown(KeyCode.R))
@@ -49,21 +43,17 @@ public class CollectiblesController : MonoBehaviour
 
             if (other.CompareTag("record"))
             {
+                // first record: 5
                 if (other.name.Equals("record5") && recordsUnlocked[4])
                 { 
                     record5.SetActive(false);
-                    addToInventory(1, 4);
-
+                    addToInventory(1, 0);
                 }
-
             }
-
-
-            
-            
         }
     }
 
+    // Adds collected objects or records to the inventory
     public void addToInventory(int type, int id)
     {
         inventoryController inventoryController = inventory.GetComponent<inventoryController>();

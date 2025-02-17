@@ -87,12 +87,9 @@ public class DoorTriggerController : MonoBehaviour
                 }
                 else if (doorNum == 6)
                 {
-                    anim.SetBool("open", true); //se abre la puerta
-                    desactivateImg(6); //se quita la e de la puerta
+                    anim.SetBool("open", true); 
+                    desactivateImg(6); 
                     StartCoroutine(swichtboardInteraction());
-                    //a partir de aqui el usuario puede interactuar con los botones y la palanca pulsando teclas 
-                    swichtInteraction = true;
-                    
                 }
                 else
                 {
@@ -107,9 +104,9 @@ public class DoorTriggerController : MonoBehaviour
                 doorsOpen[doorNum] = false;  
             }
         }
-
     }
 
+    // Doors and players animations inm mission 1
     IEnumerator initMission1()
     {
         yield return new WaitForSeconds(0.1f);
@@ -120,24 +117,38 @@ public class DoorTriggerController : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         SwapCameras(1, 0);
         playerAnimator.SetBool("open", false);
+        playerAnimator.SetBool("closeHand", false);
+
         crowbar.SetActive(false);
         Collider collider = switchboard.GetComponent<Collider>();
         collider.enabled = true;
     }
 
+    // Desactivate switchboard animator and enable switchboard player interactions
     IEnumerator swichtboardInteraction()
     {
         yield return new WaitForSeconds(3.2f);
-        activateImg(7); //se activa la e de la palanca
+        activateImg(7); 
         switchboardDoorAnim.enabled = false;
+        swichtInteraction = true;
     }
 
+    // Change player position and close switchboard door
     public void closeSwitchboardDoor(int index)
     {
+        player.transform.position = new Vector3(151.4594f, 25.74516f, 52.76605f);
+        player.transform.rotation = Quaternion.Euler(0, -178.8f, 0);
+        CharacterController cc = player.GetComponent<CharacterController>();
+        if (cc != null)
+        {
+            cc.enabled = true; 
+        }
+        switchboardDoorAnim.enabled = true;
         Animator anim = doorsAnim[index];
         anim.SetBool("open", false);
     }
 
+    // Swap between virtual cameras
     void SwapCameras(int priority1, int priority2)
     {
         vcam1.Priority = priority1;
