@@ -16,6 +16,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] GameObject inventory;
     inventoryController inventoryCont;
 
+    public bool canMove = true;
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -25,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (inventoryCont != null && inventoryCont.playerMov)
+        if (inventoryCont != null && inventoryCont.playerMov && canMove)
         {
             isGrounded = controller.isGrounded;
             if (isGrounded && velocity.y < 0)

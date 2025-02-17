@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Cinemachine;
-using System.Linq;
+
 
 public class DoorTriggerController : MonoBehaviour
 {
@@ -47,8 +47,7 @@ public class DoorTriggerController : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam2;
 
-    bool swichtInteraction = false;
-    bool[] swichtboardState;
+    public bool swichtInteraction = false;
 
     // Initialize arrays and get door animators
     void Start()
@@ -68,7 +67,6 @@ public class DoorTriggerController : MonoBehaviour
         doorsOpen = new bool[doorsAnim.Length];
         playerAnimator = player.GetComponent<Animator>();
 
-        swichtboardState = new bool[] { true, true, true, true, true, true};
     }
 
     // Toggle door animation when pressing 'E'
@@ -91,14 +89,10 @@ public class DoorTriggerController : MonoBehaviour
                 {
                     anim.SetBool("open", true); //se abre la puerta
                     desactivateImg(6); //se quita la e de la puerta
-                    inventoryController inventoryCont = inventory.GetComponent<inventoryController>();
-                    if (inventoryCont != null)
-                    {
-                        inventoryCont.playerMov = false; //se bloquea el mov y la rot del jugador
-                    }
                     StartCoroutine(swichtboardInteraction());
                     //a partir de aqui el usuario puede interactuar con los botones y la palanca pulsando teclas 
                     swichtInteraction = true;
+                    
                 }
                 else
                 {
@@ -114,83 +108,6 @@ public class DoorTriggerController : MonoBehaviour
             }
         }
 
-        if (swichtInteraction)
-        {
-            checkButtons();
-        }
-    }
-
-    void checkButtons()
-    {
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            changeState(1);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1))
-        {
-            changeState(1);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2))
-        {
-            changeState(2);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3))
-        {
-            changeState(3);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4))
-        {
-            changeState(4);
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5))
-        {
-            changeState(5);
-        }
-    }
-
-    void changeState(int index)
-    {
-        swichtboardState[index] = !swichtboardState[index];
-        string animName = "btn" + index;
-        //bool value = swichtboardState[index];
-
-        if (swichtboardState[index])
-        {
-            //encender
-            animName = "btn" + index + "On";
-        }
-        else
-        {
-            // apagar
-            animName = "btn" + index + "Off";
-        }
-
-        switchboardDoorAnim.SetBool(animName, true);
-        StartCoroutine(waitUntilEnd(animName));
-
-
-        checkWinCondition();
-    }
-
-    IEnumerator waitUntilEnd(string animName)
-    {
-        yield return new WaitForSeconds(0.19f);
-        switchboardDoorAnim.SetBool(animName, false);
-    }
-
-    bool firstPhaseComplete = false;
-    void checkWinCondition()
-    {
-        if (!firstPhaseComplete && swichtboardState.All(state => state == false))
-        {
-            firstPhaseComplete = true; 
-        }
-        // Si ya completó la primera fase, verificar si ahora todos son true
-        else if (firstPhaseComplete && swichtboardState.All(state => state == true))
-        {
-            Debug.Log("¡Juego completado!");
-            
-        }
     }
 
     IEnumerator initMission1()
@@ -212,6 +129,13 @@ public class DoorTriggerController : MonoBehaviour
     {
         yield return new WaitForSeconds(3.2f);
         activateImg(7); //se activa la e de la palanca
+        switchboardDoorAnim.enabled = false;
+    }
+
+    public void closeSwitchboardDoor(int index)
+    {
+        Animator anim = doorsAnim[index];
+        anim.SetBool("open", false);
     }
 
     void SwapCameras(int priority1, int priority2)

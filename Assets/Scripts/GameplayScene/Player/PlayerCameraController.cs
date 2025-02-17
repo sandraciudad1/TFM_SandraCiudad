@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class PlayerCameraController : MonoBehaviour
 {
-    [SerializeField] Transform playerBody;  
-    
+    [SerializeField] Transform playerBody;
+    [SerializeField] GameObject player;
+    PlayerMovement playerMov;
+
     float mouseSensitivity = 100f;  
     float verticalClamp = 80f;  
     float xRotation = 0f;
@@ -18,11 +20,12 @@ public class PlayerCameraController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;  
         Cursor.visible = false;
         inventoryCont = inventory.GetComponent<inventoryController>();
+        playerMov = player.GetComponent<PlayerMovement>();
     }
 
     void LateUpdate()
     {
-        if (inventoryCont != null && inventoryCont.playerMov)
+        if (inventoryCont != null && inventoryCont.playerMov && playerMov.canMove)
         {
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
             float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
