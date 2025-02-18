@@ -31,6 +31,10 @@ public class mission1Controller : MonoBehaviour
     [SerializeField] GameObject crate1;
     Animator crateAnim;
 
+    [SerializeField] GameObject observationDoor;
+    Animator observationDoorAnim;
+    AudioSource audioDoor;
+
     // Initializes variables and sets up the button states
     void Start()
     {
@@ -46,6 +50,8 @@ public class mission1Controller : MonoBehaviour
         }
 
         crateAnim = crate1.GetComponent<Animator>();
+        observationDoorAnim = observationDoor.GetComponent<Animator>();
+        audioDoor = observationDoor.GetComponent<AudioSource>();
     }
 
     // Checks for player interaction with the switchboard
@@ -151,9 +157,10 @@ public class mission1Controller : MonoBehaviour
         {
             doorController.closeSwitchboardDoor(6);
             crateAnim.SetBool("open", true);
+            observationDoorAnim.SetBool("open", true);
+            audioDoor.Play();
             GameManager.GameManagerInstance.SetArrayUnlocked("records", 4, 1);
             GameManager.GameManagerInstance.SaveProgress();
-            //collectiblesController.recordsUnlocked[4] = true;
             StartCoroutine(waitToUnlock());
         }
     }

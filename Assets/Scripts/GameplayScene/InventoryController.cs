@@ -47,8 +47,8 @@ public class inventoryController : MonoBehaviour
     public bool playerMov = true;
 
     // unlock arays
-    bool[] unlockedObjects;
-    bool[] unlockedRecords;
+    public bool[] unlockedObjects;
+    public bool[] unlockedRecords;
 
     // 3d objects
     [SerializeField] GameObject[] collectable3dObjects;
@@ -70,6 +70,8 @@ public class inventoryController : MonoBehaviour
 
         unlockedObjects = new bool[objectBubbles.Length];
         unlockedRecords = new bool[recordBubbles.Length];
+
+        resetState();
     }
 
     // Handles inventory visibility and section navigation
@@ -270,5 +272,25 @@ public class inventoryController : MonoBehaviour
     {
         collectableRecordsImgs[id].SetActive(true);
         unlockedRecords[id] = true;
+    }
+
+    void resetState()
+    {
+        GameManager.GameManagerInstance.LoadProgress();
+
+        int objectsIndex = GameManager.GameManagerInstance.objectIndex;
+        for (int i = 0; i < objectsIndex; i++)
+        {
+            collectableItemsImgs[i].SetActive(true);
+            unlockedObjects[i] = true;
+        }
+
+        int recordsIndex = GameManager.GameManagerInstance.recordIndex;
+        for (int i = 0; i < recordsIndex; i++)
+        {
+            collectableRecordsImgs[i].SetActive(true);
+            unlockedRecords[i] = true;
+        }
+
     }
 }
