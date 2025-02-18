@@ -47,6 +47,7 @@ public class DoorTriggerController : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam2;
 
+    bool setArray1Unlocked = false;
     public bool swichtInteraction = false;
 
     // Initialize arrays and get door animators
@@ -103,6 +104,13 @@ public class DoorTriggerController : MonoBehaviour
                 anim.SetBool("open", false);
                 doorsOpen[doorNum] = false;  
             }
+        }
+
+        if (doorsOpen[1] && !setArray1Unlocked)
+        {
+            GameManager.GameManagerInstance.SetArrayUnlocked("objects", 0, 1);
+            GameManager.GameManagerInstance.SaveProgress();
+            setArray1Unlocked = true;
         }
     }
 

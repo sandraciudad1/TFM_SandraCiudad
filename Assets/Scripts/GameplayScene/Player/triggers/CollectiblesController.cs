@@ -10,12 +10,12 @@ public class CollectiblesController : MonoBehaviour
     [SerializeField] GameObject crowbar;
     [SerializeField] GameObject record5;
 
-    public bool[] recordsUnlocked;
+    //public bool[] recordsUnlocked;
 
     // Initializes the recordsUnlocked array with default values
     void Start()
     {
-        recordsUnlocked = new bool[] { false, false, false, false, false, false, false, false, false, false };
+        //recordsUnlocked = new bool[] { false, false, false, false, false, false, false, false, false, false };
     }
 
     // Handles object collection when the player interacts with an object within the trigger zone
@@ -23,51 +23,47 @@ public class CollectiblesController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
+            GameManager.GameManagerInstance.LoadProgress();
             if (other.CompareTag("object"))
             {
-                // object 1: crowbar
-                DoorTriggerController doorController = GetComponent<DoorTriggerController>();
-                if (doorController != null)
+                // object 1: crowbar (index 0)
+                if (other.name.Equals("crowbar") && (GameManager.GameManagerInstance.GetArrayUnlocked("objects", 0) == 1))
                 {
-                    if (other.name.Equals("crowbar") && doorController.doorsOpen[1])
-                    {
-                        crowbar.SetActive(false);
-                        addToInventory(0, 0);
-                    }
-                    else if (!doorController.doorsOpen[1])
-                    {
-                        Debug.Log("puerta cerrada");
-                    }
+                    crowbar.SetActive(false);
+                    addToInventory(0);
                 }
             }
 
             if (other.CompareTag("record"))
             {
-                // first record: 5
-                if (other.name.Equals("record5") && recordsUnlocked[4])
+                // first record: 5 (index 4)
+                if (other.name.Equals("record5") && (GameManager.GameManagerInstance.GetArrayUnlocked("records", 4) == 1))
                 { 
                     record5.SetActive(false);
-                    addToInventory(1, 0);
+                    addToInventory(1);
                 }
             }
         }
     }
 
     // Adds collected objects or records to the inventory
-    public void addToInventory(int type, int id)
+    public void addToInventory(int type)
     {
+        GameManager.GameManagerInstance.LoadProgress();
         inventoryController inventoryController = inventory.GetComponent<inventoryController>();
         if (inventoryController != null)
         {
             if (type == 0)
             {
-                inventoryController.addItem(id);
+                inventoryController.addItem(GameManager.GameManagerInstance.objectIndex);
+                GameManager.GameManagerInstance.objectIndex++;
             } 
             else if (type == 1)
             {
-                inventoryController.addRecord(id);
+                inventoryController.addRecord(GameManager.GameManagerInstance.recordIndex);
+                GameManager.GameManagerInstance.recordIndex++;
             }
-            
+            GameManager.GameManagerInstance.SaveProgress();
         }
     }
 }

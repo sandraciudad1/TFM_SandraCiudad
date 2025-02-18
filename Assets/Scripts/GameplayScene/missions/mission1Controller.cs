@@ -151,7 +151,9 @@ public class mission1Controller : MonoBehaviour
         {
             doorController.closeSwitchboardDoor(6);
             crateAnim.SetBool("open", true);
-            collectiblesController.recordsUnlocked[4] = true;
+            GameManager.GameManagerInstance.SetArrayUnlocked("records", 4, 1);
+            GameManager.GameManagerInstance.SaveProgress();
+            //collectiblesController.recordsUnlocked[4] = true;
             StartCoroutine(waitToUnlock());
         }
     }
