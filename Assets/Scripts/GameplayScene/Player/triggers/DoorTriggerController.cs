@@ -114,7 +114,7 @@ public class DoorTriggerController : MonoBehaviour
         }
     }
 
-    // Doors and players animations inm mission 1
+    // Doors and players animations in mission 1
     IEnumerator initMission1()
     {
         yield return new WaitForSeconds(0.1f);

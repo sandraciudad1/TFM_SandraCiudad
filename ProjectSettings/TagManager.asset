@@ -15,6 +15,10 @@ TagManager:
   - record
   - metallicDoor
   - swichtboard
+  - door6
+  - door7
+  - door8
+  - door9
   layers:
   - Default
   - TransparentFX
