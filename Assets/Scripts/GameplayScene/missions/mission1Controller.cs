@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Video;
 
 public class mission1Controller : MonoBehaviour
 {
@@ -28,12 +29,13 @@ public class mission1Controller : MonoBehaviour
     [SerializeField] GameObject btn5;
     GameObject[] buttons;
 
-    [SerializeField] GameObject crate1;
-    Animator crateAnim;
+    
 
     [SerializeField] GameObject observationDoor;
     Animator observationDoorAnim;
     AudioSource audioDoor;
+
+    [SerializeField] VideoPlayer code1;
 
     // Initializes variables and sets up the button states
     void Start()
@@ -49,7 +51,7 @@ public class mission1Controller : MonoBehaviour
             buttons[i].transform.rotation = initialRot;
         }
 
-        crateAnim = crate1.GetComponent<Animator>();
+        
         observationDoorAnim = observationDoor.GetComponent<Animator>();
         audioDoor = observationDoor.GetComponent<AudioSource>();
     }
@@ -156,11 +158,12 @@ public class mission1Controller : MonoBehaviour
         else if (firstPhaseComplete && swichtboardState.All(state => state == true))
         {
             doorController.closeSwitchboardDoor(6);
-            crateAnim.SetBool("open", true);
             observationDoorAnim.SetBool("open", true);
             audioDoor.Play();
-            GameManager.GameManagerInstance.SetArrayUnlocked("records", 4, 1);
-            GameManager.GameManagerInstance.SaveProgress();
+            // mostrar codigo de crate 1
+            code1.gameObject.SetActive(true);
+            code1.Play();
+            
             StartCoroutine(waitToUnlock());
         }
     }

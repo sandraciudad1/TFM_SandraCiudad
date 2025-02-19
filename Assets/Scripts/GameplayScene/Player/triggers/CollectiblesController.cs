@@ -10,11 +10,14 @@ public class CollectiblesController : MonoBehaviour
     [SerializeField] GameObject crowbar;
     [SerializeField] GameObject record5;
 
+    [SerializeField] GameObject pinCodeCanvas;
+    [SerializeField] GameObject missionsControllers;
     //public bool[] recordsUnlocked;
 
     // Initializes the recordsUnlocked array with default values
     void Start()
     {
+        
         //recordsUnlocked = new bool[] { false, false, false, false, false, false, false, false, false, false };
     }
 
@@ -38,11 +41,36 @@ public class CollectiblesController : MonoBehaviour
             {
                 // first record: 5 (index 4)
                 if (other.name.Equals("record5") && (GameManager.GameManagerInstance.GetArrayUnlocked("records", 4) == 1))
-                { 
+                {
                     record5.SetActive(false);
                     addToInventory(1);
                 }
             }
+        }
+
+        if (other.CompareTag("record"))
+        {
+            pinCodeCanvas.SetActive(true);
+            pinCodeController codeController = missionsControllers.GetComponent<pinCodeController>();
+            if (codeController != null)
+            {
+                // first record: 5 (index 4)
+                if (other.name.Equals("record5"))
+                {
+                    codeController.checkCode(5);
+
+                    //record5.SetActive(false);
+                    //addToInventory(1);
+                }
+            }
+        } 
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("record"))
+        {
+            pinCodeCanvas.SetActive(false);
         }
     }
 
