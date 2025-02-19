@@ -12,13 +12,13 @@ public class CollectiblesController : MonoBehaviour
 
     [SerializeField] GameObject pinCodeCanvas;
     [SerializeField] GameObject missionsControllers;
-    //public bool[] recordsUnlocked;
 
-    // Initializes the recordsUnlocked array with default values
+    pinCodeController codeController;
+
+
     void Start()
     {
-        
-        //recordsUnlocked = new bool[] { false, false, false, false, false, false, false, false, false, false };
+        codeController = missionsControllers.GetComponent<pinCodeController>();
     }
 
     // Handles object collection when the player interacts with an object within the trigger zone
@@ -36,36 +36,34 @@ public class CollectiblesController : MonoBehaviour
                     addToInventory(0);
                 }
             }
-
-            if (other.CompareTag("record"))
-            {
-                // first record: 5 (index 4)
-                if (other.name.Equals("record5") && (GameManager.GameManagerInstance.GetArrayUnlocked("records", 4) == 1))
-                {
-                    record5.SetActive(false);
-                    addToInventory(1);
-                }
-            }
         }
 
-        if (other.CompareTag("record"))
+        if (codeController != null && other.CompareTag("record"))
         {
-            pinCodeCanvas.SetActive(true);
-            pinCodeController codeController = missionsControllers.GetComponent<pinCodeController>();
-            if (codeController != null)
+            // first record: 5 (index 4)
+            if (other.name.Equals("record5"))
             {
-                // first record: 5 (index 4)
-                if (other.name.Equals("record5"))
+                
+                if ((GameManager.GameManagerInstance.GetArrayUnlocked("records", 4) == 1))
                 {
-                    codeController.checkCode(5);
+                    pinCodeCanvas.SetActive(false);
+                    if (Input.GetKeyDown(KeyCode.R))
+                    {
+                        record5.SetActive(false);
+                        addToInventory(1);
+                    }
 
-                    //record5.SetActive(false);
-                    //addToInventory(1);
+                }
+                else
+                {
+                    pinCodeCanvas.SetActive(true);
+                    codeController.checkCode(5);
                 }
             }
         } 
     }
 
+    // Hides pin code canvas whan player exits record trigger
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("record"))

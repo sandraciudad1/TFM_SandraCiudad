@@ -160,11 +160,20 @@ public class mission1Controller : MonoBehaviour
             doorController.closeSwitchboardDoor(6);
             observationDoorAnim.SetBool("open", true);
             audioDoor.Play();
-            // mostrar codigo de crate 1
             code1.gameObject.SetActive(true);
             code1.Play();
-            
+            ActivateAllLights();
             StartCoroutine(waitToUnlock());
+        }
+    }
+
+    // Activates all objects in the scene with the "light" tag
+    void ActivateAllLights()
+    {
+        Light[] lights = Resources.FindObjectsOfTypeAll<Light>();
+        foreach (Light light in lights)
+        {
+            light.gameObject.SetActive(true); 
         }
     }
 

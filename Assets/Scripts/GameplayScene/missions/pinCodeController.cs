@@ -5,111 +5,82 @@ using TMPro;
 
 public class pinCodeController : MonoBehaviour
 {
+    [SerializeField] TextMeshProUGUI inputText;
     bool canCheck = false;
     string[] correctCodes;
-
-    [SerializeField] TextMeshProUGUI displayText;
     string correctCode; 
     string userInput = "";
+    int index;
+
+    bool correct = false;
 
     [SerializeField] GameObject crate1;
     Animator crateAnim;
 
+    // Initializes the correct codes and gets the crate animator
     void Start()
     {
         correctCodes = new string[] { "0000", "0000", "0000", "0000", "1235", "0000", "0000", "0000", "0000", "0000" };
-        UpdateDisplay();
 
         crateAnim = crate1.GetComponent<Animator>();
     }
 
+    // Handles user input for the code entry
     void Update()
     {
         if (canCheck)
         {
-            DetectKeyInput();
-        }
-    }
-
-    private void DetectKeyInput()
-    {
-        // Detecta números del 0 al 9
-        for (int i = 0; i <= 9; i++)
-        {
-            if (Input.GetKeyDown(i.ToString()))
+            foreach (char c in Input.inputString)
             {
-                AddNumber(i.ToString());
+                if (char.IsDigit(c) && userInput.Length < 4)  
+                {
+                    userInput += c;
+                }
+                else if (c == '\b' && userInput.Length > 0)  
+                {
+                    userInput = userInput.Substring(0, userInput.Length - 1);
+                }
+                else if (c == '\n' || c == '\r') 
+                {
+                    CheckCode();
+                }
             }
-        }
-
-        // Detecta la tecla de borrar 
-        if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            DeleteNumber();
-        }
-
-        // Detecta la tecla Enter para comprobar
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
-        {
-            if (userInput == correctCode)
-            {
-                Debug.Log("Clave Correcta!");
-                displayText.color = Color.green;
-
-                correctCodeAction();
-            }
-            else
-            {
-                Debug.Log("Clave Incorrecta!");
-                displayText.color = Color.red;
-            }
-            canCheck = false;
+            inputText.text = userInput;
         }
     }
 
-    public void AddNumber(string number)
-    {
-        if (userInput.Length > 0)
-        {
-            userInput = userInput.Substring(0, userInput.Length - 1);
-            UpdateDisplay();
-        }
-    }
-
-    public void DeleteNumber()
-    {
-        if (userInput.Length > 0)
-        {
-            userInput = userInput.Substring(0, userInput.Length - 1);
-            UpdateDisplay();
-        }
-    }
-
-
-    private void UpdateDisplay()
-    {
-        displayText.text = userInput;
-    }
-    int index;
+    // Enables code checking and sets the correct code
     public void checkCode(int id)
     {
         canCheck = true;
-        userInput = ""; 
-        displayText.color = Color.white;
         index = id - 1;
         correctCode = correctCodes[index].ToString();
-        UpdateDisplay();
     }
 
+    // Compares user input with the correct code
+    private void CheckCode()
+    {
+        if (userInput == correctCode)
+        {
+            correctCodeAction();
+            canCheck = false;
+        }
+        else
+        {
+            userInput = "";  
+        }
+    }
+
+    // Executes the action when the correct code is entered
     public void correctCodeAction()
     {
         switch (index)
         {
             case 4:
-                /*crateAnim.SetBool("open", true);
+                Debug.Log("Here");
+                crateAnim.SetBool("open", true);
                 GameManager.GameManagerInstance.SetArrayUnlocked("records", 4, 1);
-                GameManager.GameManagerInstance.SaveProgress();*/
-                Debug.Log("aqui");
+                GameManager.GameManagerInstance.SaveProgress();
                 break;
         }
         

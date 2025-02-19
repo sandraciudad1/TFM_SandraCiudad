@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class resetGame : MonoBehaviour
 {
-    // Start is called before the first frame update
     void Start()
     {
         GameManager.GameManagerInstance.LoadProgress();
@@ -19,11 +18,5 @@ public class resetGame : MonoBehaviour
             GameManager.GameManagerInstance.recordsUnlocked[i] = 0;
         }
         GameManager.GameManagerInstance.SaveProgress();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
