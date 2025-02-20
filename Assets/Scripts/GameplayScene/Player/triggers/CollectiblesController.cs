@@ -33,7 +33,7 @@ public class CollectiblesController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            GameManager.GameManagerInstance.LoadProgress();
+            
             if (other.CompareTag("object"))
             {
                 canAddToInventory(other, "crowbar", 0, crowbar);
@@ -72,7 +72,8 @@ public class CollectiblesController : MonoBehaviour
 
     void canAddToInventory(Collider other, string name, int index, GameObject gameobject)
     {
-        if (other.name.Equals(name) && (GameManager.GameManagerInstance.GetArrayUnlocked("objects", index) == 1))
+        GameManager.GameManagerInstance.LoadProgress();
+        if (other.name.Equals(name) && (GameManager.GameManagerInstance.GetArrayUnlocked("objects", GameManager.GameManagerInstance.objectIndex) == 1))
         {
             gameobject.SetActive(false);
             addToInventory(0, index);
