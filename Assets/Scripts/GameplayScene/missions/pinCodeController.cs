@@ -71,6 +71,13 @@ public class pinCodeController : MonoBehaviour
         }
     }
 
+    //
+    public void clearInput()
+    {
+        userInput = "";
+        inputText.text = userInput;
+    }
+
     // Executes the action when the correct code is entered
     public void correctCodeAction()
     {

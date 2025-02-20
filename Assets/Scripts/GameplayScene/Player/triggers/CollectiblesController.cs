@@ -6,8 +6,15 @@ public class CollectiblesController : MonoBehaviour
 {
     [SerializeField] GameObject inventory;
     
-
+    // objects 
     [SerializeField] GameObject crowbar;
+    [SerializeField] GameObject sample1;
+    [SerializeField] GameObject sample2;
+    [SerializeField] GameObject sample3;
+    [SerializeField] GameObject sample4;
+
+
+    // records
     [SerializeField] GameObject record5;
 
     [SerializeField] GameObject pinCodeCanvas;
@@ -29,12 +36,22 @@ public class CollectiblesController : MonoBehaviour
             GameManager.GameManagerInstance.LoadProgress();
             if (other.CompareTag("object"))
             {
-                // object 1: crowbar (index 0)
-                if (other.name.Equals("crowbar") && (GameManager.GameManagerInstance.GetArrayUnlocked("objects", 0) == 1))
+                canAddToInventory(other, "crowbar", 0, crowbar);
+                canAddToInventory(other, "sample1", 1, sample1);
+                canAddToInventory(other, "sample2", 2, sample2);
+                canAddToInventory(other, "sample3", 3, sample3);
+                canAddToInventory(other, "sample4", 4, sample4);
+
+                /*if (other.name.Equals("crowbar") && (GameManager.GameManagerInstance.GetArrayUnlocked("objects", 0) == 1))
                 {
                     crowbar.SetActive(false);
                     addToInventory(0);
                 }
+                else if (other.name.Equals("sample1") && (GameManager.GameManagerInstance.GetArrayUnlocked("objects", 1) == 1))
+                {
+                    sample1.SetActive(false);
+                    addToInventory(0);
+                }*/
             }
         }
 
@@ -52,15 +69,24 @@ public class CollectiblesController : MonoBehaviour
                         record5.SetActive(false);
                         addToInventory(1);
                     }
-
                 }
                 else
                 {
                     pinCodeCanvas.SetActive(true);
+                    codeController.clearInput();
                     codeController.checkCode(5);
                 }
             }
         } 
+    }
+
+    void canAddToInventory(Collider other, string name, int index, GameObject gameobject)
+    {
+        if (other.name.Equals(name) && (GameManager.GameManagerInstance.GetArrayUnlocked("objects", index) == 1))
+        {
+            gameobject.SetActive(false);
+            addToInventory(0);
+        }
     }
 
     // Hides pin code canvas whan player exits record trigger

@@ -15,6 +15,10 @@ public class DoorTriggerController : MonoBehaviour
     [SerializeField] Image metallicDoorImg;
     [SerializeField] Image switchboardDoorImg;
     [SerializeField] Image switchboardLeverImg;
+    [SerializeField] Image doorImg6;
+    [SerializeField] Image doorImg7;
+    [SerializeField] Image doorImg8;
+    [SerializeField] Image doorImg9;
     Image[] doorImages;
 
     int doorNum = -1;
@@ -27,6 +31,10 @@ public class DoorTriggerController : MonoBehaviour
     [SerializeField] GameObject door5;
     [SerializeField] GameObject metallicDoor;
     [SerializeField] GameObject switchboardDoor;
+    [SerializeField] GameObject door6;
+    [SerializeField] GameObject door7;
+    [SerializeField] GameObject door8;
+    [SerializeField] GameObject door9;
 
     Animator door1Anim;
     Animator door2Anim;
@@ -35,6 +43,10 @@ public class DoorTriggerController : MonoBehaviour
     Animator door5Anim;
     Animator metallicDoorAnim;
     Animator switchboardDoorAnim;
+    Animator door6Anim;
+    Animator door7Anim;
+    Animator door8Anim;
+    Animator door9Anim;
     Animator[] doorsAnim;
 
     [SerializeField] GameObject crowbar;
@@ -47,14 +59,14 @@ public class DoorTriggerController : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam2;
 
-    bool setArray1Unlocked = false;
+    bool[] setArrayUnlocked = new bool[15];
     public bool swichtInteraction = false;
 
     // Initialize arrays and get door animators
     void Start()
     {
         SwapCameras(1, 0);
-        doorImages = new Image[] { doorImg1, doorImg2, doorImg3, doorImg4, doorImg5, metallicDoorImg, switchboardDoorImg, switchboardLeverImg };
+        doorImages = new Image[] { doorImg1, doorImg2, doorImg3, doorImg4, doorImg5, metallicDoorImg, switchboardDoorImg, switchboardLeverImg, doorImg6, doorImg7, doorImg8, doorImg9 };
 
         door1Anim = door1.GetComponent<Animator>();
         door2Anim = door2.GetComponent<Animator>();
@@ -63,11 +75,13 @@ public class DoorTriggerController : MonoBehaviour
         door5Anim = door5.GetComponent<Animator>();
         metallicDoorAnim = metallicDoor.GetComponent<Animator>();
         switchboardDoorAnim = switchboardDoor.GetComponent<Animator>();
-        doorsAnim = new Animator[] { door1Anim, door2Anim, door3Anim, door4Anim, door5Anim, metallicDoorAnim, switchboardDoorAnim };
-
+        door6Anim = door6.GetComponent<Animator>();
+        door7Anim = door7.GetComponent<Animator>();
+        door8Anim = door8.GetComponent<Animator>();
+        door9Anim = door9.GetComponent<Animator>(); 
+        doorsAnim = new Animator[] { door1Anim, door2Anim, door3Anim, door4Anim, door5Anim, metallicDoorAnim, switchboardDoorAnim, door6Anim, door7Anim, door8Anim, door9Anim };
         doorsOpen = new bool[doorsAnim.Length];
         playerAnimator = player.GetComponent<Animator>();
-
     }
 
     // Toggle door animation when pressing 'E'
@@ -106,11 +120,27 @@ public class DoorTriggerController : MonoBehaviour
             }
         }
 
-        if (doorsOpen[1] && !setArray1Unlocked)
+        /*if (doorsOpen[1] && !setArray1Unlocked)
         {
             GameManager.GameManagerInstance.SetArrayUnlocked("objects", 0, 1);
             GameManager.GameManagerInstance.SaveProgress();
             setArray1Unlocked = true;
+        }*/
+
+        allowCollectObject(doorsOpen[1], 0);
+
+        allowCollectObject(doorsOpen[3], 1);
+        allowCollectObject(doorsOpen[7], 2);
+        allowCollectObject(doorsOpen[10], 3);
+    }
+
+    void allowCollectObject(bool isOpen, int index)
+    {
+        if(isOpen && !setArrayUnlocked[index])
+        {
+            GameManager.GameManagerInstance.SetArrayUnlocked("objects", index, 1);
+            GameManager.GameManagerInstance.SaveProgress();
+            setArrayUnlocked[index] = true;
         }
     }
 
@@ -201,6 +231,26 @@ public class DoorTriggerController : MonoBehaviour
             activateImg(6);
             doorNum = 6;
         }
+        else if (other.CompareTag("door6"))
+        {
+            activateImg(7);
+            doorNum = 7;
+        }
+        else if (other.CompareTag("door7"))
+        {
+            activateImg(8);
+            doorNum = 8;
+        }
+        else if (other.CompareTag("door8"))
+        {
+            activateImg(9);
+            doorNum = 9;
+        }
+        else if (other.CompareTag("door9"))
+        {
+            activateImg(10);
+            doorNum = 10;
+        }
     }
 
     // Activates the corresponding door image
@@ -249,6 +299,22 @@ public class DoorTriggerController : MonoBehaviour
         else if (other.CompareTag("swichtboard"))
         {
             desactivateImg(6);
+        }
+        else if (other.CompareTag("door6"))
+        {
+            desactivateImg(7);
+        }
+        else if (other.CompareTag("door7"))
+        {
+            desactivateImg(8);
+        }
+        else if (other.CompareTag("door8"))
+        {
+            desactivateImg(9);
+        }
+        else if (other.CompareTag("door9"))
+        {
+            desactivateImg(10);
         }
         doorNum = -1;
     }
