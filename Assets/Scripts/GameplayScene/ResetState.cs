@@ -26,10 +26,10 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject inventory;
 
     [SerializeField] GameObject crowbarImg;
-    GameObject[] inventoryObjects;
+    GameObject[] inventoryObjects = new GameObject[15];
 
     [SerializeField] GameObject record5Img;
-    GameObject[] inventoryRecords;
+    GameObject[] inventoryRecords = new GameObject[10];
 
     void Start()
     {

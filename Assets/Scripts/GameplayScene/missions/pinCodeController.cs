@@ -84,7 +84,6 @@ public class pinCodeController : MonoBehaviour
         switch (index)
         {
             case 4:
-                Debug.Log("Here");
                 crateAnim.SetBool("open", true);
                 GameManager.GameManagerInstance.SetArrayUnlocked("records", 4, 1);
                 GameManager.GameManagerInstance.SaveProgress();

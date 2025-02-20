@@ -57,7 +57,10 @@ public class GameManager : MonoBehaviour
     {
         objectIndex = PlayerPrefs.GetInt("objectIndex", 0);
         recordIndex = PlayerPrefs.GetInt("recordIndex", 0);
-        
+
+        objectsUnlocked = new int[15];
+        recordsUnlocked = new int[10];
+
         for (int i = 0; i < objectsUnlocked.Length; i++)
         {
             objectsUnlocked[i] = PlayerPrefs.GetInt("objectsUnlocked" + i, 0);
@@ -86,7 +89,7 @@ public class GameManager : MonoBehaviour
     {
         int[] array = checkArrayType(arrayName);
 
-        if (index >= 0 && index < array.Length)
+        if (array != null && index >= 0 && index < array.Length)
         {
             array[index] = value;
             PlayerPrefs.SetInt((arrayName + "Unlocked" + index), value);

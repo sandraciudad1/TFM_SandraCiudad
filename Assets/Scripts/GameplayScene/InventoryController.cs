@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class inventoryController : MonoBehaviour
 {
@@ -25,29 +26,59 @@ public class inventoryController : MonoBehaviour
     int selectedRow = 0;
     int selectedCol = 0;
 
-    // items
-    [SerializeField] GameObject crowbarImg;
-    [SerializeField] GameObject sample1;
-    [SerializeField] GameObject sample2;
-    [SerializeField] GameObject sample3;
-    [SerializeField] GameObject sample4;
+    // objects
+    [SerializeField] Image object1;
+    [SerializeField] Image object2;
+    [SerializeField] Image object3;
+    [SerializeField] Image object4;
+    [SerializeField] Image object5;
+    [SerializeField] Image object6;
+    [SerializeField] Image object7;
+    [SerializeField] Image object8;
+    [SerializeField] Image object9;
+    [SerializeField] Image object10;
+    [SerializeField] Image object11;
+    [SerializeField] Image object12;
+    [SerializeField] Image object13;
+    [SerializeField] Image object14;
+    [SerializeField] Image object15;
+    Image[] collectableItemsImgs;
+    string[] itemsNames = new string[15];
 
-    GameObject[] collectableItemsImgs;
-    string[] itemsNames;
+    // objects sprites
+    [SerializeField] Sprite crowbarSprite;
+    [SerializeField] Sprite sample1Sprite;
+    [SerializeField] Sprite sample2Sprite;
+    [SerializeField] Sprite sample3Sprite;
+    [SerializeField] Sprite sample4Sprite;
+    Sprite[] objectsSprites;
 
     // records
-    [SerializeField] GameObject record1Img;
-    [SerializeField] GameObject record2Img;
-    [SerializeField] GameObject record3Img;
-    [SerializeField] GameObject record4Img;
-    [SerializeField] GameObject record5Img;
-    [SerializeField] GameObject record6Img;
-    [SerializeField] GameObject record7Img;
-    [SerializeField] GameObject record8Img;
-    [SerializeField] GameObject record9Img;
-    [SerializeField] GameObject record10Img;
-    GameObject[] collectableRecordsImgs;
+    [SerializeField] Image record1Img;
+    [SerializeField] Image record2Img;
+    [SerializeField] Image record3Img;
+    [SerializeField] Image record4Img;
+    [SerializeField] Image record5Img;
+    [SerializeField] Image record6Img;
+    [SerializeField] Image record7Img;
+    [SerializeField] Image record8Img;
+    [SerializeField] Image record9Img;
+    [SerializeField] Image record10Img;
+    Image[] collectableRecordsImgs;
     string[] recordsNames;
+
+    // records sprites
+    [SerializeField] Sprite record1Sprite;
+    [SerializeField] Sprite record2Sprite;
+    [SerializeField] Sprite record3Sprite;
+    [SerializeField] Sprite record4Sprite;
+    [SerializeField] Sprite record5Sprite;
+    [SerializeField] Sprite record6Sprite;
+    [SerializeField] Sprite record7Sprite;
+    [SerializeField] Sprite record8Sprite;
+    [SerializeField] Sprite record9Sprite;
+    [SerializeField] Sprite record10Sprite;
+    Sprite[] recordsSprites;
 
     public bool playerMov = true;
 
@@ -66,9 +97,11 @@ public class inventoryController : MonoBehaviour
         recordsContainer.SetActive(false);
         objectsContainer.SetActive(false);
 
-        collectableItemsImgs = new GameObject[] { crowbarImg, sample1, sample2, sample3, sample4 };
-        collectableRecordsImgs = new GameObject[] { record1Img, record2Img, record3Img, record4Img, record5Img, record6Img, record7Img, record8Img, record9Img, record10Img };
-        itemsNames = new string[] { "Palanca", "Muestra 1", "Muestra 2", "Muestra 3", "Muestra 4", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20" };
+        collectableItemsImgs = new Image[] { object1, object2, object3, object4, object5, object6, object7, object8, object9, object10, object11, object12, object13, object14, object15 };
+        objectsSprites = new Sprite[] { crowbarSprite, sample1Sprite, sample2Sprite, sample3Sprite, sample4Sprite };
+        collectableRecordsImgs = new Image[] { record1Img, record2Img, record3Img, record4Img, record5Img, record6Img, record7Img, record8Img, record9Img, record10Img };
+        recordsSprites = new Sprite[] { record1Sprite, record2Sprite, record3Sprite, record4Sprite, record5Sprite, record6Sprite, record7Sprite, record8Sprite, record9Sprite, record10Sprite };
+        //itemsNames = new string[] { "Palanca", "Muestra 1", "Muestra 2", "Muestra 3", "Muestra 4", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20" };
         recordsNames = new string[] { "Grabacion 5: Sala de Comunicaciones", "Grabacion 2: Laboratorio cientifico", "Grabacion 3: Sala de Comunicaciones", "Grabacion 4: Zona de Inteligencia Artificial",
                                       "Grabacion 1: Zona de Observacion", "Grabacion 6: Zona de Despresurizacion", "Grabacion 7: Puente de Mando", "Grabacion 8: Bahía de Mantenimiento Tecnológico",
                                       "Grabacion 9: Pasillos Centrales", "Grabacion 10: Zona de Observacion" };
@@ -266,17 +299,39 @@ public class inventoryController : MonoBehaviour
     }
 
     // Adds an item to the inventory
-    public void addItem(int id)
+    public void addItem(int index, int id)
     {
-        collectableItemsImgs[id].SetActive(true);
-        unlockedObjects[id] = true; 
+        itemsNames[index] = addItemNames(id);
+        collectableItemsImgs[index].sprite = objectsSprites[id];
+        collectableItemsImgs[index].gameObject.SetActive(true);
+        unlockedObjects[index] = true; 
     }
 
     // Adds a record to the inventory
-    public void addRecord(int id)
+    public void addRecord(int index, int id)
     {
-        collectableRecordsImgs[id].SetActive(true);
-        unlockedRecords[id] = true;
+        collectableRecordsImgs[index].sprite = recordsSprites[id];
+        collectableRecordsImgs[index].gameObject.SetActive(true);
+        unlockedRecords[index] = true;
+    }
+
+    string addItemNames(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                return "Palanca";
+            case 1:
+                return "Muestra 1";
+            case 2:
+                return "Muestra 2";
+            case 3:
+                return "Muestra 3";
+            case 4:
+                return "Muestra 4";
+            default:
+                return "";
+        }
     }
 
     void resetState()
@@ -286,14 +341,14 @@ public class inventoryController : MonoBehaviour
         int objectsIndex = GameManager.GameManagerInstance.objectIndex;
         for (int i = 0; i < objectsIndex; i++)
         {
-            collectableItemsImgs[i].SetActive(true);
+            collectableItemsImgs[i].gameObject.SetActive(true);
             unlockedObjects[i] = true;
         }
 
         int recordsIndex = GameManager.GameManagerInstance.recordIndex;
         for (int i = 0; i < recordsIndex; i++)
         {
-            collectableRecordsImgs[i].SetActive(true);
+            collectableRecordsImgs[i].gameObject.SetActive(true);
             unlockedRecords[i] = true;
         }
 

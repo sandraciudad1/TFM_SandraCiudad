@@ -66,7 +66,7 @@ public class DoorTriggerController : MonoBehaviour
     void Start()
     {
         SwapCameras(1, 0);
-        doorImages = new Image[] { doorImg1, doorImg2, doorImg3, doorImg4, doorImg5, metallicDoorImg, switchboardDoorImg, switchboardLeverImg, doorImg6, doorImg7, doorImg8, doorImg9 };
+        doorImages = new Image[] { doorImg1, doorImg2, doorImg3, doorImg4, doorImg5, metallicDoorImg, switchboardDoorImg, doorImg6, doorImg7, doorImg8, doorImg9 };
 
         door1Anim = door1.GetComponent<Animator>();
         door2Anim = door2.GetComponent<Animator>();
@@ -120,18 +120,12 @@ public class DoorTriggerController : MonoBehaviour
             }
         }
 
-        /*if (doorsOpen[1] && !setArray1Unlocked)
-        {
-            GameManager.GameManagerInstance.SetArrayUnlocked("objects", 0, 1);
-            GameManager.GameManagerInstance.SaveProgress();
-            setArray1Unlocked = true;
-        }*/
-
         allowCollectObject(doorsOpen[1], 0);
 
-        allowCollectObject(doorsOpen[3], 1);
-        allowCollectObject(doorsOpen[7], 2);
-        allowCollectObject(doorsOpen[10], 3);
+        allowCollectObject(true, 1);
+        allowCollectObject(doorsOpen[3], 2);
+        allowCollectObject(doorsOpen[7], 3);
+        allowCollectObject(doorsOpen[10], 4);
     }
 
     void allowCollectObject(bool isOpen, int index)
@@ -166,7 +160,7 @@ public class DoorTriggerController : MonoBehaviour
     IEnumerator swichtboardInteraction()
     {
         yield return new WaitForSeconds(3.2f);
-        activateImg(7); 
+        switchboardLeverImg.gameObject.SetActive(true);
         switchboardDoorAnim.enabled = false;
         swichtInteraction = true;
     }
