@@ -122,7 +122,7 @@ public class DoorTriggerController : MonoBehaviour
 
         allowCollectObject(doorsOpen[1], 0);
 
-        allowCollectObject(true, 1);
+        allowCollectObject(doorsOpen[0], 1);
         allowCollectObject(doorsOpen[3], 2);
         allowCollectObject(doorsOpen[7], 3);
         allowCollectObject(doorsOpen[10], 4);

@@ -87,7 +87,12 @@ public class inventoryController : MonoBehaviour
     public bool[] unlockedRecords;
 
     // 3d objects
-    [SerializeField] GameObject[] collectable3dObjects;
+    [SerializeField] GameObject crowbar;
+    [SerializeField] GameObject sample1;
+    [SerializeField] GameObject sample2;
+    [SerializeField] GameObject sample3;
+    [SerializeField] GameObject sample4;
+    GameObject[] collectable3dObjects = new GameObject[15];
 
     // Initializes inventory variables
     void Start()
@@ -247,7 +252,8 @@ public class inventoryController : MonoBehaviour
             int index = selectedRow * cols + selectedCol;
             if (index >= 0 && index < currentBubbles.Length && unlockedItems[index])
             {
-                equipPlayer(index);
+                //equipPlayer(index);
+                collectable3dObjects[index].SetActive(true);
                 playerAnim.SetBool("closeHand", true);
             }
         }
@@ -263,7 +269,7 @@ public class inventoryController : MonoBehaviour
     }
 
     // Equips a selected item to the player
-    void equipPlayer(int index)
+    /*void equipPlayer(int index)
     {
         for(int i = 0; i < collectable3dObjects.Length; i++)
         {
@@ -276,7 +282,7 @@ public class inventoryController : MonoBehaviour
                 collectable3dObjects[i].SetActive(false);
             }
         }
-    }
+    }*/
 
     // Moves selection inside the grid 
     void MoveSelection(int rowChange, int colChange, bool[] unlockedItems)
@@ -302,6 +308,7 @@ public class inventoryController : MonoBehaviour
     public void addItem(int index, int id)
     {
         itemsNames[index] = addItemNames(id);
+        collectable3dObjects[index] = add3DItems(id);
         collectableItemsImgs[index].sprite = objectsSprites[id];
         collectableItemsImgs[index].gameObject.SetActive(true);
         unlockedObjects[index] = true; 
@@ -319,18 +326,25 @@ public class inventoryController : MonoBehaviour
     {
         switch (id)
         {
-            case 0:
-                return "Palanca";
-            case 1:
-                return "Muestra 1";
-            case 2:
-                return "Muestra 2";
-            case 3:
-                return "Muestra 3";
-            case 4:
-                return "Muestra 4";
-            default:
-                return "";
+            case 0: return "Palanca";
+            case 1: return "Muestra 1";
+            case 2: return "Muestra 2";
+            case 3: return "Muestra 3";
+            case 4: return "Muestra 4";
+            default: return "";
+        }
+    }
+
+    GameObject add3DItems(int id)
+    {
+        switch (id)
+        {
+            case 0: return crowbar;
+            case 1: return sample1;
+            case 2: return sample2;
+            case 3: return sample3;
+            case 4: return sample4;
+            default: return null;
         }
     }
 
