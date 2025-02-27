@@ -253,7 +253,8 @@ public class inventoryController : MonoBehaviour
             if (index >= 0 && index < currentBubbles.Length && unlockedItems[index])
             {
                 //equipPlayer(index);
-                collectable3dObjects[index].SetActive(true);
+                //collectable3dObjects[index].SetActive(true);
+                add3DItems(idObject).SetActive(true);
                 playerAnim.SetBool("closeHand", true);
             }
         }
@@ -303,10 +304,12 @@ public class inventoryController : MonoBehaviour
     {
         return (currentContainer == recordsContainer) ? unlockedRecords[index] : unlockedObjects[index];
     }
-
+    static int idObject;
+    static int idRecord;
     // Adds an item to the inventory
     public void addItem(int index, int id)
     {
+        idObject = id;
         itemsNames[index] = addItemNames(id);
         collectable3dObjects[index] = add3DItems(id);
         collectableItemsImgs[index].sprite = objectsSprites[id];
@@ -317,6 +320,7 @@ public class inventoryController : MonoBehaviour
     // Adds a record to the inventory
     public void addRecord(int index, int id)
     {
+        idRecord = id;
         collectableRecordsImgs[index].sprite = recordsSprites[id];
         collectableRecordsImgs[index].gameObject.SetActive(true);
         unlockedRecords[index] = true;

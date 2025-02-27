@@ -19,6 +19,7 @@ TagManager:
   - door7
   - door8
   - door9
+  - analyticalInstrument
   layers:
   - Default
   - TransparentFX
