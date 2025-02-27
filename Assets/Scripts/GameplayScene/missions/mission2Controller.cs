@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class mission2Controller : MonoBehaviour
 {
     [SerializeField] GameObject player;
     Animator playerAnim;
     PlayerMovement playerMov;
-    Vector3 playerPos = new Vector3(105.231f, 30.676f, 64.234f);
+    Vector3 playerPos = new Vector3(105.317f, 30.74516f, 63.886f);
+    Quaternion playerRot = Quaternion.Euler(new Vector3(0f, -180f, 0f));
 
     [SerializeField] GameObject sample1;
     [SerializeField] GameObject sample2;
@@ -16,8 +18,13 @@ public class mission2Controller : MonoBehaviour
 
     [SerializeField] GameObject letterX;
 
+    [SerializeField] CinemachineVirtualCamera vcam1;
+    [SerializeField] CinemachineVirtualCamera vcam3;
+    bool swap = false;
+
     void Start()
     {
+        SwapCameras(1, 0);
         playerAnim = player.GetComponent<Animator>();
         playerMov = player.GetComponent<PlayerMovement>();
     }
@@ -51,8 +58,17 @@ public class mission2Controller : MonoBehaviour
             // fijar posicion del jugador e impedir que pueda moverse
             playerMov.canMove = false;
             player.transform.position = playerPos;
-            // poner muestra a analizar (animacion analyze true)
-            playerAnim.SetBool("analyze", true);
+            player.transform.rotation = playerRot;
+            if (player.transform.position == playerPos && !swap)
+            {
+                Debug.Log("dentro");
+                SwapCameras(0, 1);
+                // poner muestra a analizar (animacion analyze true)
+                StartCoroutine(waitAnalyzeAnim(2f, true));
+                swap = true;
+            } 
+            
+            
             
             
             // aumentar el contador y el pb 
@@ -60,6 +76,12 @@ public class mission2Controller : MonoBehaviour
             
             //desactivar el gameobject sample
         }
+    }
+
+    IEnumerator waitAnalyzeAnim(float time, bool value)
+    {
+        yield return new WaitForSeconds(time);
+        playerAnim.SetBool("analyze", value);
     }
 
     int sampleActive()
@@ -84,6 +106,12 @@ public class mission2Controller : MonoBehaviour
         {
             return -1;
         }
+    }
 
+    // Swap between virtual cameras
+    void SwapCameras(int priority1, int priority2)
+    {
+        vcam1.Priority = priority1;
+        vcam3.Priority = priority2;
     }
 }
