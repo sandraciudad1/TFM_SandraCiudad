@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class mission2Controller : MonoBehaviour
 {
+    [SerializeField] GameObject player;
+    Animator playerAnim;
+    PlayerMovement playerMov;
+    Vector3 playerPos = new Vector3(105.231f, 30.676f, 64.234f);
+
     [SerializeField] GameObject sample1;
     [SerializeField] GameObject sample2;
     [SerializeField] GameObject sample3;
@@ -13,7 +18,8 @@ public class mission2Controller : MonoBehaviour
 
     void Start()
     {
-        
+        playerAnim = player.GetComponent<Animator>();
+        playerMov = player.GetComponent<PlayerMovement>();
     }
 
 
@@ -22,19 +28,36 @@ public class mission2Controller : MonoBehaviour
         
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("analyticalInstrument"))
+        {
+            letterX.SetActive(true);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("analyticalInstrument"))
+        {
+            letterX.SetActive(false);
+        }
+    }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("analyticalInstrument") && sampleActive()>0)
+        if (other.gameObject.CompareTag("analyticalInstrument") && sampleActive()>0 && Input.GetKeyDown(KeyCode.X))
         {
-            letterX.SetActive(true);
-            if (Input.GetKeyDown(KeyCode.X))
-            {
-                // fijar posicion del jugador e impedir que pueda moverse
-                // poner muestra a analizar (animacion analyze true)
-                // aumentar el contador y el pb 
-                //cambiar la imagen pequeña por un circulo que se rellena
-            }
+            // fijar posicion del jugador e impedir que pueda moverse
+            playerMov.canMove = false;
+            player.transform.position = playerPos;
+            // poner muestra a analizar (animacion analyze true)
+            playerAnim.SetBool("analyze", true);
+            
+            
+            // aumentar el contador y el pb 
+            //cambiar la imagen pequeña por un circulo que se rellena
+            
             //desactivar el gameobject sample
         }
     }

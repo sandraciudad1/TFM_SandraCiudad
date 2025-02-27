@@ -30,6 +30,16 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         LoadProgress();
+        /*Debug.Log("data in game manager:");
+        Debug.Log("object index " + objectIndex + " record index " + recordIndex);
+        for (int i = 0; i < objectsUnlocked.Length; i++)
+        {
+            Debug.Log("objectsUnlocked" + i + ": "+ objectsUnlocked[i]);
+        }
+        for (int i = 0; i < recordsUnlocked.Length; i++)
+        {
+            Debug.Log("recordsUnlocked" + i + ": " + recordsUnlocked[i]);
+        }*/
     }
 
     // Saves game progress to PlayerPrefs

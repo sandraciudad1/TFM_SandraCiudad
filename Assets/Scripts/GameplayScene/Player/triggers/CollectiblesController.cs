@@ -33,7 +33,6 @@ public class CollectiblesController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            
             if (other.CompareTag("object"))
             {
                 canAddToInventory(other, "crowbar", 0, crowbar);

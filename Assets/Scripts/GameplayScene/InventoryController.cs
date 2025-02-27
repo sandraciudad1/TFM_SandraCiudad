@@ -97,6 +97,8 @@ public class inventoryController : MonoBehaviour
     // Initializes inventory variables
     void Start()
     {
+        loadProgress();
+
         playerAnim = player.GetComponent<Animator>();
         inventoryBg.SetActive(false);
         recordsContainer.SetActive(false);
@@ -253,8 +255,8 @@ public class inventoryController : MonoBehaviour
             if (index >= 0 && index < currentBubbles.Length && unlockedItems[index])
             {
                 //equipPlayer(index);
-                //collectable3dObjects[index].SetActive(true);
-                add3DItems(idObject).SetActive(true);
+                collectable3dObjects[index].SetActive(true);
+                //add3DItems(idObject).SetActive(true);
                 playerAnim.SetBool("closeHand", true);
             }
         }
@@ -304,12 +306,12 @@ public class inventoryController : MonoBehaviour
     {
         return (currentContainer == recordsContainer) ? unlockedRecords[index] : unlockedObjects[index];
     }
-    static int idObject;
-    static int idRecord;
+    //static int idObject;
+    //static int idRecord;
     // Adds an item to the inventory
     public void addItem(int index, int id)
     {
-        idObject = id;
+        //idObject = id;
         itemsNames[index] = addItemNames(id);
         collectable3dObjects[index] = add3DItems(id);
         collectableItemsImgs[index].sprite = objectsSprites[id];
@@ -320,10 +322,22 @@ public class inventoryController : MonoBehaviour
     // Adds a record to the inventory
     public void addRecord(int index, int id)
     {
-        idRecord = id;
+        //idRecord = id;
         collectableRecordsImgs[index].sprite = recordsSprites[id];
         collectableRecordsImgs[index].gameObject.SetActive(true);
         unlockedRecords[index] = true;
+    }
+
+    void loadProgress()
+    {
+        GameManager.GameManagerInstance.LoadProgress();
+
+        int objectsIndex = GameManager.GameManagerInstance.objectIndex;
+        for(int i = 0; i < objectsIndex; i++)
+        {
+            itemsNames[i] = addItemNames(i);
+            collectable3dObjects[i] = add3DItems(i);
+        }
     }
 
     string addItemNames(int id)
