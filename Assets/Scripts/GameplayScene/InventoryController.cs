@@ -251,12 +251,15 @@ public class inventoryController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
+            for (int i = 0; i < GameManager.GameManagerInstance.objectIndex; i++)
+            {
+                collectable3dObjects[i].SetActive(false);
+            }
+
             int index = selectedRow * cols + selectedCol;
             if (index >= 0 && index < currentBubbles.Length && unlockedItems[index])
             {
-                //equipPlayer(index);
                 collectable3dObjects[index].SetActive(true);
-                //add3DItems(idObject).SetActive(true);
                 playerAnim.SetBool("closeHand", true);
             }
         }
@@ -270,22 +273,6 @@ public class inventoryController : MonoBehaviour
             objectsBubble.SetActive(true);
         }
     }
-
-    // Equips a selected item to the player
-    /*void equipPlayer(int index)
-    {
-        for(int i = 0; i < collectable3dObjects.Length; i++)
-        {
-            if (i == index)
-            {
-                collectable3dObjects[i].SetActive(true);
-            } 
-            else
-            {
-                collectable3dObjects[i].SetActive(false);
-            }
-        }
-    }*/
 
     // Moves selection inside the grid 
     void MoveSelection(int rowChange, int colChange, bool[] unlockedItems)

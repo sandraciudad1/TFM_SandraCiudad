@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     public int[] objectsUnlocked = new int[15];
     public int[] recordsUnlocked = new int[10];
 
+    public int samplesCounter;
+    public int[] samplesUnlocked = new int[4];
 
     // Ensures only one instance of GameManager exists (Singleton pattern)
     private void Awake()
@@ -35,11 +37,15 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < objectsUnlocked.Length; i++)
         {
             Debug.Log("objectsUnlocked" + i + ": "+ objectsUnlocked[i]);
-        }
-        for (int i = 0; i < recordsUnlocked.Length; i++)
-        {
-            Debug.Log("recordsUnlocked" + i + ": " + recordsUnlocked[i]);
         }*/
+        //samplesCounter = 0;
+        /*Debug.Log("samplesCounter " + samplesCounter);
+        for (int i = 0; i < samplesUnlocked.Length; i++)
+        {
+            //samplesUnlocked[i] = 0;
+            Debug.Log("samplesUnlocked" + i + ": " + samplesUnlocked[i]);
+        }*/
+        //PlayerPrefs.Save();
     }
 
     // Saves game progress to PlayerPrefs
@@ -58,6 +64,12 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("recordsUnlocked" + i, recordsUnlocked[i]);
         }
 
+        PlayerPrefs.SetInt("samplesCounter", samplesCounter);
+
+        for (int i = 0; i < samplesUnlocked.Length; i++)
+        {
+            PlayerPrefs.SetInt("samplesUnlocked" + i, samplesUnlocked[i]);
+        }
 
         PlayerPrefs.Save();
     }
@@ -79,6 +91,13 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < recordsUnlocked.Length; i++)
         {
             recordsUnlocked[i] = PlayerPrefs.GetInt("recordsUnlocked" + i, 0);
+        }
+
+        samplesCounter = PlayerPrefs.GetInt("samplesCounter", 0);
+
+        for (int i = 0; i < samplesUnlocked.Length; i++)
+        {
+            samplesUnlocked[i] = PlayerPrefs.GetInt("samplesUnlocked" + i, 0);
         }
     }
 
@@ -118,6 +137,9 @@ public class GameManager : MonoBehaviour
         else if (arrayName.Equals("records"))
         {
             array = recordsUnlocked;
+        } else if (arrayName.Equals("samples"))
+        {
+            array = samplesUnlocked;
         }
         return array;
     }
