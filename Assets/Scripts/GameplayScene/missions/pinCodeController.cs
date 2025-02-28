@@ -15,14 +15,41 @@ public class pinCodeController : MonoBehaviour
     bool correct = false;
 
     [SerializeField] GameObject crate1;
-    Animator crateAnim;
+    [SerializeField] GameObject crate2;
+    [SerializeField] GameObject crate3;
+    [SerializeField] GameObject crate4;
+    [SerializeField] GameObject crate5;
+    [SerializeField] GameObject crate6;
+    [SerializeField] GameObject crate7;
+    [SerializeField] GameObject crate8;
+    [SerializeField] GameObject crate9;
+    [SerializeField] GameObject crate10;
+    Animator crateAnim1;
+    Animator crateAnim2;
+    Animator crateAnim3;
+    Animator crateAnim4;
+    Animator crateAnim5;
+    Animator crateAnim6;
+    Animator crateAnim7;
+    Animator crateAnim8;
+    Animator crateAnim9;
+    Animator crateAnim10;
 
     // Initializes the correct codes and gets the crate animator
     void Start()
     {
-        correctCodes = new string[] { "0000", "0000", "0000", "0000", "1235", "0000", "0000", "0000", "0000", "0000" };
+        correctCodes = new string[] { "0000", "0000", "6375", "0000", "1235", "0000", "0000", "0000", "0000", "0000" };
 
-        crateAnim = crate1.GetComponent<Animator>();
+        crateAnim1 = crate1.GetComponent<Animator>();
+        crateAnim2 = crate2.GetComponent<Animator>();
+        crateAnim3 = crate3.GetComponent<Animator>();
+        crateAnim4 = crate4.GetComponent<Animator>();
+        crateAnim5 = crate5.GetComponent<Animator>();
+        crateAnim6 = crate6.GetComponent<Animator>();
+        crateAnim7 = crate7.GetComponent<Animator>();
+        crateAnim8 = crate8.GetComponent<Animator>();
+        crateAnim9 = crate9.GetComponent<Animator>();
+        crateAnim10 = crate10.GetComponent<Animator>();
     }
 
     // Handles user input for the code entry
@@ -84,7 +111,7 @@ public class pinCodeController : MonoBehaviour
         switch (index)
         {
             case 4:
-                crateAnim.SetBool("open", true);
+                crateAnim1.SetBool("open", true);
                 GameManager.GameManagerInstance.SetArrayUnlocked("records", 4, 1);
                 GameManager.GameManagerInstance.SaveProgress();
                 break;

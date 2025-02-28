@@ -16,6 +16,7 @@ public class CollectiblesController : MonoBehaviour
 
     // records
     [SerializeField] GameObject record5;
+    [SerializeField] GameObject record3;
 
     [SerializeField] GameObject pinCodeCanvas;
     [SerializeField] GameObject missionsControllers;
