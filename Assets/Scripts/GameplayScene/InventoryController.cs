@@ -293,12 +293,11 @@ public class inventoryController : MonoBehaviour
     {
         return (currentContainer == recordsContainer) ? unlockedRecords[index] : unlockedObjects[index];
     }
-    //static int idObject;
-    //static int idRecord;
+    
+
     // Adds an item to the inventory
     public void addItem(int index, int id)
     {
-        //idObject = id;
         itemsNames[index] = addItemNames(id);
         collectable3dObjects[index] = add3DItems(id);
         collectableItemsImgs[index].sprite = objectsSprites[id];
@@ -309,7 +308,6 @@ public class inventoryController : MonoBehaviour
     // Adds a record to the inventory
     public void addRecord(int index, int id)
     {
-        //idRecord = id;
         collectableRecordsImgs[index].sprite = recordsSprites[id];
         collectableRecordsImgs[index].gameObject.SetActive(true);
         unlockedRecords[index] = true;
@@ -353,6 +351,7 @@ public class inventoryController : MonoBehaviour
         }
     }
 
+    // Resets inventory previous state
     void resetState()
     {
         GameManager.GameManagerInstance.LoadProgress();
@@ -370,6 +369,5 @@ public class inventoryController : MonoBehaviour
             collectableRecordsImgs[i].gameObject.SetActive(true);
             unlockedRecords[i] = true;
         }
-
     }
 }

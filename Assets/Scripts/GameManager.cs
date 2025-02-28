@@ -32,20 +32,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         LoadProgress();
-        /*Debug.Log("data in game manager:");
-        Debug.Log("object index " + objectIndex + " record index " + recordIndex);
-        for (int i = 0; i < objectsUnlocked.Length; i++)
-        {
-            Debug.Log("objectsUnlocked" + i + ": "+ objectsUnlocked[i]);
-        }*/
-        //samplesCounter = 0;
-        /*Debug.Log("samplesCounter " + samplesCounter);
-        for (int i = 0; i < samplesUnlocked.Length; i++)
-        {
-            //samplesUnlocked[i] = 0;
-            Debug.Log("samplesUnlocked" + i + ": " + samplesUnlocked[i]);
-        }*/
-        //PlayerPrefs.Save();
     }
 
     // Saves game progress to PlayerPrefs
