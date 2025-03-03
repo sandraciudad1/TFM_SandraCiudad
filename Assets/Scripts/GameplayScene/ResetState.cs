@@ -6,14 +6,21 @@ public class ResetState : MonoBehaviour
 {
     // objects
     [SerializeField] GameObject crowbar;
+    [SerializeField] GameObject sample1;
+    [SerializeField] GameObject sample2;
+    [SerializeField] GameObject sample3;
+    [SerializeField] GameObject sample4;
+    GameObject[] inventoryObjects = new GameObject[15];
 
     // records
     [SerializeField] GameObject record5;
-
+    [SerializeField] GameObject record3;
 
     // crates
     [SerializeField] GameObject crate1;
+    [SerializeField] GameObject crate2;
     Animator crate1Anim;
+    Animator crate2Anim;
 
     // doors
     [SerializeField] GameObject observationDoor;
@@ -25,14 +32,15 @@ public class ResetState : MonoBehaviour
     // inventory
     [SerializeField] GameObject inventory;
 
-    [SerializeField] GameObject crowbarImg;
-    GameObject[] inventoryObjects = new GameObject[15];
+    //[SerializeField] GameObject crowbarImg;
+    
 
-    [SerializeField] GameObject record5Img;
+    //[SerializeField] GameObject record5Img;
     GameObject[] inventoryRecords = new GameObject[10];
 
     void Start()
     {
+        inventoryObjects = new GameObject[] { crowbar, sample1, sample2, sample3, sample4, null, null, null, null, null, null, null, null, null, null };
         GameManager.GameManagerInstance.LoadProgress();
 
         objectsUnlocked = GameManager.GameManagerInstance.objectsUnlocked;
@@ -44,7 +52,8 @@ public class ResetState : MonoBehaviour
         {
             if (objectsUnlocked[i] == 1)
             {
-                checkObjectsIndex(i);
+                inventoryObjects[i].SetActive(false);
+                additionalActions(i);
             }
         }
 
@@ -61,24 +70,24 @@ public class ResetState : MonoBehaviour
     {
         // crates Animators
         crate1Anim = crate1.GetComponent<Animator>();
+        crate2Anim = crate2.GetComponent<Animator>();
 
         // doors Animators
         observationDoorAnim = observationDoor.GetComponent<Animator>();
     }
     
-    void checkObjectsIndex(int index)
+    void additionalActions(int index)
     {
         switch (index)
         {
             case 0:
-                crowbar.SetActive(false);
                 crate1Anim.SetBool("open", true);
                 observationDoorAnim.SetBool("open", true);
                 break;
-            /*case 1:
-                
+            case 1:
+                crate2Anim.SetBool("open", true);
                 break;
-            case 2:
+            /*case 2:
 
                 break;
             case 3:

@@ -7,7 +7,8 @@ public class resetGame : MonoBehaviour
     void Start()
     {
         GameManager.GameManagerInstance.LoadProgress();
-        GameManager.GameManagerInstance.objectIndex = 0;
+        GameManager.GameManagerInstance.recordsUnlocked[2] = 0;
+        /*GameManager.GameManagerInstance.objectIndex = 0;
         GameManager.GameManagerInstance.recordIndex = 0;
         for(int i=0; i< GameManager.GameManagerInstance.objectsUnlocked.Length; i++)
         {
@@ -16,7 +17,7 @@ public class resetGame : MonoBehaviour
         for (int i = 0; i < GameManager.GameManagerInstance.recordsUnlocked.Length; i++)
         {
             GameManager.GameManagerInstance.recordsUnlocked[i] = 0;
-        }
+        }*/
         GameManager.GameManagerInstance.SaveProgress();
     }
 }

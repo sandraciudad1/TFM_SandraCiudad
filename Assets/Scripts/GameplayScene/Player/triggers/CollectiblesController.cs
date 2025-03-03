@@ -50,6 +50,16 @@ public class CollectiblesController : MonoBehaviour
             // first record: 5 (index 4)
             if (other.name.Equals("record5"))
             {
+                recordsManager(5, record5);
+            } 
+            else if (other.name.Equals("record3"))
+            {
+                recordsManager(3, record3);
+            }
+
+
+            /*if (other.name.Equals("record5"))
+            {
                 
                 if ((GameManager.GameManagerInstance.GetArrayUnlocked("records", 4) == 1))
                 {
@@ -63,11 +73,31 @@ public class CollectiblesController : MonoBehaviour
                 else
                 {
                     pinCodeCanvas.SetActive(true);
-                    
+                    ///////////////////////////////////////////////////
                     codeController.checkCode(5);
                 }
-            }
+            }*/
         } 
+    }
+
+    void recordsManager(int id, GameObject record)
+    {
+        int index = id - 1;
+        if ((GameManager.GameManagerInstance.GetArrayUnlocked("records", index) == 1))
+        {
+            pinCodeCanvas.SetActive(false);
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                record.SetActive(false);
+                addToInventory(1, index);
+            }
+        }
+        else
+        {
+            pinCodeCanvas.SetActive(true);
+            ///////////////////////////////////////////////////
+            codeController.checkCode(id);
+        }
     }
 
     void canAddToInventory(Collider other, string name, int index, GameObject gameobject)

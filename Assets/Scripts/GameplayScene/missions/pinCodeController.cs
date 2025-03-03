@@ -35,6 +35,8 @@ public class pinCodeController : MonoBehaviour
     Animator crateAnim9;
     Animator crateAnim10;
 
+    Animator[] crateAnimators;
+
     // Initializes the correct codes and gets the crate animator
     void Start()
     {
@@ -50,6 +52,7 @@ public class pinCodeController : MonoBehaviour
         crateAnim8 = crate8.GetComponent<Animator>();
         crateAnim9 = crate9.GetComponent<Animator>();
         crateAnim10 = crate10.GetComponent<Animator>();
+        crateAnimators = new Animator[] { crateAnim4, crateAnim3, crateAnim2, crateAnim5, crateAnim1, crateAnim6, crateAnim7, crateAnim8, crateAnim9, crateAnim10 };
     }
 
     // Handles user input for the code entry
@@ -108,14 +111,21 @@ public class pinCodeController : MonoBehaviour
     // Executes the action when the correct code is entered
     public void correctCodeAction()
     {
-        switch (index)
+        GameManager.GameManagerInstance.LoadProgress();
+        GameManager.GameManagerInstance.correctCodeCounter++;
+        GameManager.GameManagerInstance.SaveProgress();
+        /*switch (index)
         {
             case 4:
                 crateAnim1.SetBool("open", true);
-                GameManager.GameManagerInstance.SetArrayUnlocked("records", 4, 1);
-                GameManager.GameManagerInstance.SaveProgress();
                 break;
-        }
-        
+
+            case 2:
+                crateAnim2.SetBool("open", true);
+                break;
+        }*/
+        crateAnimators[index].SetBool("open", true);
+        GameManager.GameManagerInstance.SetArrayUnlocked("records", index, 1);
+        GameManager.GameManagerInstance.SaveProgress();
     }
 }

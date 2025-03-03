@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     public int samplesCounter;
     public int[] samplesUnlocked = new int[4];
 
+    public int correctCodeCounter;
+
     // Ensures only one instance of GameManager exists (Singleton pattern)
     private void Awake()
     {
@@ -57,6 +59,8 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("samplesUnlocked" + i, samplesUnlocked[i]);
         }
 
+        PlayerPrefs.SetInt("correctCodeCounter", correctCodeCounter);
+
         PlayerPrefs.Save();
     }
 
@@ -85,6 +89,8 @@ public class GameManager : MonoBehaviour
         {
             samplesUnlocked[i] = PlayerPrefs.GetInt("samplesUnlocked" + i, 0);
         }
+
+        correctCodeCounter = PlayerPrefs.GetInt("correctCodeCounter", 0);
     }
 
     // Returns the value of the specified array at the given index

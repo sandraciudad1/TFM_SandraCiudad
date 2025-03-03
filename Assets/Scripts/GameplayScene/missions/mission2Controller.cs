@@ -4,6 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Video;
 
 public class mission2Controller : MonoBehaviour
 {
@@ -23,7 +24,8 @@ public class mission2Controller : MonoBehaviour
 
     [SerializeField] GameObject letterX;
     [SerializeField] GameObject waitingVideo;
-    [SerializeField] GameObject code2;
+    [SerializeField] VideoPlayer code2;
+    [SerializeField] VideoPlayer unknownSamples;
     bool finish = false;
 
     [SerializeField] CinemachineVirtualCamera vcam1;
@@ -72,7 +74,11 @@ public class mission2Controller : MonoBehaviour
 
         if (GameManager.GameManagerInstance.samplesCounter == 4)
         {
-            code2.SetActive(true);
+            code2.gameObject.SetActive(true);
+            code2.Play();
+            unknownSamples.gameObject.SetActive(true);
+            unknownSamples.Play();
+            waitingVideo.SetActive(false);
             finish = true;
         }
     }
