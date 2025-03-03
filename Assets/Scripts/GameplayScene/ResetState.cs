@@ -83,6 +83,11 @@ public class ResetState : MonoBehaviour
             case 0:
                 crate1Anim.SetBool("open", true);
                 observationDoorAnim.SetBool("open", true);
+                Light[] lights = Resources.FindObjectsOfTypeAll<Light>();
+                foreach (Light light in lights)
+                {
+                    light.gameObject.SetActive(true);
+                }
                 break;
             case 1:
                 crate2Anim.SetBool("open", true);

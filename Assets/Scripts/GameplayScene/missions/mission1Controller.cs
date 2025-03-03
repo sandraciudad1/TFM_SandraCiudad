@@ -167,7 +167,7 @@ public class mission1Controller : MonoBehaviour
         }
     }
 
-    // Activates all objects in the scene with the "light" tag
+    // Activates all light objects in the scene 
     void ActivateAllLights()
     {
         Light[] lights = Resources.FindObjectsOfTypeAll<Light>();
