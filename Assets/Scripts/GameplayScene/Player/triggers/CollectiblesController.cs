@@ -12,6 +12,7 @@ public class CollectiblesController : MonoBehaviour
     [SerializeField] GameObject sample2;
     [SerializeField] GameObject sample3;
     [SerializeField] GameObject sample4;
+    [SerializeField] GameObject spannerwrench;
 
 
     // records
@@ -41,7 +42,7 @@ public class CollectiblesController : MonoBehaviour
                 canAddToInventory(other, "sample2", 2, sample2);
                 canAddToInventory(other, "sample3", 3, sample3);
                 canAddToInventory(other, "sample4", 4, sample4);
-
+                canAddToInventory(other, "spannerwrench", 5, spannerwrench);
             }
         }
 

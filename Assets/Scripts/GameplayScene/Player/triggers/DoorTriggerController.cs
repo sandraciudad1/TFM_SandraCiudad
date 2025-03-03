@@ -120,12 +120,16 @@ public class DoorTriggerController : MonoBehaviour
             }
         }
 
+        // crowbar
         allowCollectObject(doorsOpen[1], 0);
-
+        // samples: 1, 2, 3, 4
         allowCollectObject(doorsOpen[0], 1);
         allowCollectObject(doorsOpen[3], 2);
         allowCollectObject(doorsOpen[7], 3);
         allowCollectObject(doorsOpen[10], 4);
+        // spannerwrench
+        allowCollectObject(doorsOpen[9], 5);
+
     }
 
     void allowCollectObject(bool isOpen, int index)
