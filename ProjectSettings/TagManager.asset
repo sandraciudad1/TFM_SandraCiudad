@@ -21,6 +21,7 @@ TagManager:
   - door9
   - analyticalInstrument
   - observationDoor
+  - modularPipes
   layers:
   - Default
   - TransparentFX
