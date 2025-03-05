@@ -11,10 +11,11 @@ public class mission3Controller : MonoBehaviour
     CharacterController cc;
     PlayerMovement playerMov;
     Vector3 firstPos = new Vector3(88.028f, 30.74504f, 62.476f);
-    Vector3 secondPos = new Vector3();
-    Vector3 thirdPos = new Vector3();
+    Vector3 secondPos = new Vector3(88.028f, 30.74504f, 60.484f);
+    Vector3 thirdPos = new Vector3(88.028f, 30.74504f, 59.8f);
     Quaternion playerRot = Quaternion.Euler(new Vector3(0f, 90f, 0f));
     bool change = false;
+    bool updatePos = false;
 
     [SerializeField] GameObject spannerwrench;
     [SerializeField] GameObject letterX;
@@ -22,6 +23,8 @@ public class mission3Controller : MonoBehaviour
 
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam4;
+    [SerializeField] CinemachineVirtualCamera vcam5;
+    [SerializeField] CinemachineVirtualCamera vcam6;
 
     [SerializeField] GameObject gradientBg;
     [SerializeField] RectTransform gradient;
@@ -31,11 +34,19 @@ public class mission3Controller : MonoBehaviour
     bool movingRight = true;
     bool stopped = false;
     bool start = false;
+    Vector3 initialArrowPos;
+    static float counter = 3;
+    int solved = 0;
 
+    [SerializeField] GameObject smoke1;
+    [SerializeField] GameObject smoke2;
+    [SerializeField] GameObject smoke3;
+    [SerializeField] GameObject smoke4;
 
     void Start()
     {
-        SwapCameras(1, 0);
+        initialArrowPos = arrow.transform.position;
+        SwapCameras(1, 0, 0, 0);
         playerAnim = player.GetComponent<Animator>();
         cc = player.GetComponent<CharacterController>();
         playerMov = player.GetComponent<PlayerMovement>();
@@ -44,23 +55,6 @@ public class mission3Controller : MonoBehaviour
         
     }
 
-    
-    void Update()
-    {
-        Debug.Log(arrow.transform.position);
-        if (start && !stopped)
-        {
-            moveArrow();
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                checkValue(arrow.transform.position.x);
-                stopped = true;
-            }
-        }
-    }
-
-
     void calculateLimits()
     {
         float halfWidth = gradient.rect.width / 2f;
@@ -68,29 +62,103 @@ public class mission3Controller : MonoBehaviour
         maxX = gradient.position.x + halfWidth - 20f;
     }
 
-    void checkValue(float value)
+    void Update()
     {
-        if(value <= 128.38f) //rojo izq
+        if (start && !stopped)
         {
-            // quitar vida y repetir
-        } 
-        else if (value > 128.38f && value <= 296.25f) // amarillo izq
+            moveArrow();
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                counter -= checkValue(arrow.transform.position.x);
+
+                if (counter <= 0)
+                {
+                    solved++;
+                    gradientBg.SetActive(false);
+                    counter = 3;
+                    resetValues();
+                    
+                }
+                stopped = true;
+            }
+        }
+
+        if (solved == 1 && !updatePos)
         {
-            // quitar vida y dejar un poco humo
+            player.transform.position = secondPos;
+            SwapCameras(0, 0, 1, 0);
+            start = true;
+            updatePos = true;
         } 
-        else if (value > 296.25f && value < 493.75f) // verde
+        else if (solved == 2 && !updatePos)
+        {
+            player.transform.position = thirdPos;
+            SwapCameras(0, 0, 0, 1);
+            start = true;
+            updatePos = true;
+        } 
+        else if (solved == 3 && !updatePos)
+        {
+            SwapCameras(1, 0, 0, 0);
+            playerMov.canMove = true;
+            cc.enabled = true;
+            updatePos = true;
+        }
+    }
+
+    float checkValue(float value)
+    {
+        if (value > 296.25f && value < 493.75f) // verde
         {
             // hacer animacion de apretar y se corta el humo
-            playerAnim.SetBool("wrench", true);
+            updateSmoke(0.1f);
+            return 1;  
+        }
+        else if ((value > 128.38f && value <= 296.25f) || (value >= 493.75f && value < 661.63f)) // amarillo 
+        {
+            // quitar vida y decrementar en 0.5
+            updateSmoke(0.05f);
+            return 0.5f;
+        }
+        else // rojo
+        {
+            StartCoroutine(waitToReset());
+            return 0;
+
+        }
+    }
+
+    void updateSmoke(float value)
+    {
+        playerAnim.SetBool("wrench", true);
+        StartCoroutine(waitUntilFinishAnim());
+        if (solved == 0)
+        {
+            smoke1.transform.localScale -= new Vector3(value, value, value);
         } 
-        else if (value >= 493.75f && value < 661.63f) // amarillo der
+        else if (solved == 1)
         {
-            // quitar vida y dejar un poco humo
-        }
-        else if (value >= 661.63f) // rojo der
+            smoke2.transform.localScale -= new Vector3(value, value, value);
+            smoke3.transform.localScale -= new Vector3(value, value, value);
+        } else if (solved == 2)
         {
-            // quitar vida y repetir
+            smoke4.transform.localScale -= new Vector3(value, value, value);
         }
+        
+    }
+
+    IEnumerator waitUntilFinishAnim()
+    {
+        yield return new WaitForSeconds(9.1f);
+        StartCoroutine(waitToReset());
+    }
+
+    IEnumerator waitToReset()
+    {
+        resetValues();
+        yield return new WaitForSeconds(0.5f);
+        start = true;
     }
 
     void moveArrow()
@@ -109,6 +177,15 @@ public class mission3Controller : MonoBehaviour
             if (arrow.transform.position.x <= minX)
                 movingRight = true;
         }
+    }
+
+    void resetValues()
+    {
+        start = false;
+        stopped = false;
+        arrow.transform.position = initialArrowPos;
+        
+        updatePos = false;
     }
 
     // Shows 'X' when near modular pipes.
@@ -134,23 +211,20 @@ public class mission3Controller : MonoBehaviour
     {
         if (other.gameObject.CompareTag("modularPipes") && spannerwrench.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
         {
-            // cambio de camaras?
-            SwapCameras(0, 1);
-            // se coloca al personaje en la primera llave 
+            SwapCameras(0, 1, 0, 0);
             playerMov.canMove = false;
             cc.enabled = false;
             player.transform.position = firstPos;
             player.transform.rotation = playerRot;
             if (player.transform.position == firstPos && !change)
             {
-                // barra que oscila de uin lado a otro antes de activar animacion
                 gradientBg.SetActive(true);
                 start = true;
                 //playerAnim.SetBool("wrench", true);
                 change = true;
             }
             
-            //cc.enabled = true;
+            //
             // se muestra 3 veces la barra
             //desactivar el character controller par acolocarlo bien
             // por cada vez que el usuario ajuste bien la presio se muestra la animacion de apretar
@@ -160,9 +234,11 @@ public class mission3Controller : MonoBehaviour
 
 
     // Swap between virtual cameras
-    void SwapCameras(int priority1, int priority2)
+    void SwapCameras(int p1, int p2, int p3, int p4)
     {
-        vcam1.Priority = priority1;
-        vcam4.Priority = priority2;
+        vcam1.Priority = p1;
+        vcam4.Priority = p2;
+        vcam5.Priority = p3;
+        vcam6.Priority = p4;
     }
 }
