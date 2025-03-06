@@ -22,6 +22,7 @@ TagManager:
   - analyticalInstrument
   - observationDoor
   - modularPipes
+  - scifi_terminal
   layers:
   - Default
   - TransparentFX
