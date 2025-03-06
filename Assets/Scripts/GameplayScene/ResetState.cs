@@ -37,6 +37,7 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject inventory;
 
     // other objects
+    [SerializeField] GameObject code3;
     [SerializeField] GameObject smoke1;
     [SerializeField] GameObject smoke2;
     [SerializeField] GameObject smoke3;
@@ -92,6 +93,7 @@ public class ResetState : MonoBehaviour
         {
             case 0:
                 crate1Anim.SetBool("open", true);
+                //activar el video del codigo
                 observationDoorAnim.SetBool("open", true);
                 Light[] lights = Resources.FindObjectsOfTypeAll<Light>();
                 foreach (Light light in lights)
@@ -101,9 +103,11 @@ public class ResetState : MonoBehaviour
                 break;
             case 1:
                 crate2Anim.SetBool("open", true);
+                //activar el video del codigo
                 break;
             case 2:
                 crate3Anim.SetBool("open", true);
+                code3.SetActive(true);
                 smoke1.SetActive(false);
                 smoke2.SetActive(false);
                 smoke3.SetActive(false);

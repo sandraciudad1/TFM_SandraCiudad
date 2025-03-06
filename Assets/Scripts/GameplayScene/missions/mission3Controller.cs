@@ -43,6 +43,7 @@ public class mission3Controller : MonoBehaviour
     [SerializeField] GameObject smoke3;
     [SerializeField] GameObject smoke4;
 
+    [SerializeField] GameObject code3;
     [SerializeField] GameObject spaceKeyInfo;
     CanvasGroup canvasGroup;
 
@@ -104,6 +105,7 @@ public class mission3Controller : MonoBehaviour
         else if (solved == 3 && !updatePos)
         {
             gradientBg.SetActive(false);
+            code3.SetActive(true);
             SwapCameras(1, 0, 0, 0);
             playerMov.canMove = true;
             cc.enabled = true;
