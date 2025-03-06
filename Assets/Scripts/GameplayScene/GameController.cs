@@ -23,6 +23,7 @@ public class GameController : MonoBehaviour
         
     }
 
+    // Waits before showing the initial info.
     IEnumerator waitToShow()
     {
         yield return new WaitForSeconds(1.5f);
@@ -31,6 +32,7 @@ public class GameController : MonoBehaviour
         StartCoroutine(FadeOutCoroutine());
     }
 
+    // Fades out the initial info over time.
     IEnumerator FadeOutCoroutine()
     {
         float duration = 2f;

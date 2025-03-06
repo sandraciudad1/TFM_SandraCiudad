@@ -37,7 +37,7 @@ public class pinCodeController : MonoBehaviour
 
     Animator[] crateAnimators;
 
-    // Initializes the correct codes and gets the crate animator
+    // Initializes the correct codes and gets the crate animator.
     void Start()
     {
         correctCodes = new string[] { "0000", "6375", "4360", "0000", "1235", "0000", "0000", "0000", "0000", "0000" };
@@ -55,7 +55,7 @@ public class pinCodeController : MonoBehaviour
         crateAnimators = new Animator[] { crateAnim4, crateAnim3, crateAnim2, crateAnim5, crateAnim1, crateAnim6, crateAnim7, crateAnim8, crateAnim9, crateAnim10 };
     }
 
-    // Handles user input for the code entry
+    // Handles user input for the code entry.
     void Update()
     {
         if (canCheck)
@@ -79,7 +79,7 @@ public class pinCodeController : MonoBehaviour
         }
     }
 
-    // Enables code checking and sets the correct code
+    // Enables code checking and sets the correct code.
     public void checkCode(int id)
     {
         canCheck = true;
@@ -87,7 +87,7 @@ public class pinCodeController : MonoBehaviour
         correctCode = correctCodes[index].ToString();
     }
 
-    // Compares user input with the correct code
+    // Compares user input with the correct code.
     private void CheckCode()
     {
         if (userInput == correctCode)
@@ -101,14 +101,14 @@ public class pinCodeController : MonoBehaviour
         }
     }
 
-    //
+    // Resets the user input field and clears the displayed text.
     public void clearInput()
     {
         userInput = "";
         inputText.text = userInput;
     }
 
-    // Executes the action when the correct code is entered
+    // Executes the action when the correct code is entered.
     public void correctCodeAction()
     {
         GameManager.GameManagerInstance.LoadProgress();

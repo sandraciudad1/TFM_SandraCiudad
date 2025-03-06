@@ -96,7 +96,7 @@ public class inventoryController : MonoBehaviour
     [SerializeField] GameObject spannerwrench;
     GameObject[] collectable3dObjects = new GameObject[15];
 
-    // Initializes inventory variables
+    // Initializes inventory variables.
     void Start()
     {
         loadProgress();
@@ -120,7 +120,7 @@ public class inventoryController : MonoBehaviour
         resetState();
     }
 
-    // Handles inventory visibility and section navigation
+    // Handles inventory visibility and section navigation.
     void Update()
     {
         if (inventoryBg.activeInHierarchy)
@@ -161,7 +161,7 @@ public class inventoryController : MonoBehaviour
         }
     }
 
-    // Handles selection between records and objects sections
+    // Handles selection between records and objects sections.
     void HandleBubbleSelection()
     {
         if (Input.GetKeyDown(KeyCode.LeftArrow)) selectedBubble = 0;
@@ -201,7 +201,7 @@ public class inventoryController : MonoBehaviour
         }
     }
 
-    // Sets the initial selection for a section
+    // Sets the initial selection for a section.
     void SetInitialSelection(GameObject[] bubbles)
     {
         selectedRow = 0;
@@ -209,7 +209,7 @@ public class inventoryController : MonoBehaviour
         UpdateBubbleSelection(bubbles);
     }
 
-    // Updates the selection visual effect
+    // Updates the selection visual effect.
     void UpdateBubbleSelection(GameObject[] bubbles)
     {
         foreach (var bubble in bubbles)
@@ -226,7 +226,7 @@ public class inventoryController : MonoBehaviour
         }
     }
 
-    // Handles navigation inside a section
+    // Handles navigation inside a section.
     void HandleItemSelection()
     {
         GameObject[] currentBubbles;
@@ -275,7 +275,7 @@ public class inventoryController : MonoBehaviour
         }
     }
 
-    // Moves selection inside the grid 
+    // Moves selection inside the grid.
     void MoveSelection(int rowChange, int colChange, bool[] unlockedItems)
     {
         int newRow = Mathf.Clamp(selectedRow + rowChange, 0, rows - 1);
@@ -289,14 +289,14 @@ public class inventoryController : MonoBehaviour
         }
     }
 
-    // Checks if an item is unlocked
+    // Checks if an item is unlocked.
     bool IsUnlocked(int index)
     {
         return (currentContainer == recordsContainer) ? unlockedRecords[index] : unlockedObjects[index];
     }
     
 
-    // Adds an item to the inventory
+    // Adds an item to the inventory.
     public void addItem(int index, int id)
     {
         itemsNames[index] = addItemNames(id);
@@ -306,7 +306,7 @@ public class inventoryController : MonoBehaviour
         unlockedObjects[index] = true; 
     }
 
-    // Adds a record to the inventory
+    // Adds a record to the inventory.
     public void addRecord(int index, int id)
     {
         collectableRecordsImgs[index].sprite = recordsSprites[id];
@@ -314,6 +314,7 @@ public class inventoryController : MonoBehaviour
         unlockedRecords[index] = true;
     }
 
+    // Loads progress and updates collected objects.
     void loadProgress()
     {
         GameManager.GameManagerInstance.LoadProgress();
@@ -326,6 +327,7 @@ public class inventoryController : MonoBehaviour
         }
     }
 
+    // Returns the name of an item by its ID.
     string addItemNames(int id)
     {
         switch (id)
@@ -340,6 +342,7 @@ public class inventoryController : MonoBehaviour
         }
     }
 
+    // Returns the 3D object corresponding to an item ID.
     GameObject add3DItems(int id)
     {
         switch (id)
@@ -354,7 +357,7 @@ public class inventoryController : MonoBehaviour
         }
     }
 
-    // Resets inventory previous state
+    // Resets inventory previous state.
     void resetState()
     {
         GameManager.GameManagerInstance.LoadProgress();

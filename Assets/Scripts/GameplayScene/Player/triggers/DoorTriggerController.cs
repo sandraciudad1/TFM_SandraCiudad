@@ -62,7 +62,7 @@ public class DoorTriggerController : MonoBehaviour
     bool[] setArrayUnlocked = new bool[15];
     public bool swichtInteraction = false;
 
-    // Initialize arrays and get door animators
+    // Initialize arrays and get door animators.
     void Start()
     {
         SwapCameras(1, 0);
@@ -84,7 +84,7 @@ public class DoorTriggerController : MonoBehaviour
         playerAnimator = player.GetComponent<Animator>();
     }
 
-    // Toggle door animation when pressing 'E'
+    // Toggle door animation when pressing 'E'.
     void Update()
     {
         if (doorNum >= 0)  
@@ -132,6 +132,7 @@ public class DoorTriggerController : MonoBehaviour
 
     }
 
+    // Unlocks and saves an object if conditions are met.
     void allowCollectObject(bool isOpen, int index)
     {
         if(isOpen && !setArrayUnlocked[index])
@@ -142,7 +143,7 @@ public class DoorTriggerController : MonoBehaviour
         }
     }
 
-    // Doors and players animations in mission 1
+    // Doors and players animations in mission 1.
     IEnumerator initMission1()
     {
         yield return new WaitForSeconds(0.1f);
@@ -160,7 +161,7 @@ public class DoorTriggerController : MonoBehaviour
         collider.enabled = true;
     }
 
-    // Desactivate switchboard animator and enable switchboard player interactions
+    // Desactivate switchboard animator and enable switchboard player interactions.
     IEnumerator swichtboardInteraction()
     {
         yield return new WaitForSeconds(3.2f);
@@ -169,7 +170,7 @@ public class DoorTriggerController : MonoBehaviour
         swichtInteraction = true;
     }
 
-    // Change player position and close switchboard door
+    // Change player position and close switchboard door.
     public void closeSwitchboardDoor(int index)
     {
         player.transform.position = new Vector3(151.4594f, 25.74516f, 52.76605f);
@@ -184,14 +185,14 @@ public class DoorTriggerController : MonoBehaviour
         anim.SetBool("open", false);
     }
 
-    // Swap between virtual cameras
+    // Swap between virtual cameras.
     void SwapCameras(int priority1, int priority2)
     {
         vcam1.Priority = priority1;
         vcam2.Priority = priority2;
     }
 
-    // Detects when the player enters a door trigger
+    // Detects when the player enters a door trigger.
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("door1"))
@@ -251,7 +252,7 @@ public class DoorTriggerController : MonoBehaviour
         }
     }
 
-    // Activates the corresponding door image
+    // Activates the corresponding door image.
     void activateImg(int index)
     {
         for (int i = 0; i < doorImages.Length; i++)
@@ -267,7 +268,7 @@ public class DoorTriggerController : MonoBehaviour
         }
     }
 
-    // Detects when the player exits a door trigger
+    // Detects when the player exits a door trigger.
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("door1"))
@@ -317,7 +318,7 @@ public class DoorTriggerController : MonoBehaviour
         doorNum = -1;
     }
 
-    // Deactivates the corresponding door image
+    // Deactivates the corresponding door image.
     void desactivateImg(int index)
     {
         doorImages[index].gameObject.SetActive(false);

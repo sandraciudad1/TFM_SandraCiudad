@@ -37,7 +37,7 @@ public class mission1Controller : MonoBehaviour
 
     [SerializeField] VideoPlayer code1;
 
-    // Initializes variables and sets up the button states
+    // Initializes variables and sets up the button states.
     void Start()
     {
         doorController = triggerDetector.GetComponent<DoorTriggerController>();
@@ -56,7 +56,7 @@ public class mission1Controller : MonoBehaviour
         audioDoor = observationDoor.GetComponent<AudioSource>();
     }
 
-    // Checks for player interaction with the switchboard
+    // Checks for player interaction with the switchboard.
     void Update()
     {
         if (doorController != null && doorController.swichtInteraction)
@@ -69,7 +69,7 @@ public class mission1Controller : MonoBehaviour
         }
     }
 
-    // Locks player movement and sets a fixed position and rotation
+    // Locks player movement and sets a fixed position and rotation.
     void lockPlayerMov()
     {
         if (playerMov != null)
@@ -88,7 +88,7 @@ public class mission1Controller : MonoBehaviour
         lockMov = true;
     }
 
-    // Checks for key presses to change button states
+    // Checks for key presses to change button states.
     void checkButtons()
     {
         if (Input.GetKeyDown(KeyCode.X))
@@ -117,7 +117,7 @@ public class mission1Controller : MonoBehaviour
         }
     }
 
-    // Changes the state of a button and rotates it accordingly
+    // Changes the state of a button and rotates it accordingly.
     void changeState(int index)
     {
         swichtboardState[index] = !swichtboardState[index];
@@ -135,7 +135,7 @@ public class mission1Controller : MonoBehaviour
         checkWinCondition();
     }
 
-    // Rotates a button smoothly to a target rotation
+    // Rotates a button smoothly to a target rotation.
     IEnumerator RotateButton(int index, Quaternion targetRot)
     {
         Quaternion startRot = buttons[index].transform.rotation;
@@ -148,7 +148,7 @@ public class mission1Controller : MonoBehaviour
         buttons[index].transform.rotation = targetRot;
     }
 
-    // Checks if all buttons are pressed and triggers the next phase
+    // Checks if all buttons are pressed and triggers the next phase.
     void checkWinCondition()
     {
         if (!firstPhaseComplete && swichtboardState.All(state => state == false))
@@ -167,7 +167,7 @@ public class mission1Controller : MonoBehaviour
         }
     }
 
-    // Activates all light objects in the scene 
+    // Activates all light objects in the scene.
     void ActivateAllLights()
     {
         Light[] lights = Resources.FindObjectsOfTypeAll<Light>();
@@ -177,7 +177,7 @@ public class mission1Controller : MonoBehaviour
         }
     }
 
-    // Waits before unlocking player movement again
+    // Waits before unlocking player movement again.
     IEnumerator waitToUnlock()
     {
         yield return new WaitForSeconds(3f);

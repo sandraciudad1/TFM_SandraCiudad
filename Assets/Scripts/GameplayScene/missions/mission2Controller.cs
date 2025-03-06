@@ -83,7 +83,7 @@ public class mission2Controller : MonoBehaviour
         }
     }
 
-    // Shows 'X' when near an analytical instrument
+    // Shows 'X' when near an analytical instrument.
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("analyticalInstrument") && !finish)
@@ -252,7 +252,7 @@ public class mission2Controller : MonoBehaviour
         else { return -1; }
     }
 
-    // Swap between virtual cameras
+    // Swap between virtual cameras.
     void SwapCameras(int priority1, int priority2)
     {
         vcam1.Priority = priority1;

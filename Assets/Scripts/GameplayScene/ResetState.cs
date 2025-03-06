@@ -44,6 +44,7 @@ public class ResetState : MonoBehaviour
 
     GameObject[] inventoryRecords = new GameObject[10];
 
+    // Initializes inventory and updates unlocked objects and records.
     void Start()
     {
 
@@ -72,6 +73,7 @@ public class ResetState : MonoBehaviour
         }
     }
 
+    // Assigns Animator components to crates and doors.
     void initializeAnimators()
     {
         // crates Animators
@@ -82,7 +84,8 @@ public class ResetState : MonoBehaviour
         // doors Animators
         observationDoorAnim = observationDoor.GetComponent<Animator>();
     }
-    
+
+    // Executes actions when an object is collected.
     void additionalActions(int index)
     {
         switch (index)
@@ -147,7 +150,7 @@ public class ResetState : MonoBehaviour
         }
     }
 
-
+    // Manages record visibility based on unlocked items.
     void checkRecordsIndex(int index)
     {
         switch (index)
@@ -187,5 +190,4 @@ public class ResetState : MonoBehaviour
                 break;
         }
     }
-
 }

@@ -26,12 +26,13 @@ public class CollectiblesController : MonoBehaviour
     pinCodeController codeController;
 
 
+    // Initializes the pin code controller reference.
     void Start()
     {
         codeController = missionsControllers.GetComponent<pinCodeController>();
     }
 
-    // Handles object collection when the player interacts with an object within the trigger zone
+    // Handles object collection when the player interacts with an object within the trigger zone.
     private void OnTriggerStay(Collider other)
     {
         if (Input.GetKeyDown(KeyCode.R))
@@ -49,7 +50,6 @@ public class CollectiblesController : MonoBehaviour
 
         if (codeController != null && other.CompareTag("record"))
         {
-            // first record: 5 (index 4)
             if (other.name.Equals("record5"))
             {
                 recordsManager(5, record5);
@@ -65,6 +65,7 @@ public class CollectiblesController : MonoBehaviour
         } 
     }
 
+    // Manages records collection and pin code validation.
     void recordsManager(int id, GameObject record)
     {
         int index = id - 1;
@@ -84,6 +85,7 @@ public class CollectiblesController : MonoBehaviour
         }
     }
 
+    // Checks if an object can be added to the inventory.
     void canAddToInventory(Collider other, string name, int index, GameObject gameobject)
     {
         GameManager.GameManagerInstance.LoadProgress();
@@ -94,6 +96,7 @@ public class CollectiblesController : MonoBehaviour
         }
     }
 
+    // Clears pin code input when the player enters a record trigger.
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("record"))
@@ -102,7 +105,7 @@ public class CollectiblesController : MonoBehaviour
         }
     }
 
-    // Hides pin code canvas whan player exits record trigger
+    // Hides pin code canvas whan player exits record trigger.
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("record"))
@@ -111,7 +114,7 @@ public class CollectiblesController : MonoBehaviour
         }
     }
 
-    // Adds collected objects or records to the inventory
+    // Adds collected objects or records to the inventory.
     public void addToInventory(int type, int id)
     {
         GameManager.GameManagerInstance.LoadProgress();

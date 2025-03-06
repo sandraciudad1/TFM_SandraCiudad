@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
 
     public int correctCodeCounter;
 
-    // Ensures only one instance of GameManager exists (Singleton pattern)
+    // Ensures only one instance of GameManager exists (Singleton pattern).
     private void Awake()
     {
         if (GameManagerInstance == null)
@@ -30,13 +30,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Loads saved progress when the game starts
+    // Loads saved progress when the game starts.
     private void Start()
     {
         LoadProgress();
     }
 
-    // Saves game progress to PlayerPrefs
+    // Saves game progress to PlayerPrefs.
     public void SaveProgress()
     {
         PlayerPrefs.SetInt("objectIndex", objectIndex);
@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    // Loads game progress from PlayerPrefs
+    // Loads game progress from PlayerPrefs.
     public void LoadProgress()
     {
         objectIndex = PlayerPrefs.GetInt("objectIndex", 0);
@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
         correctCodeCounter = PlayerPrefs.GetInt("correctCodeCounter", 0);
     }
 
-    // Returns the value of the specified array at the given index
+    // Returns the value of the specified array at the given index.
     public int GetArrayUnlocked(string arrayName, int index)
     {
         int[] array = checkArrayType(arrayName);
@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour
         return 0; 
     }
 
-    // Sets the value of the specified array at the given index and saves it
+    // Sets the value of the specified array at the given index and saves it.
     public void SetArrayUnlocked(string arrayName, int index, int value)
     {
         int[] array = checkArrayType(arrayName);
@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // Returns the appropriate array based on the array name
+    // Returns the appropriate array based on the array name.
     int[] checkArrayType(string arrayName)
     {
         int[] array = null;
