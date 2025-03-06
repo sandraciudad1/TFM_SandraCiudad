@@ -129,14 +129,18 @@ public class DoorTriggerController : MonoBehaviour
         allowCollectObject(doorsOpen[10], 4);
         // spannerwrench
         allowCollectObject(doorsOpen[9], 5);
+        // securityCard
+        allowCollectObject(doorsOpen[8], 6);
+
 
     }
 
     // Unlocks and saves an object if conditions are met.
     void allowCollectObject(bool isOpen, int index)
     {
-        if(isOpen && !setArrayUnlocked[index])
+        if(isOpen && !setArrayUnlocked[index] && Input.GetKeyDown(KeyCode.R))
         {
+            Debug.Log("item collected");
             GameManager.GameManagerInstance.SetArrayUnlocked("objects", GameManager.GameManagerInstance.objectIndex, 1);
             GameManager.GameManagerInstance.SaveProgress();
             setArrayUnlocked[index] = true;

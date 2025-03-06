@@ -11,20 +11,24 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject sample3;
     [SerializeField] GameObject sample4;
     [SerializeField] GameObject spannerwrench;
+    [SerializeField] GameObject securityCard;
     GameObject[] inventoryObjects = new GameObject[15];
 
     // records
     [SerializeField] GameObject record5;
     [SerializeField] GameObject record3;
     [SerializeField] GameObject record2;
+    [SerializeField] GameObject record1;
 
     // crates
     [SerializeField] GameObject crate1;
     [SerializeField] GameObject crate2;
     [SerializeField] GameObject crate3;
+    [SerializeField] GameObject crate4;
     Animator crate1Anim;
     Animator crate2Anim;
     Animator crate3Anim;
+    Animator crate4Anim;
 
     // doors
     [SerializeField] GameObject observationDoor;
@@ -49,7 +53,7 @@ public class ResetState : MonoBehaviour
     void Start()
     {
 
-        inventoryObjects = new GameObject[] { crowbar, sample1, sample2, sample3, sample4, spannerwrench, null, null, null, null, null, null, null, null, null };
+        inventoryObjects = new GameObject[] { crowbar, sample1, sample2, sample3, sample4, spannerwrench, securityCard, null, null, null, null, null, null, null, null };
         GameManager.GameManagerInstance.LoadProgress();
         objectsUnlocked = GameManager.GameManagerInstance.objectsUnlocked;
         recordsUnlocked = GameManager.GameManagerInstance.recordsUnlocked;
@@ -81,6 +85,7 @@ public class ResetState : MonoBehaviour
         crate1Anim = crate1.GetComponent<Animator>();
         crate2Anim = crate2.GetComponent<Animator>();
         crate3Anim = crate3.GetComponent<Animator>();
+        crate4Anim = crate4.GetComponent<Animator>();
 
         // doors Animators
         observationDoorAnim = observationDoor.GetComponent<Animator>();
@@ -91,7 +96,7 @@ public class ResetState : MonoBehaviour
     {
         switch (index)
         {
-            case 0:
+            case 0: // crowbar
                 crate1Anim.SetBool("open", true);
                 //activar el video del codigo
                 observationDoorAnim.SetBool("open", true);
@@ -101,11 +106,20 @@ public class ResetState : MonoBehaviour
                     light.gameObject.SetActive(true);
                 }
                 break;
-            case 1:
+            case 1: //muestra1
                 crate2Anim.SetBool("open", true);
                 //activar el video del codigo
                 break;
-            case 2:
+            case 2: //muestra 2
+                
+                break;
+            case 3: // muestra 3
+
+                break;
+            case 4: // muestra 4
+
+                break;
+            case 5: // llave inglesa
                 crate3Anim.SetBool("open", true);
                 code3.SetActive(true);
                 smoke1.SetActive(false);
@@ -113,16 +127,7 @@ public class ResetState : MonoBehaviour
                 smoke3.SetActive(false);
                 smoke4.SetActive(false);
                 break;
-            /*case 3:
-
-                break;
-            case 4:
-
-                break;
-            case 5:
-
-                break;
-            case 6:
+            /*case 6: // tarjeta de seguridad
 
                 break;
             case 7:

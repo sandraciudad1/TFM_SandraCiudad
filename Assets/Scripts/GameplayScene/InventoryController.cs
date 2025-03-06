@@ -52,6 +52,7 @@ public class inventoryController : MonoBehaviour
     [SerializeField] Sprite sample3Sprite;
     [SerializeField] Sprite sample4Sprite;
     [SerializeField] Sprite spannerwrenchSprite;
+    [SerializeField] Sprite securityCardSprite;
     Sprite[] objectsSprites;
 
     // records
@@ -94,6 +95,7 @@ public class inventoryController : MonoBehaviour
     [SerializeField] GameObject sample3;
     [SerializeField] GameObject sample4;
     [SerializeField] GameObject spannerwrench;
+    [SerializeField] GameObject securityCard;
     GameObject[] collectable3dObjects = new GameObject[15];
 
     // Initializes inventory variables.
@@ -107,7 +109,7 @@ public class inventoryController : MonoBehaviour
         objectsContainer.SetActive(false);
 
         collectableItemsImgs = new Image[] { object1, object2, object3, object4, object5, object6, object7, object8, object9, object10, object11, object12, object13, object14, object15 };
-        objectsSprites = new Sprite[] { crowbarSprite, sample1Sprite, sample2Sprite, sample3Sprite, sample4Sprite, spannerwrenchSprite };
+        objectsSprites = new Sprite[] { crowbarSprite, sample1Sprite, sample2Sprite, sample3Sprite, sample4Sprite, spannerwrenchSprite, securityCardSprite };
         collectableRecordsImgs = new Image[] { record1Img, record2Img, record3Img, record4Img, record5Img, record6Img, record7Img, record8Img, record9Img, record10Img };
         recordsSprites = new Sprite[] { record1Sprite, record2Sprite, record3Sprite, record4Sprite, record5Sprite, record6Sprite, record7Sprite, record8Sprite, record9Sprite, record10Sprite };
         recordsNames = new string[] { "Grabacion 5: Sala de Comunicaciones", "Grabacion 2: Laboratorio cientifico", "Grabacion 3: Sala de Comunicaciones", "Grabacion 4: Zona de Inteligencia Artificial",
@@ -338,6 +340,7 @@ public class inventoryController : MonoBehaviour
             case 3: return "Muestra 3";
             case 4: return "Muestra 4";
             case 5: return "Llave inglesa";
+            case 6: return "Tarjeta de Seguridad";
             default: return "";
         }
     }
@@ -353,6 +356,7 @@ public class inventoryController : MonoBehaviour
             case 3: return sample3;
             case 4: return sample4;
             case 5: return spannerwrench;
+            case 6: return securityCard;
             default: return null;
         }
     }

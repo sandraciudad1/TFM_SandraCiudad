@@ -13,12 +13,13 @@ public class CollectiblesController : MonoBehaviour
     [SerializeField] GameObject sample3;
     [SerializeField] GameObject sample4;
     [SerializeField] GameObject spannerwrench;
-
+    [SerializeField] GameObject securityCard;
 
     // records
     [SerializeField] GameObject record5;
     [SerializeField] GameObject record3;
     [SerializeField] GameObject record2;
+    [SerializeField] GameObject record1;
 
     [SerializeField] GameObject pinCodeCanvas;
     [SerializeField] GameObject missionsControllers;
@@ -45,6 +46,7 @@ public class CollectiblesController : MonoBehaviour
                 canAddToInventory(other, "sample3", 3, sample3);
                 canAddToInventory(other, "sample4", 4, sample4);
                 canAddToInventory(other, "spannerwrench", 5, spannerwrench);
+                canAddToInventory(other, "securityCard", 6, securityCard);
             }
         }
 
@@ -61,6 +63,10 @@ public class CollectiblesController : MonoBehaviour
             else if (other.name.Equals("record2"))
             {
                 recordsManager(2, record2);
+            }
+            else if (other.name.Equals("record1"))
+            {
+                recordsManager(1, record1);
             }
         } 
     }
