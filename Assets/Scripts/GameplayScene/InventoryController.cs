@@ -110,7 +110,6 @@ public class inventoryController : MonoBehaviour
         objectsSprites = new Sprite[] { crowbarSprite, sample1Sprite, sample2Sprite, sample3Sprite, sample4Sprite, spannerwrenchSprite };
         collectableRecordsImgs = new Image[] { record1Img, record2Img, record3Img, record4Img, record5Img, record6Img, record7Img, record8Img, record9Img, record10Img };
         recordsSprites = new Sprite[] { record1Sprite, record2Sprite, record3Sprite, record4Sprite, record5Sprite, record6Sprite, record7Sprite, record8Sprite, record9Sprite, record10Sprite };
-        //itemsNames = new string[] { "Palanca", "Muestra 1", "Muestra 2", "Muestra 3", "Muestra 4", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20" };
         recordsNames = new string[] { "Grabacion 5: Sala de Comunicaciones", "Grabacion 2: Laboratorio cientifico", "Grabacion 3: Sala de Comunicaciones", "Grabacion 4: Zona de Inteligencia Artificial",
                                       "Grabacion 1: Zona de Observacion", "Grabacion 6: Zona de Despresurizacion", "Grabacion 7: Puente de Mando", "Grabacion 8: Bahía de Mantenimiento Tecnológico",
                                       "Grabacion 9: Pasillos Centrales", "Grabacion 10: Zona de Observacion" };

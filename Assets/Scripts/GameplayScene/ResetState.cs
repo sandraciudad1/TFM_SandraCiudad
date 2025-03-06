@@ -16,12 +16,15 @@ public class ResetState : MonoBehaviour
     // records
     [SerializeField] GameObject record5;
     [SerializeField] GameObject record3;
+    [SerializeField] GameObject record2;
 
     // crates
     [SerializeField] GameObject crate1;
     [SerializeField] GameObject crate2;
+    [SerializeField] GameObject crate3;
     Animator crate1Anim;
     Animator crate2Anim;
+    Animator crate3Anim;
 
     // doors
     [SerializeField] GameObject observationDoor;
@@ -33,20 +36,22 @@ public class ResetState : MonoBehaviour
     // inventory
     [SerializeField] GameObject inventory;
 
-    //[SerializeField] GameObject crowbarImg;
-    
+    // other objects
+    [SerializeField] GameObject smoke1;
+    [SerializeField] GameObject smoke2;
+    [SerializeField] GameObject smoke3;
+    [SerializeField] GameObject smoke4;
 
-    //[SerializeField] GameObject record5Img;
     GameObject[] inventoryRecords = new GameObject[10];
 
     void Start()
     {
+
         inventoryObjects = new GameObject[] { crowbar, sample1, sample2, sample3, sample4, spannerwrench, null, null, null, null, null, null, null, null, null };
         GameManager.GameManagerInstance.LoadProgress();
-
         objectsUnlocked = GameManager.GameManagerInstance.objectsUnlocked;
         recordsUnlocked = GameManager.GameManagerInstance.recordsUnlocked;
-
+        
         initializeAnimators();
 
         for (int i = 0; i < objectsUnlocked.Length; i++)
@@ -72,6 +77,7 @@ public class ResetState : MonoBehaviour
         // crates Animators
         crate1Anim = crate1.GetComponent<Animator>();
         crate2Anim = crate2.GetComponent<Animator>();
+        crate3Anim = crate3.GetComponent<Animator>();
 
         // doors Animators
         observationDoorAnim = observationDoor.GetComponent<Animator>();
@@ -93,10 +99,14 @@ public class ResetState : MonoBehaviour
             case 1:
                 crate2Anim.SetBool("open", true);
                 break;
-            /*case 2:
-
+            case 2:
+                crate3Anim.SetBool("open", true);
+                smoke1.SetActive(false);
+                smoke2.SetActive(false);
+                smoke3.SetActive(false);
+                smoke4.SetActive(false);
                 break;
-            case 3:
+            /*case 3:
 
                 break;
             case 4:
@@ -147,10 +157,10 @@ public class ResetState : MonoBehaviour
 
                 break;
             case 1:
-                
+                record2.SetActive(false);
                 break;
             case 2:
-
+                record3.SetActive(false);
                 break;
             case 3:
 

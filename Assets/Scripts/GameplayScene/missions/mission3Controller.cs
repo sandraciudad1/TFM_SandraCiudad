@@ -12,7 +12,7 @@ public class mission3Controller : MonoBehaviour
     PlayerMovement playerMov;
     Vector3 firstPos = new Vector3(88.10962f, 30.74504f, 62.43017f);
     Vector3 secondPos = new Vector3(87.97955f, 30.74504f, 60.40985f);
-    Vector3 thirdPos = new Vector3(87.49987f, 30.74504f, 57.9805f);
+    Vector3 thirdPos = new Vector3(87.49987f, 30.74504f, 58.16861f);
     Quaternion playerRot = Quaternion.Euler(new Vector3(0f, 90f, 0f));
     bool change = false;
     bool updatePos = false;
@@ -43,6 +43,10 @@ public class mission3Controller : MonoBehaviour
     [SerializeField] GameObject smoke3;
     [SerializeField] GameObject smoke4;
 
+    [SerializeField] GameObject spaceKeyInfo;
+    CanvasGroup canvasGroup;
+
+    // Initializes necessary components and calculates limits.
     void Start()
     {
         initialArrowPos = arrow.transform.position;
@@ -52,14 +56,16 @@ public class mission3Controller : MonoBehaviour
         playerMov = player.GetComponent<PlayerMovement>();
 
         calculateLimits();
-        
+        canvasGroup = spaceKeyInfo.GetComponent<CanvasGroup>();
     }
 
+    // Recalculates limits when rect transform changes.
     void OnRectTransformDimensionsChange()
     {
         calculateLimits();
     }
 
+    // Calculates the movement limits for the arrow.
     void calculateLimits()
     {
         float halfWidth = gradient.rect.width / 2f;
@@ -67,6 +73,7 @@ public class mission3Controller : MonoBehaviour
         maxX = halfWidth - 20f;
     }
 
+    // Updates game logic and checks input actions.
     void Update()
     {
         if (start && !stopped)
@@ -74,6 +81,7 @@ public class mission3Controller : MonoBehaviour
             moveArrow();
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                recalculatePlayerPos();
                 checkValue(arrow.transform.position.x);
                 stopped = true;
             }
@@ -103,21 +111,37 @@ public class mission3Controller : MonoBehaviour
         }
     }
 
-    
-    
+    // Recalculates player position based on solved state.
+    void recalculatePlayerPos()
+    {
+        if (solved == 0)
+        {
+            player.transform.position = firstPos;
+        } 
+        else if (solved == 1)
+        {
+            player.transform.position = secondPos;
+        } 
+        else if (solved == 2)
+        {
+            player.transform.position = thirdPos;
+        }
+    }
+
+    // Checks the arrow's value and updates game state.
     void checkValue(float value)
     {
-        if (value > 296.25f && value < 493.75f) // verde
+        if (value > 296.25f && value < 493.75f) 
         {
             updateSmoke(0.1f);
             counter -= 1;  
         }
-        else if ((value > 128.38f && value <= 296.25f) || (value >= 493.75f && value < 661.63f)) // amarillo 
+        else if ((value > 128.38f && value <= 296.25f) || (value >= 493.75f && value < 661.63f))
         {
             updateSmoke(0.05f);
             counter -= 0.5f;
         }
-        else if(value <= 128.38f || value >= 661.63f) // rojo
+        else if(value <= 128.38f || value >= 661.63f) 
         {
             StartCoroutine(waitToReset());
         }
@@ -129,6 +153,7 @@ public class mission3Controller : MonoBehaviour
         }
     }
 
+    // Waits for a set duration before changing state.
     IEnumerator waitUntilChange()
     {
         yield return new WaitForSeconds(10f);
@@ -139,6 +164,7 @@ public class mission3Controller : MonoBehaviour
         start = true;
     }
 
+    // Updates smoke effect based on the value passed.
     void updateSmoke(float value)
     {
         playerAnim.SetBool("wrench", true);
@@ -158,12 +184,14 @@ public class mission3Controller : MonoBehaviour
         }
     }
 
+    // Waits for animation to finish before resetting.
     IEnumerator waitUntilFinishAnim()
     {
         yield return new WaitForSeconds(9.1f);
         StartCoroutine(waitToReset());
     }
 
+    // Waits a short time before resetting values.
     IEnumerator waitToReset()
     {
         yield return new WaitForSeconds(0.5f);
@@ -171,6 +199,7 @@ public class mission3Controller : MonoBehaviour
         start = true;
     }
 
+    // Moves the arrow back and forth across the screen.
     void moveArrow()
     {
         float step = flechaSpeed * Time.deltaTime;
@@ -189,6 +218,7 @@ public class mission3Controller : MonoBehaviour
         }
     }
 
+    // Resets values and stops game actions.
     void resetValues()
     {
         playerAnim.SetBool("wrench", false);
@@ -216,11 +246,12 @@ public class mission3Controller : MonoBehaviour
         }
     }
 
-    // 
+    // Manages actions when staying near modular pipes.
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("modularPipes") && spannerwrench.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
         {
+            StartCoroutine(waitToShow());
             letterX.SetActive(false);
             SwapCameras(0, 1, 0, 0);
             playerMov.canMove = false;
@@ -236,6 +267,32 @@ public class mission3Controller : MonoBehaviour
         }
     }
 
+    // Waits before showing the space key info.
+    IEnumerator waitToShow()
+    {
+        yield return new WaitForSeconds(0.5f);
+        spaceKeyInfo.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        StartCoroutine(FadeOutCoroutine());
+    }
+
+    // Fades out the space key info over time.
+    IEnumerator FadeOutCoroutine()
+    {
+        float duration = 2f;
+        float startAlpha = 1f;
+        float endAlpha = 0f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float newAlpha = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / duration);
+            canvasGroup.alpha = newAlpha;
+            yield return null;
+        }
+        canvasGroup.alpha = endAlpha;
+    }
 
     // Swap between virtual cameras
     void SwapCameras(int p1, int p2, int p3, int p4)

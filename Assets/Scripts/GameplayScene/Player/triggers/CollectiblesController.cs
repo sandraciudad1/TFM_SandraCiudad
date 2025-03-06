@@ -18,6 +18,7 @@ public class CollectiblesController : MonoBehaviour
     // records
     [SerializeField] GameObject record5;
     [SerializeField] GameObject record3;
+    [SerializeField] GameObject record2;
 
     [SerializeField] GameObject pinCodeCanvas;
     [SerializeField] GameObject missionsControllers;
@@ -57,27 +58,10 @@ public class CollectiblesController : MonoBehaviour
             {
                 recordsManager(3, record3);
             }
-
-
-            /*if (other.name.Equals("record5"))
+            else if (other.name.Equals("record2"))
             {
-                
-                if ((GameManager.GameManagerInstance.GetArrayUnlocked("records", 4) == 1))
-                {
-                    pinCodeCanvas.SetActive(false);
-                    if (Input.GetKeyDown(KeyCode.R))
-                    {
-                        record5.SetActive(false);
-                        addToInventory(1, 4);
-                    }
-                }
-                else
-                {
-                    pinCodeCanvas.SetActive(true);
-                    ///////////////////////////////////////////////////
-                    codeController.checkCode(5);
-                }
-            }*/
+                recordsManager(2, record2);
+            }
         } 
     }
 
@@ -96,7 +80,6 @@ public class CollectiblesController : MonoBehaviour
         else
         {
             pinCodeCanvas.SetActive(true);
-            ///////////////////////////////////////////////////
             codeController.checkCode(id);
         }
     }
