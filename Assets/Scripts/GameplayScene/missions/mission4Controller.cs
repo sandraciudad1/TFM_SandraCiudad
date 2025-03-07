@@ -29,6 +29,7 @@ public class mission4Controller : MonoBehaviour
     [SerializeField] VideoPlayer sequence3;
     [SerializeField] VideoPlayer sequence4;
     [SerializeField] VideoPlayer sequence5;
+    [SerializeField] VideoPlayer code4;
     bool readSequence = false;
 
     [SerializeField] GameObject info;
@@ -70,6 +71,7 @@ public class mission4Controller : MonoBehaviour
             SwapCameras(1, 0);
             playerMov.canMove = true;
             cc.enabled = true;
+            code4.gameObject.SetActive(true);
             //poner el codigo para desbloquear la siguiente caja
             hasFinish = true;
         }
@@ -139,8 +141,7 @@ public class mission4Controller : MonoBehaviour
             player.transform.rotation = playerRot;
             if (player.transform.position == playerPos && !change)
             {
-                // activar animacion de lectura de tarjeta
-                
+                playerAnim.SetBool("securityCard", true);
                 StartCoroutine(showVideos());
                 change = true;
             }
@@ -152,6 +153,7 @@ public class mission4Controller : MonoBehaviour
         cardReader.gameObject.SetActive(false);
         analyzingScreen.gameObject.SetActive(true);
         yield return new WaitForSeconds(8f);
+        playerAnim.SetBool("securityCard", false);
         analyzingScreen.gameObject.SetActive(false);
         loadingScreen.gameObject.SetActive(true);
         yield return new WaitForSeconds(10f);
