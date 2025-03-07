@@ -140,7 +140,6 @@ public class DoorTriggerController : MonoBehaviour
     {
         if(isOpen && !setArrayUnlocked[index] && Input.GetKeyDown(KeyCode.R))
         {
-            Debug.Log("item collected");
             GameManager.GameManagerInstance.SetArrayUnlocked("objects", GameManager.GameManagerInstance.objectIndex, 1);
             GameManager.GameManagerInstance.SaveProgress();
             setArrayUnlocked[index] = true;

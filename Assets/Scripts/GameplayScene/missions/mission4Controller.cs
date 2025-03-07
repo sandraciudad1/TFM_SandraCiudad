@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.Video;
+using TMPro;
 
 public class mission4Controller : MonoBehaviour
 {
@@ -9,10 +11,11 @@ public class mission4Controller : MonoBehaviour
     Animator playerAnim;
     CharacterController cc;
     PlayerMovement playerMov;
-    Vector3 playerPos = new Vector3();
-    Quaternion playerRot = Quaternion.Euler(new Vector3(0f, 90f, 0f));
+    Vector3 playerPos = new Vector3(85.9f, 30.745f, 43.46f);
+    Quaternion playerRot = Quaternion.Euler(new Vector3(0f, -81.7f, 0f));
     bool change = false;
 
+    [SerializeField] GameObject securityCard;
     [SerializeField] GameObject scifi_terminal;
     [SerializeField] GameObject letterX;
     bool finish = false;
@@ -20,17 +23,90 @@ public class mission4Controller : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam7;
 
-    // Start is called before the first frame update
+    [SerializeField] VideoPlayer cardReader;
+    [SerializeField] VideoPlayer analyzingScreen;
+    [SerializeField] VideoPlayer loadingScreen;
+    [SerializeField] VideoPlayer sequence3;
+    [SerializeField] VideoPlayer sequence4;
+    [SerializeField] VideoPlayer sequence5;
+    bool readSequence = false;
+
+    [SerializeField] GameObject info;
+    CanvasGroup canvasGroup;
+
+    [SerializeField] GameObject inputTextBg;
+    [SerializeField] TextMeshProUGUI inputText;
+    static int charCounter = 3;
+    string userInput = "";
+    string[] codes;
+
+    bool hasFinish = false;
+
+
+    // 
     void Start()
     {
-        
+        SwapCameras(1, 0);
+        playerAnim = player.GetComponent<Animator>();
+        cc = player.GetComponent<CharacterController>();
+        playerMov = player.GetComponent<PlayerMovement>();
+        canvasGroup = info.GetComponent<CanvasGroup>();
+
+        codes = new string[] { "DBK", "ASLZ", "OYLWP" };
     }
 
-    // Update is called once per frame
+    
+    // 
     void Update()
     {
-        
+        if (readSequence)
+        {
+            readUserInput();
+        }
+
+        if (charCounter > 5 && !hasFinish)
+        {
+            inputTextBg.SetActive(false);
+            SwapCameras(1, 0);
+            playerMov.canMove = true;
+            cc.enabled = true;
+            //poner el codigo para desbloquear la siguiente caja
+            hasFinish = true;
+        }
     }
+
+    void readUserInput()
+    {
+        foreach (char c in Input.inputString)
+        {
+            if (userInput.Length < charCounter)
+            {
+                userInput += c;
+            }
+            else if (c == '\b' && userInput.Length > 0)
+            {
+                userInput = userInput.Substring(0, userInput.Length - 1);
+            }
+            else if (c == '\n' || c == '\r')
+            {
+                string correctCode = codes[charCounter - 3];
+                if (userInput.ToUpper() == correctCode.ToUpper())
+                {
+                    userInput = "";
+                    charCounter++;
+                    readSequence = false;
+                    checkSequence();   
+                }
+                else
+                {
+                    // pierde vida
+                    userInput = "";
+                }
+            }
+        }
+        inputText.text = userInput;
+    }
+
 
     // Shows 'X' when near scifi terminal.
     private void OnTriggerEnter(Collider other)
@@ -50,10 +126,10 @@ public class mission4Controller : MonoBehaviour
         }
     }
 
-    // Manages actions when staying near modular pipes.
+    // Manages actions when staying near scifi terminal.
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("scifi_terminal") && scifi_terminal.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        if (other.gameObject.CompareTag("scifi_terminal") && securityCard.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
         {
             letterX.SetActive(false);
             SwapCameras(0, 1);
@@ -63,10 +139,85 @@ public class mission4Controller : MonoBehaviour
             player.transform.rotation = playerRot;
             if (player.transform.position == playerPos && !change)
             {
-                // actions 
+                // activar animacion de lectura de tarjeta
+                
+                StartCoroutine(showVideos());
                 change = true;
             }
         }
+    }
+
+    IEnumerator showVideos()
+    {
+        cardReader.gameObject.SetActive(false);
+        analyzingScreen.gameObject.SetActive(true);
+        yield return new WaitForSeconds(8f);
+        analyzingScreen.gameObject.SetActive(false);
+        loadingScreen.gameObject.SetActive(true);
+        yield return new WaitForSeconds(10f);
+        loadingScreen.gameObject.SetActive(false);
+        StartCoroutine(waitToShow());
+        checkSequence();
+    }
+
+    void checkSequence()
+    {
+        if (charCounter == 3)
+        {
+            StartCoroutine(showSequences(4, 6, sequence3));
+        } 
+        else if (charCounter == 4)
+        {
+            StartCoroutine(showSequences(1, 8, sequence4));
+        }
+        else if (charCounter == 5)
+        {
+            StartCoroutine(showSequences(1, 10, sequence5));
+        }
+    }
+
+    IEnumerator showSequences(float wait1, float wait2, VideoPlayer sequence)
+    {
+        yield return new WaitForSeconds(wait1);
+        sequence.gameObject.SetActive(false);
+        sequence.frame = 0;  
+        sequence.targetTexture.Release(); 
+
+        yield return null; 
+        sequence.gameObject.SetActive(true);
+        sequence.Play();
+
+        yield return new WaitForSeconds(wait2);
+        sequence.gameObject.SetActive(false);
+        inputTextBg.SetActive(true);
+        readSequence = true;
+    }
+
+    // Waits before showing the info.
+    IEnumerator waitToShow()
+    {
+        yield return new WaitForSeconds(0.5f);
+        info.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        StartCoroutine(FadeOutCoroutine());
+    }
+
+    // Fades out the info over time.
+    IEnumerator FadeOutCoroutine()
+    {
+        float duration = 2f;
+        float startAlpha = 1f;
+        float endAlpha = 0f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float newAlpha = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / duration);
+            canvasGroup.alpha = newAlpha;
+            yield return null;
+        }
+        canvasGroup.alpha = endAlpha;
     }
 
     // Swap between virtual cameras
