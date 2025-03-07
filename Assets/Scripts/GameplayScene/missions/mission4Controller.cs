@@ -40,9 +40,11 @@ public class mission4Controller : MonoBehaviour
     static int charCounter = 3;
     string userInput = "";
     string[] codes;
-
     bool hasFinish = false;
 
+    [SerializeField] GameObject labDoor;
+    Animator labDoorAnim;
+    AudioSource audioDoor;
 
     // 
     void Start()
@@ -54,6 +56,8 @@ public class mission4Controller : MonoBehaviour
         canvasGroup = info.GetComponent<CanvasGroup>();
 
         codes = new string[] { "DBK", "ASLZ", "OYLWP" };
+        labDoorAnim = labDoor.GetComponent<Animator>();
+        audioDoor = labDoor.GetComponent<AudioSource>();
     }
 
     
@@ -72,7 +76,8 @@ public class mission4Controller : MonoBehaviour
             playerMov.canMove = true;
             cc.enabled = true;
             code4.gameObject.SetActive(true);
-            //poner el codigo para desbloquear la siguiente caja
+            labDoorAnim.SetBool("open", true);
+            audioDoor.Play();
             hasFinish = true;
         }
     }

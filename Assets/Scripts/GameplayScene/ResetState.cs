@@ -33,6 +33,8 @@ public class ResetState : MonoBehaviour
     // doors
     [SerializeField] GameObject observationDoor;
     Animator observationDoorAnim;
+    [SerializeField] GameObject labDoor;
+    Animator labDoorAnim;
 
     int[] objectsUnlocked;
     int[] recordsUnlocked;
@@ -46,6 +48,7 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject smoke2;
     [SerializeField] GameObject smoke3;
     [SerializeField] GameObject smoke4;
+    [SerializeField] GameObject code4;
 
     GameObject[] inventoryRecords = new GameObject[10];
 
@@ -89,6 +92,7 @@ public class ResetState : MonoBehaviour
 
         // doors Animators
         observationDoorAnim = observationDoor.GetComponent<Animator>();
+        labDoorAnim = labDoor.GetComponent<Animator>();
     }
 
     // Executes actions when an object is collected.
@@ -127,10 +131,12 @@ public class ResetState : MonoBehaviour
                 smoke3.SetActive(false);
                 smoke4.SetActive(false);
                 break;
-            /*case 6: // tarjeta de seguridad
-
+            case 6: // tarjeta de seguridad
+                crate4Anim.SetBool("open", true);
+                code4.SetActive(true);
+                labDoorAnim.SetBool("open", true);
                 break;
-            case 7:
+            /*case 7:
 
                 break;
             case 8:
@@ -165,8 +171,7 @@ public class ResetState : MonoBehaviour
         switch (index)
         {
             case 0:
-                
-
+                record1.SetActive(false);
                 break;
             case 1:
                 record2.SetActive(false);
