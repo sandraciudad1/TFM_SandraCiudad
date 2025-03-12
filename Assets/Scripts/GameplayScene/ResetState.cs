@@ -12,6 +12,7 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject sample4;
     [SerializeField] GameObject spannerwrench;
     [SerializeField] GameObject securityCard;
+    [SerializeField] GameObject wireCutters;
     GameObject[] inventoryObjects = new GameObject[15];
 
     // records
@@ -56,14 +57,15 @@ public class ResetState : MonoBehaviour
     void Start()
     {
 
-        inventoryObjects = new GameObject[] { crowbar, sample1, sample2, sample3, sample4, spannerwrench, securityCard, null, null, null, null, null, null, null, null };
+        inventoryObjects = new GameObject[] { crowbar, sample1, sample2, sample3, sample4, spannerwrench, securityCard, wireCutters, null, null, null, null, null, null, null };
         GameManager.GameManagerInstance.LoadProgress();
         objectsUnlocked = GameManager.GameManagerInstance.objectsUnlocked;
-        recordsUnlocked = GameManager.GameManagerInstance.recordsUnlocked;
         
+
+        recordsUnlocked = GameManager.GameManagerInstance.recordsUnlocked;
         initializeAnimators();
 
-        for (int i = 0; i < objectsUnlocked.Length; i++)
+        for (int i = 0; i < GameManager.GameManagerInstance.objectIndex; i++)
         {
             if (objectsUnlocked[i] == 1)
             {

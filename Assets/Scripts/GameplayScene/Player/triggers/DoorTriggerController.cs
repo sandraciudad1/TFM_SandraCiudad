@@ -149,7 +149,8 @@ public class DoorTriggerController : MonoBehaviour
         allowCollectObject(doorsOpen[9], 5);
         // securityCard
         allowCollectObject(doorsOpen[8], 6);
-
+        // wireCutters
+        allowCollectObject(doorsOpen[14], 7);
 
     }
 
