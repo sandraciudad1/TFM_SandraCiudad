@@ -28,11 +28,20 @@ public class mission5 : MonoBehaviour
         alarm.transform.DORotate(new Vector3(x, y, z), duration, RotateMode.FastBeyond360)
             .SetLoops(-1, LoopType.Yoyo)
             .SetEase(Ease.InOutSine)
-            .SetDelay(delay); // Retraso inicial aleatorio
+            .SetDelay(delay);
     }
 
     void Update()
     {
         
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("alarm"))
+        {
+            // se le quita vida
+            Debug.Log("colision con el player");
+        }
     }
 }

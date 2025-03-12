@@ -24,6 +24,10 @@ TagManager:
   - modularPipes
   - scifi_terminal
   - alarm
+  - door10
+  - door11
+  - door12
+  - door13
   layers:
   - Default
   - TransparentFX

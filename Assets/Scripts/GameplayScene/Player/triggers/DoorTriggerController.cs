@@ -19,6 +19,10 @@ public class DoorTriggerController : MonoBehaviour
     [SerializeField] Image doorImg7;
     [SerializeField] Image doorImg8;
     [SerializeField] Image doorImg9;
+    [SerializeField] Image doorImg10;
+    [SerializeField] Image doorImg11;
+    [SerializeField] Image doorImg12;
+    [SerializeField] Image doorImg13;
     Image[] doorImages;
 
     int doorNum = -1;
@@ -35,6 +39,10 @@ public class DoorTriggerController : MonoBehaviour
     [SerializeField] GameObject door7;
     [SerializeField] GameObject door8;
     [SerializeField] GameObject door9;
+    [SerializeField] GameObject door10;
+    [SerializeField] GameObject door11;
+    [SerializeField] GameObject door12;
+    [SerializeField] GameObject door13;
 
     Animator door1Anim;
     Animator door2Anim;
@@ -47,6 +55,10 @@ public class DoorTriggerController : MonoBehaviour
     Animator door7Anim;
     Animator door8Anim;
     Animator door9Anim;
+    Animator door10Anim;
+    Animator door11Anim;
+    Animator door12Anim;
+    Animator door13Anim;
     Animator[] doorsAnim;
 
     [SerializeField] GameObject crowbar;
@@ -66,7 +78,8 @@ public class DoorTriggerController : MonoBehaviour
     void Start()
     {
         SwapCameras(1, 0);
-        doorImages = new Image[] { doorImg1, doorImg2, doorImg3, doorImg4, doorImg5, metallicDoorImg, switchboardDoorImg, doorImg6, doorImg7, doorImg8, doorImg9 };
+        doorImages = new Image[] { doorImg1, doorImg2, doorImg3, doorImg4, doorImg5, metallicDoorImg, switchboardDoorImg, doorImg6, doorImg7, doorImg8, doorImg9, 
+                                   doorImg10, doorImg11, doorImg12, doorImg13 };
 
         door1Anim = door1.GetComponent<Animator>();
         door2Anim = door2.GetComponent<Animator>();
@@ -78,8 +91,13 @@ public class DoorTriggerController : MonoBehaviour
         door6Anim = door6.GetComponent<Animator>();
         door7Anim = door7.GetComponent<Animator>();
         door8Anim = door8.GetComponent<Animator>();
-        door9Anim = door9.GetComponent<Animator>(); 
-        doorsAnim = new Animator[] { door1Anim, door2Anim, door3Anim, door4Anim, door5Anim, metallicDoorAnim, switchboardDoorAnim, door6Anim, door7Anim, door8Anim, door9Anim };
+        door9Anim = door9.GetComponent<Animator>();
+        door10Anim = door10.GetComponent<Animator>();
+        door11Anim = door11.GetComponent<Animator>();
+        door12Anim = door12.GetComponent<Animator>();
+        door13Anim = door13.GetComponent<Animator>();
+        doorsAnim = new Animator[] { door1Anim, door2Anim, door3Anim, door4Anim, door5Anim, metallicDoorAnim, switchboardDoorAnim, door6Anim, door7Anim, door8Anim, 
+                                     door9Anim, door10Anim, door11Anim, door12Anim, door13Anim };
         doorsOpen = new bool[doorsAnim.Length];
         playerAnimator = player.GetComponent<Animator>();
     }
@@ -253,6 +271,26 @@ public class DoorTriggerController : MonoBehaviour
             activateImg(10);
             doorNum = 10;
         }
+        else if (other.CompareTag("door10"))
+        {
+            activateImg(11);
+            doorNum = 11;
+        }
+        else if (other.CompareTag("door11"))
+        {
+            activateImg(12);
+            doorNum = 12;
+        }
+        else if (other.CompareTag("door12"))
+        {
+            activateImg(13);
+            doorNum = 13;
+        }
+        else if (other.CompareTag("door13"))
+        {
+            activateImg(14);
+            doorNum = 14;
+        }
     }
 
     // Activates the corresponding door image.
@@ -317,6 +355,22 @@ public class DoorTriggerController : MonoBehaviour
         else if (other.CompareTag("door9"))
         {
             desactivateImg(10);
+        }
+        else if (other.CompareTag("door10"))
+        {
+            desactivateImg(11);
+        }
+        else if (other.CompareTag("door11"))
+        {
+            desactivateImg(12);
+        }
+        else if (other.CompareTag("door12"))
+        {
+            desactivateImg(13);
+        }
+        else if (other.CompareTag("door13"))
+        {
+            desactivateImg(14);
         }
         doorNum = -1;
     }
