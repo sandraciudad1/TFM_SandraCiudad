@@ -23,6 +23,7 @@ TagManager:
   - observationDoor
   - modularPipes
   - scifi_terminal
+  - alarm
   layers:
   - Default
   - TransparentFX
