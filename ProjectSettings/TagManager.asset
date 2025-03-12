@@ -28,6 +28,7 @@ TagManager:
   - door11
   - door12
   - door13
+  - securitySystem
   layers:
   - Default
   - TransparentFX

@@ -53,10 +53,13 @@ public class ResetState : MonoBehaviour
 
     GameObject[] inventoryRecords = new GameObject[10];
 
+    [SerializeField] GameObject playerTrigger;
+    mission5Controller mision5;
+
     // Initializes inventory and updates unlocked objects and records.
     void Start()
     {
-
+        mision5 = playerTrigger.GetComponent<mission5Controller>();
         inventoryObjects = new GameObject[] { crowbar, sample1, sample2, sample3, sample4, spannerwrench, securityCard, wireCutters, null, null, null, null, null, null, null };
         GameManager.GameManagerInstance.LoadProgress();
         objectsUnlocked = GameManager.GameManagerInstance.objectsUnlocked;
@@ -137,6 +140,7 @@ public class ResetState : MonoBehaviour
                 crate4Anim.SetBool("open", true);
                 code4.SetActive(true);
                 labDoorAnim.SetBool("open", true);
+                mision5.initializeAlarms();
                 break;
             /*case 7:
 
