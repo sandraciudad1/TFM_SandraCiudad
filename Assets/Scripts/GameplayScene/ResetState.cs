@@ -26,10 +26,12 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject crate2;
     [SerializeField] GameObject crate3;
     [SerializeField] GameObject crate4;
+    [SerializeField] GameObject crate5;
     Animator crate1Anim;
     Animator crate2Anim;
     Animator crate3Anim;
     Animator crate4Anim;
+    Animator crate5Anim;
 
     // doors
     [SerializeField] GameObject observationDoor;
@@ -94,6 +96,7 @@ public class ResetState : MonoBehaviour
         crate2Anim = crate2.GetComponent<Animator>();
         crate3Anim = crate3.GetComponent<Animator>();
         crate4Anim = crate4.GetComponent<Animator>();
+        crate5Anim = crate5.GetComponent<Animator>();
 
         // doors Animators
         observationDoorAnim = observationDoor.GetComponent<Animator>();
@@ -142,10 +145,12 @@ public class ResetState : MonoBehaviour
                 labDoorAnim.SetBool("open", true);
                 mision5.initializeAlarms();
                 break;
-            /*case 7:
-
+            case 7: // cortador de cables
+                crate5Anim.SetBool("open", true);
+                mision5.desactivateAlarms();
+                mision5.showPinCode();
                 break;
-            case 8:
+            /*case 8:
 
                 break;
             case 9:

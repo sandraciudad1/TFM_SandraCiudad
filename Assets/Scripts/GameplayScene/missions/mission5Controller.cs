@@ -48,7 +48,10 @@ public class mission5Controller : MonoBehaviour
 
     static int cableCounter = 0;
     static int spacePressed = 0;
+    bool finish = false;
+    bool isShowing = false;
 
+    // Initializes variables and resets cable colors. 
     void Start()
     {
         SwapCameras(1, 0);
@@ -57,11 +60,13 @@ public class mission5Controller : MonoBehaviour
         playerMov = player.GetComponent<PlayerMovement>();
         canvasGroup = info.GetComponent<CanvasGroup>();
         cableMaterials = new Material[] { cable1, cable2, cable3, cable4 };
-        resetvalues();
+        for (int i = 0; i < cableMaterials.Length; i++)
+        {
+            cableMaterials[i].SetColor("_Color", Color.white);
+        }
     }
 
-    bool finish = false;
-    bool isShowing = false;
+    // Manages game state and updates player position and UI.
     void Update()
     {
         if(cableCounter >= 0 && cableCounter <= 3)
@@ -87,6 +92,7 @@ public class mission5Controller : MonoBehaviour
         }
     }
 
+    // Moves the player based on the selected cable.  
     void setPlayerPosition(int cable)
     {
         switch (cable)
@@ -105,6 +111,7 @@ public class mission5Controller : MonoBehaviour
         } 
     }
 
+    // Updates progress bar when pressing space.  
     void updateProgressBar()
     {
         if (progressBar.activeInHierarchy && Input.GetKeyDown(KeyCode.Space))
@@ -120,22 +127,18 @@ public class mission5Controller : MonoBehaviour
                 cableCounter++;
                 resetvalues();
             }
-            
         }
     }
 
-
+    // Resets progress bar and space press counter.  
     void resetvalues()
     {
         pb.fillAmount = 0;
         spacePressed = 0;
-        for(int i=0; i<cableMaterials.Length; i++)
-        {
-            cableMaterials[i].SetColor("_Color", Color.white);
-        }
     }
 
-    IEnumerator showPinCode()
+    // Displays a sequence of squares as a pin code.  
+    public IEnumerator showPinCode()
     {
         isShowing = true;  
         yield return new WaitForSeconds(0.5f);
@@ -155,6 +158,7 @@ public class mission5Controller : MonoBehaviour
         isShowing = false;  
     }
 
+    // Activates alarms with movement and visual effects.  
     public void initializeAlarms()
     {
         alarmMovement(alarm1, 135f, 0f, 0f);
@@ -165,7 +169,8 @@ public class mission5Controller : MonoBehaviour
         alarmOn.gameObject.SetActive(true);
     }
 
-    void desactivateAlarms()
+    // Deactivates alarms and turns them off.  
+    public void desactivateAlarms()
     {
         alarmOn.gameObject.SetActive(false);
         alarmOff.gameObject.SetActive(true);
@@ -176,6 +181,7 @@ public class mission5Controller : MonoBehaviour
         alarm5.SetActive(false);
     }
 
+    // Animates alarm rotation with a looping effect.  
     void alarmMovement(GameObject alarm, float x, float y, float z)
     {
         float duration = Random.Range(2f, 4f);
@@ -187,6 +193,7 @@ public class mission5Controller : MonoBehaviour
             .SetDelay(delay);
     }
 
+    // Detects when the player enters an area.  
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("alarm"))
@@ -208,7 +215,7 @@ public class mission5Controller : MonoBehaviour
         }
     }
 
-
+    // Detects continuous presence in a trigger area.  
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("securitySystem") && wireCutters.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
@@ -229,6 +236,7 @@ public class mission5Controller : MonoBehaviour
         }
     }
 
+    // Delays player movement for 2 seconds.  
     IEnumerator waitUntilMove()
     {
         yield return new WaitForSeconds(2f);
