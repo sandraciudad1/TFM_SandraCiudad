@@ -21,6 +21,7 @@ public class CollectiblesController : MonoBehaviour
     [SerializeField] GameObject record3;
     [SerializeField] GameObject record2;
     [SerializeField] GameObject record1;
+    [SerializeField] GameObject record4;
 
     [SerializeField] GameObject pinCodeCanvas;
     [SerializeField] GameObject missionsControllers;
@@ -69,6 +70,10 @@ public class CollectiblesController : MonoBehaviour
             else if (other.name.Equals("record1"))
             {
                 recordsManager(1, record1);
+            }
+            else if (other.name.Equals("record4"))
+            {
+                recordsManager(4, record4);
             }
         } 
     }

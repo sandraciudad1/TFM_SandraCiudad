@@ -4,6 +4,7 @@ using UnityEngine;
 using DG.Tweening;
 using Cinemachine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 public class mission5Controller : MonoBehaviour
 {
@@ -32,6 +33,19 @@ public class mission5Controller : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam8;
 
+    [SerializeField] Material cable1;
+    [SerializeField] Material cable2;
+    [SerializeField] Material cable3;
+    [SerializeField] Material cable4;
+    Material[] cableMaterials;
+
+    [SerializeField] VideoPlayer alarmOn;
+    [SerializeField] Image alarmOff;
+    [SerializeField] Image square1;
+    [SerializeField] Image square2;
+    [SerializeField] Image square3;
+    [SerializeField] Image square4;
+
     static int cableCounter = 0;
     static int spacePressed = 0;
 
@@ -42,9 +56,12 @@ public class mission5Controller : MonoBehaviour
         cc = player.GetComponent<CharacterController>();
         playerMov = player.GetComponent<PlayerMovement>();
         canvasGroup = info.GetComponent<CanvasGroup>();
+        cableMaterials = new Material[] { cable1, cable2, cable3, cable4 };
+        resetvalues();
     }
 
-    
+    bool finish = false;
+    bool isShowing = false;
     void Update()
     {
         if(cableCounter >= 0 && cableCounter <= 3)
@@ -52,14 +69,21 @@ public class mission5Controller : MonoBehaviour
             setPlayerPosition(cableCounter);
             updateProgressBar();
         } 
-        else if (cableCounter == 4)
+        else if (cableCounter == 4 && !finish)
         {
+            desactivateAlarms();
             playerAnim.SetBool("wireCutters", false);
             progressBar.SetActive(false);
             SwapCameras(1, 0);
             player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, 51.082f);
             playerMov.canMove = true;
             cc.enabled = true;
+            finish = true;
+        }
+        
+        if (finish && !isShowing)
+        {
+            StartCoroutine(showPinCode());
         }
     }
 
@@ -92,7 +116,7 @@ public class mission5Controller : MonoBehaviour
             } 
             else
             {
-                // animacion de cable cortado
+                cableMaterials[cableCounter].SetColor("_Color", Color.black);
                 cableCounter++;
                 resetvalues();
             }
@@ -100,10 +124,35 @@ public class mission5Controller : MonoBehaviour
         }
     }
 
+
     void resetvalues()
     {
         pb.fillAmount = 0;
         spacePressed = 0;
+        for(int i=0; i<cableMaterials.Length; i++)
+        {
+            cableMaterials[i].SetColor("_Color", Color.white);
+        }
+    }
+
+    IEnumerator showPinCode()
+    {
+        isShowing = true;  
+        yield return new WaitForSeconds(0.5f);
+        square1.gameObject.SetActive(true);
+        yield return new WaitForSeconds(1.2f);
+        square1.gameObject.SetActive(false);
+        square2.gameObject.SetActive(true);
+        yield return new WaitForSeconds(1.2f);
+        square2.gameObject.SetActive(false);
+        square3.gameObject.SetActive(true);
+        yield return new WaitForSeconds(1.2f);
+        square3.gameObject.SetActive(false);
+        square4.gameObject.SetActive(true);
+        yield return new WaitForSeconds(1.2f);
+        square4.gameObject.SetActive(false);
+        yield return new WaitForSeconds(1.5f);
+        isShowing = false;  
     }
 
     public void initializeAlarms()
@@ -113,6 +162,18 @@ public class mission5Controller : MonoBehaviour
         alarmMovement(alarm3, 135f, 0f, 0f);
         alarmMovement(alarm4, 135f, 90f, 90f);
         alarmMovement(alarm5, 135f, 90f, 90f);
+        alarmOn.gameObject.SetActive(true);
+    }
+
+    void desactivateAlarms()
+    {
+        alarmOn.gameObject.SetActive(false);
+        alarmOff.gameObject.SetActive(true);
+        alarm1.SetActive(false);
+        alarm2.SetActive(false);
+        alarm3.SetActive(false);
+        alarm4.SetActive(false);
+        alarm5.SetActive(false);
     }
 
     void alarmMovement(GameObject alarm, float x, float y, float z)
