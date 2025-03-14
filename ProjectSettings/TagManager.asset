@@ -30,6 +30,8 @@ TagManager:
   - door13
   - securitySystem
   - emergencyKit
+  - door14
+  - door15
   layers:
   - Default
   - TransparentFX
