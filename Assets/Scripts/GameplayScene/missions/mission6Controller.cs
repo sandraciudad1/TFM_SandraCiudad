@@ -9,7 +9,7 @@ public class mission6Controller : MonoBehaviour
     Animator playerAnim;
     CharacterController cc;
     PlayerMovement playerMov;
-    Vector3 playerPos = new Vector3(124.441f, 25.67f, 51.878f);
+    Vector3 playerPos = new Vector3(123.945f, 25.67f, 51.546f);
     Quaternion playerRot = Quaternion.Euler(new Vector3(0f, 180f, 0f));
     bool change = false;
 
@@ -66,6 +66,7 @@ public class mission6Controller : MonoBehaviour
             player.transform.rotation = playerRot;
             if (player.transform.position == playerPos && !change)
             {
+                playerAnim.SetBool("clipboard", true);
                 // animacion del personaje dejando en la mesa la clipboard
                 // habilitar el clipboard2 y deshabilitar el de la mano
                 // cambio de camara a la 10 
