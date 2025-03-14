@@ -32,6 +32,7 @@ TagManager:
   - emergencyKit
   - door14
   - door15
+  - book
   layers:
   - Default
   - TransparentFX

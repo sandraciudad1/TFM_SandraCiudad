@@ -54,6 +54,7 @@ public class inventoryController : MonoBehaviour
     [SerializeField] Sprite spannerwrenchSprite;
     [SerializeField] Sprite securityCardSprite;
     [SerializeField] Sprite wireCuttersSprite;
+    [SerializeField] Sprite clipboardSprite;
     Sprite[] objectsSprites;
 
     // records
@@ -98,6 +99,7 @@ public class inventoryController : MonoBehaviour
     [SerializeField] GameObject spannerwrench;
     [SerializeField] GameObject securityCard;
     [SerializeField] GameObject wireCutters;
+    [SerializeField] GameObject clipboard;
     GameObject[] collectable3dObjects = new GameObject[15];
 
     // Initializes inventory variables.
@@ -111,7 +113,7 @@ public class inventoryController : MonoBehaviour
         objectsContainer.SetActive(false);
 
         collectableItemsImgs = new Image[] { object1, object2, object3, object4, object5, object6, object7, object8, object9, object10, object11, object12, object13, object14, object15 };
-        objectsSprites = new Sprite[] { crowbarSprite, sample1Sprite, sample2Sprite, sample3Sprite, sample4Sprite, spannerwrenchSprite, securityCardSprite, wireCuttersSprite };
+        objectsSprites = new Sprite[] { crowbarSprite, sample1Sprite, sample2Sprite, sample3Sprite, sample4Sprite, spannerwrenchSprite, securityCardSprite, wireCuttersSprite, clipboardSprite };
         collectableRecordsImgs = new Image[] { record1Img, record2Img, record3Img, record4Img, record5Img, record6Img, record7Img, record8Img, record9Img, record10Img };
         recordsSprites = new Sprite[] { record1Sprite, record2Sprite, record3Sprite, record4Sprite, record5Sprite, record6Sprite, record7Sprite, record8Sprite, record9Sprite, record10Sprite };
         recordsNames = new string[] { "Grabacion 5: Sala de Comunicaciones", "Grabacion 2: Laboratorio cientifico", "Grabacion 3: Sala de Comunicaciones", "Grabacion 1: Zona de Observacion",
@@ -344,6 +346,7 @@ public class inventoryController : MonoBehaviour
             case 5: return "Llave inglesa";
             case 6: return "Tarjeta de Seguridad";
             case 7: return "Cortador de Cables";
+            case 8: return "Tabla de traduccion";
             default: return "";
         }
     }
@@ -361,6 +364,7 @@ public class inventoryController : MonoBehaviour
             case 5: return spannerwrench;
             case 6: return securityCard;
             case 7: return wireCutters;
+            case 8: return clipboard;
             default: return null;
         }
     }

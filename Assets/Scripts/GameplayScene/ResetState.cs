@@ -13,6 +13,7 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject spannerwrench;
     [SerializeField] GameObject securityCard;
     [SerializeField] GameObject wireCutters;
+    [SerializeField] GameObject clipboard;
     GameObject[] inventoryObjects = new GameObject[15];
 
     // records
@@ -62,7 +63,7 @@ public class ResetState : MonoBehaviour
     void Start()
     {
         mision5 = playerTrigger.GetComponent<mission5Controller>();
-        inventoryObjects = new GameObject[] { crowbar, sample1, sample2, sample3, sample4, spannerwrench, securityCard, wireCutters, null, null, null, null, null, null, null };
+        inventoryObjects = new GameObject[] { crowbar, sample1, sample2, sample3, sample4, spannerwrench, securityCard, wireCutters, clipboard, null, null, null, null, null, null };
         GameManager.GameManagerInstance.LoadProgress();
         objectsUnlocked = GameManager.GameManagerInstance.objectsUnlocked;
         

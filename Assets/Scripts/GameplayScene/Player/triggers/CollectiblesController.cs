@@ -15,6 +15,7 @@ public class CollectiblesController : MonoBehaviour
     [SerializeField] GameObject spannerwrench;
     [SerializeField] GameObject securityCard;
     [SerializeField] GameObject wireCutters;
+    [SerializeField] GameObject clipboard;
 
     // records
     [SerializeField] GameObject record5;
@@ -50,6 +51,8 @@ public class CollectiblesController : MonoBehaviour
                 canAddToInventory(other, "spannerwrench", 5, spannerwrench);
                 canAddToInventory(other, "securityCard", 6, securityCard);
                 canAddToInventory(other, "wireCutters", 7, wireCutters);
+                canAddToInventory(other, "clipboard", 8, clipboard);
+                
             }
         }
 
