@@ -33,6 +33,7 @@ TagManager:
   - door14
   - door15
   - book
+  - verticalDoor
   layers:
   - Default
   - TransparentFX
