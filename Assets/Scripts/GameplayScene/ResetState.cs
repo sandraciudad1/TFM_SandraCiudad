@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ResetState : MonoBehaviour
@@ -63,6 +64,10 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject playerTrigger;
     mission5Controller mision5;
 
+    [SerializeField] TextMeshProUGUI inputText1;
+    [SerializeField] TextMeshProUGUI inputText2;
+    [SerializeField] TextMeshProUGUI inputText3;
+    
     // Initializes inventory and updates unlocked objects and records.
     void Start()
     {
@@ -102,6 +107,7 @@ public class ResetState : MonoBehaviour
         crate3Anim = crate3.GetComponent<Animator>();
         crate4Anim = crate4.GetComponent<Animator>();
         crate5Anim = crate5.GetComponent<Animator>();
+        crate6Anim = crate6.GetComponent<Animator>();
 
         // doors Animators
         observationDoorAnim = observationDoor.GetComponent<Animator>();
@@ -157,6 +163,9 @@ public class ResetState : MonoBehaviour
                 break;
             case 8: // tabla de traduccion 
                 crate6Anim.SetBool("open", true);
+                inputText1.text = "C0D1GO";
+                inputText2.text = "PU3RT4";
+                inputText3.text = "5726";
                 break;
             /*case 9:
 
