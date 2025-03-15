@@ -102,6 +102,8 @@ public class inventoryController : MonoBehaviour
     [SerializeField] GameObject clipboard;
     GameObject[] collectable3dObjects = new GameObject[15];
 
+    public bool blockInventory = false;
+
     // Initializes inventory variables.
     void Start()
     {
@@ -138,7 +140,7 @@ public class inventoryController : MonoBehaviour
             playerMov = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.I) && !blockInventory)
         {
             inventoryBg.SetActive(true);
             playerMov = false;

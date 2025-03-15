@@ -21,6 +21,8 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject record3;
     [SerializeField] GameObject record2;
     [SerializeField] GameObject record1;
+    [SerializeField] GameObject record4;
+    [SerializeField] GameObject record6;
 
     // crates
     [SerializeField] GameObject crate1;
@@ -28,11 +30,13 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject crate3;
     [SerializeField] GameObject crate4;
     [SerializeField] GameObject crate5;
+    [SerializeField] GameObject crate6;
     Animator crate1Anim;
     Animator crate2Anim;
     Animator crate3Anim;
     Animator crate4Anim;
     Animator crate5Anim;
+    Animator crate6Anim;
 
     // doors
     [SerializeField] GameObject observationDoor;
@@ -151,10 +155,10 @@ public class ResetState : MonoBehaviour
                 mision5.desactivateAlarms();
                 mision5.showPinCode();
                 break;
-            /*case 8:
-
+            case 8: // tabla de traduccion 
+                crate6Anim.SetBool("open", true);
                 break;
-            case 9:
+            /*case 9:
 
                 break;
             case 10:
@@ -192,13 +196,13 @@ public class ResetState : MonoBehaviour
                 record3.SetActive(false);
                 break;
             case 3:
-
+                record4.SetActive(false);
                 break;
             case 4:
                 record5.SetActive(false);
                 break;
             case 5:
-
+                record6.SetActive(false);
                 break;
             case 6:
 

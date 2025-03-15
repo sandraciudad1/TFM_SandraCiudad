@@ -1,7 +1,9 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class mission6Controller : MonoBehaviour
 {
@@ -10,15 +12,35 @@ public class mission6Controller : MonoBehaviour
     CharacterController cc;
     PlayerMovement playerMov;
     Vector3 playerPos = new Vector3(123.945f, 25.67f, 51.546f);
+    Vector3 endPosition = new Vector3(124.749f, 25.67f, 53.155f);
     Quaternion playerRot = Quaternion.Euler(new Vector3(0f, 180f, 0f));
     bool change = false;
 
     [SerializeField] GameObject clipboard;
+    [SerializeField] GameObject clipboardStatic;
     [SerializeField] GameObject letterX;
 
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam9;
     [SerializeField] CinemachineVirtualCamera vcam10;
+
+    [SerializeField] TextMeshProUGUI inputText1;
+    [SerializeField] TextMeshProUGUI inputText2;
+    [SerializeField] TextMeshProUGUI inputText3;
+    TextMeshProUGUI[] inputTexts;
+    [SerializeField] GameObject textBox1;
+    [SerializeField] GameObject textBox2;
+    [SerializeField] GameObject textBox3;
+    GameObject[] textBoxs;
+
+    string userInput = "";
+    string[] correctAnswers = { "C0D1GO", "PU3RT4", "5726" };
+    static int wordCounter = 0;
+    bool canCheck = true;
+
+    [SerializeField] GameObject inventory;
+    inventoryController inventoryCont;
+
 
     //
     void Start()
@@ -27,12 +49,67 @@ public class mission6Controller : MonoBehaviour
         playerAnim = player.GetComponent<Animator>();
         cc = player.GetComponent<CharacterController>();
         playerMov = player.GetComponent<PlayerMovement>();
+
+        inputTexts = new TextMeshProUGUI[] { inputText1, inputText2, inputText3 };
+        textBoxs = new GameObject[] { textBox1, textBox2, textBox3 };
+        inventoryCont = inventory.GetComponent<inventoryController>();
     }
+    
 
     // 
     void Update()
     {
-        
+        if (wordCounter >= 3)
+        {
+            canCheck = false;
+            SwapCameras(1, 0, 0);
+            player.transform.position = endPosition;
+            inventoryCont.blockInventory = false;
+            playerMov.canMove = true;
+            cc.enabled = true;
+            for(int i = 0; i < textBoxs.Length; i++)
+            {
+                textBoxs[i].SetActive(false);
+            }
+        }
+
+        if (change && canCheck)
+        {
+            foreach (char c in Input.inputString)
+            {
+                if (c != '\b') 
+                {
+                    userInput += c;
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.Backspace) && userInput.Length > 0)
+            {
+                userInput = userInput.Substring(0, userInput.Length - 1);
+            }
+
+            inputTexts[wordCounter].text = userInput;
+            checkAnswer(userInput);
+        }
+    }
+
+    void enableTextBox()
+    {
+        StartCoroutine(clearInputBuffer());
+        textBoxs[wordCounter].SetActive(true);
+    }
+
+    void checkAnswer(string userInput)
+    {
+        if (userInput.ToUpper() == correctAnswers[wordCounter].ToUpper())
+        {
+            wordCounter++;
+            if (wordCounter < 3)
+            {
+                enableTextBox();
+            }
+            
+        }
     }
 
     // Shows 'X' when leaving book.  
@@ -66,15 +143,29 @@ public class mission6Controller : MonoBehaviour
             player.transform.rotation = playerRot;
             if (player.transform.position == playerPos && !change)
             {
+                inventoryCont.blockInventory = true;
                 playerAnim.SetBool("clipboard", true);
-                // animacion del personaje dejando en la mesa la clipboard
-                // habilitar el clipboard2 y deshabilitar el de la mano
-                // cambio de camara a la 10 
-                // capturar entrada por teclado del usuario
-                // dejarlo grabado en la otra pagina del libro
+                StartCoroutine(waitEndAnimation());
                 change = true;
+                StartCoroutine(clearInputBuffer());
             }
         }
+    }
+
+    private IEnumerator clearInputBuffer()
+    {
+        yield return null; 
+        userInput = ""; 
+    }
+
+    IEnumerator waitEndAnimation()
+    {
+        yield return new WaitForSeconds(2f);
+        SwapCameras(0, 0, 1);
+        clipboard.SetActive(false);
+        clipboardStatic.SetActive(true);
+        playerAnim.SetBool("clipboard", false);
+        enableTextBox();
     }
 
     // Swap between virtual cameras
