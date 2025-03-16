@@ -42,7 +42,7 @@ public class mission6Controller : MonoBehaviour
     inventoryController inventoryCont;
 
 
-    //
+    // Initializes references and sets up objects at the start of the game.
     void Start()
     {
         SwapCameras(1, 0, 0);
@@ -54,9 +54,8 @@ public class mission6Controller : MonoBehaviour
         textBoxs = new GameObject[] { textBox1, textBox2, textBox3 };
         inventoryCont = inventory.GetComponent<inventoryController>();
     }
-    
 
-    // 
+    // Checks input and manages word validation and movement restrictions.
     void Update()
     {
         if (wordCounter >= 3)
@@ -93,12 +92,14 @@ public class mission6Controller : MonoBehaviour
         }
     }
 
+    // Enables the text box for the next input.
     void enableTextBox()
     {
         StartCoroutine(clearInputBuffer());
         textBoxs[wordCounter].SetActive(true);
     }
 
+    // Checks if the user's input matches the correct answer.
     void checkAnswer(string userInput)
     {
         if (userInput.ToUpper() == correctAnswers[wordCounter].ToUpper())
@@ -152,12 +153,14 @@ public class mission6Controller : MonoBehaviour
         }
     }
 
+    // Clears the input buffer after a frame delay.
     private IEnumerator clearInputBuffer()
     {
         yield return null; 
         userInput = ""; 
     }
 
+    // Handles the animation transition after interacting with the clipboard.
     IEnumerator waitEndAnimation()
     {
         yield return new WaitForSeconds(2f);

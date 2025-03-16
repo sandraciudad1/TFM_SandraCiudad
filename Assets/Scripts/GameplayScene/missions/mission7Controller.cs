@@ -57,7 +57,7 @@ public class mission7Controller : MonoBehaviour
     GameObject[] objectsArray;
     GameObject[] objectsKitArray;
 
-    //
+    // Initializes references and sets up objects at the start of the game.
     void Start()
     {
         SwapCameras(1, 0);
@@ -73,7 +73,7 @@ public class mission7Controller : MonoBehaviour
         objectsKitArray = new GameObject[] { alcoholKit, bandAidRollKit, medicalPackageKit, burnCreamKit, oxyWaterKit, scissorkit, miniAidBoxKit, hydroCreamKit };
     }
 
-    
+    // Checks for input and manages object collection and door code input.
     void Update()
     {
         if (readCode)
@@ -116,6 +116,7 @@ public class mission7Controller : MonoBehaviour
         }
     }
 
+    // Moves the player to a specific position and rotation.
     void movePlayer()
     {
         playerMov.canMove = false;
@@ -124,6 +125,7 @@ public class mission7Controller : MonoBehaviour
         player.transform.rotation = playerRot;
     }
 
+    // Activates letter X when player enters the "kit" trigger area.
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("kit"))
@@ -132,7 +134,7 @@ public class mission7Controller : MonoBehaviour
         }
     }
 
-    //
+    // Deactivates background and letter X on trigger exit.
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("verticalDoor"))
@@ -145,7 +147,7 @@ public class mission7Controller : MonoBehaviour
         }
     }
 
-    // Detects continuous presence in a trigger area.  
+    // Detects continuous presence in a trigger area and handles interactions.
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("verticalDoor"))
@@ -204,6 +206,7 @@ public class mission7Controller : MonoBehaviour
         }
     }
 
+    // Collects objects and activates their corresponding kit.
     void collectObject(int index)
     {
         objectsArray[index].SetActive(false);
@@ -211,6 +214,7 @@ public class mission7Controller : MonoBehaviour
         objectsCollected++;
     }
 
+    // Handles animation transitions after the kit interaction.
     IEnumerator waitFinishAnim()
     {
         yield return new WaitForSeconds(2.5f);
