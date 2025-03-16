@@ -146,21 +146,24 @@ public class DoorTriggerController : MonoBehaviour
             }
         }
 
-        // crowbar
+        // mission 1 - crowbar
         allowCollectObject(doorsOpen[1], 0);
-        // samples: 1, 2, 3, 4
+        // mission 2 - samples: 1, 2, 3, 4
         allowCollectObject(doorsOpen[0], 1);
         allowCollectObject(doorsOpen[3], 2);
         allowCollectObject(doorsOpen[7], 3);
         allowCollectObject(doorsOpen[10], 4);
-        // spannerwrench
+        // mission 3 - spannerwrench
         allowCollectObject(doorsOpen[9], 5);
-        // securityCard
+        // mission 4 - securityCard
         allowCollectObject(doorsOpen[8], 6);
-        // wireCutters
+        // mission 5 - wireCutters
         allowCollectObject(doorsOpen[14], 7);
-        // clipboard
+        // mission 6 - clipboard
         allowCollectObject(doorsOpen[15], 8);
+        // mission 7 - emergencyKit
+        allowCollectObject(doorsOpen[13], 9);
+
     }
 
     // Unlocks and saves an object if conditions are met.
