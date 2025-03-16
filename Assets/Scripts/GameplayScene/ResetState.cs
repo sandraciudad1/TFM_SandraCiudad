@@ -25,6 +25,7 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject record1;
     [SerializeField] GameObject record4;
     [SerializeField] GameObject record6;
+    [SerializeField] GameObject record7;
 
     // crates
     [SerializeField] GameObject crate1;
@@ -33,12 +34,14 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject crate4;
     [SerializeField] GameObject crate5;
     [SerializeField] GameObject crate6;
+    [SerializeField] GameObject crate7;
     Animator crate1Anim;
     Animator crate2Anim;
     Animator crate3Anim;
     Animator crate4Anim;
     Animator crate5Anim;
     Animator crate6Anim;
+    Animator crate7Anim;
 
     // doors
     [SerializeField] GameObject observationDoor;
@@ -110,6 +113,7 @@ public class ResetState : MonoBehaviour
         crate4Anim = crate4.GetComponent<Animator>();
         crate5Anim = crate5.GetComponent<Animator>();
         crate6Anim = crate6.GetComponent<Animator>();
+        crate7Anim = crate7.GetComponent<Animator>();
 
         // doors Animators
         observationDoorAnim = observationDoor.GetComponent<Animator>();
@@ -170,7 +174,7 @@ public class ResetState : MonoBehaviour
                 inputText3.text = "5726";
                 break;
             /*case 9: // kit de emergencia
-
+                crate7Anim.SetBool("open", true);
                 break;
             case 10:
 

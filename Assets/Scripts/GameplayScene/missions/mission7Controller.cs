@@ -31,10 +31,33 @@ public class mission7Controller : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam11;
 
+    [SerializeField] GameObject code;
     [SerializeField] GameObject info;
     CanvasGroup canvasGroup;
     bool canCollect = false;
+    bool finish = false;
+    static int objectsCollected = 0;
 
+    [SerializeField] GameObject alcohol;
+    [SerializeField] GameObject alcoholKit;
+    [SerializeField] GameObject bandAidRoll;
+    [SerializeField] GameObject bandAidRollKit;
+    [SerializeField] GameObject medicalPackage;
+    [SerializeField] GameObject medicalPackageKit;
+    [SerializeField] GameObject burnCream;
+    [SerializeField] GameObject burnCreamKit;
+    [SerializeField] GameObject oxyWater;
+    [SerializeField] GameObject oxyWaterKit;
+    [SerializeField] GameObject scissor;
+    [SerializeField] GameObject scissorkit;
+    [SerializeField] GameObject miniAidBox;
+    [SerializeField] GameObject miniAidBoxKit;
+    [SerializeField] GameObject hydroCream;
+    [SerializeField] GameObject hydroCreamKit;
+    GameObject[] objectsArray;
+    GameObject[] objectsKitArray;
+
+    //
     void Start()
     {
         SwapCameras(1, 0);
@@ -46,6 +69,8 @@ public class mission7Controller : MonoBehaviour
         doorAudio = verticalDoor.GetComponent<AudioSource>();
 
         canvasGroup = info.GetComponent<CanvasGroup>();
+        objectsArray = new GameObject[] { alcohol, bandAidRoll, medicalPackage, burnCream, oxyWater, scissor, miniAidBox, hydroCream };
+        objectsKitArray = new GameObject[] { alcoholKit, bandAidRollKit, medicalPackageKit, burnCreamKit, oxyWaterKit, scissorkit, miniAidBoxKit, hydroCreamKit };
     }
 
     
@@ -80,6 +105,23 @@ public class mission7Controller : MonoBehaviour
             }
             inputText.text = userInput;
         }
+
+        if (objectsCollected >= 8 && !finish)
+        {
+            movePlayer();
+            code.SetActive(true);
+            playerMov.canMove = true;
+            cc.enabled = true;
+            finish = true;
+        }
+    }
+
+    void movePlayer()
+    {
+        playerMov.canMove = false;
+        cc.enabled = false;
+        player.transform.position = playerPos;
+        player.transform.rotation = playerRot;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -115,10 +157,7 @@ public class mission7Controller : MonoBehaviour
         if (other.gameObject.CompareTag("kit") && emergencyKit.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
         {
             letterX.SetActive(false);
-            playerMov.canMove = false;
-            cc.enabled = false;
-            player.transform.position = playerPos;
-            player.transform.rotation = playerRot;
+            movePlayer();
             if (player.transform.position == playerPos && !change)
             {
                 SwapCameras(0, 1);
@@ -130,45 +169,46 @@ public class mission7Controller : MonoBehaviour
 
         if (other.gameObject.CompareTag("emergencyKit") && canCollect && Input.GetKeyDown(KeyCode.R))
         {
-            // desactivarlo de su sitio y actvarlo en el maletin
-
             if (other.gameObject.name.Equals("Alcohol"))
             {
-
+                collectObject(0);
             }
             else if (other.gameObject.name.Equals("BandAidRoll"))
             {
-
+                collectObject(1);
             }
             else if (other.gameObject.name.Equals("MedicalPackage"))
             {
-
+                collectObject(2);
             }
             else if (other.gameObject.name.Equals("BurnCream"))
             {
-
+                collectObject(3);
             }
             else if (other.gameObject.name.Equals("OxyWater"))
             {
-
+                collectObject(4);
             }
             else if (other.gameObject.name.Equals("Scissor1"))
             {
-
+                collectObject(5);
             }
             else if (other.gameObject.name.Equals("MiniAidBox"))
             {
-
+                collectObject(6);
             }
             else if (other.gameObject.name.Equals("HydroCream"))
             {
-
+                collectObject(7);
             }
-
-            // incvremenar el contador de objetos recogidos
-            // cuando el contador sea 6 lleavr al personaje enfrente del maletin para cerrarlo
-            // mostrarle el pin de la caja
         }
+    }
+
+    void collectObject(int index)
+    {
+        objectsArray[index].SetActive(false);
+        objectsKitArray[index].SetActive(true);
+        objectsCollected++;
     }
 
     IEnumerator waitFinishAnim()
