@@ -31,6 +31,10 @@ public class mission7Controller : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam11;
 
+    [SerializeField] GameObject info;
+    CanvasGroup canvasGroup;
+    bool canCollect = false;
+
     void Start()
     {
         SwapCameras(1, 0);
@@ -40,6 +44,8 @@ public class mission7Controller : MonoBehaviour
         doorAnimator = verticalDoor.GetComponent<Animator>();
         emergencyKitStaticAnim = emergencyKitStatic.GetComponent<Animator>();
         doorAudio = verticalDoor.GetComponent<AudioSource>();
+
+        canvasGroup = info.GetComponent<CanvasGroup>();
     }
 
     
@@ -118,14 +124,50 @@ public class mission7Controller : MonoBehaviour
                 SwapCameras(0, 1);
                 playerAnim.SetBool("kit", true);
                 StartCoroutine(waitFinishAnim());
-                /////////
-                /// animacion del player poniendo la caja encima de la otra caja
-                /// aniamcion de caja abriendose
-                /// 
-                /// activar la caja estatica y desactivar la que lleva en la mano 
-                /// mensaje de ayuda para que recolecte cosas con la r
                 change = true;
             }
+        }
+
+        if (other.gameObject.CompareTag("emergencyKit") && canCollect && Input.GetKeyDown(KeyCode.R))
+        {
+            // desactivarlo de su sitio y actvarlo en el maletin
+
+            if (other.gameObject.name.Equals("Alcohol"))
+            {
+
+            }
+            else if (other.gameObject.name.Equals("BandAidRoll"))
+            {
+
+            }
+            else if (other.gameObject.name.Equals("MedicalPackage"))
+            {
+
+            }
+            else if (other.gameObject.name.Equals("BurnCream"))
+            {
+
+            }
+            else if (other.gameObject.name.Equals("OxyWater"))
+            {
+
+            }
+            else if (other.gameObject.name.Equals("Scissor1"))
+            {
+
+            }
+            else if (other.gameObject.name.Equals("MiniAidBox"))
+            {
+
+            }
+            else if (other.gameObject.name.Equals("HydroCream"))
+            {
+
+            }
+
+            // incvremenar el contador de objetos recogidos
+            // cuando el contador sea 6 lleavr al personaje enfrente del maletin para cerrarlo
+            // mostrarle el pin de la caja
         }
     }
 
@@ -138,11 +180,39 @@ public class mission7Controller : MonoBehaviour
         playerAnim.SetBool("kit", false);
         emergencyKitStaticAnim.SetBool("open", true);
         yield return new WaitForSeconds(3f);
+        StartCoroutine(waitToShow());
         SwapCameras(1, 0);
         player.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, 51.77582f);
         playerMov.canMove = true;
         cc.enabled = true;
+        canCollect = true;
+    }
 
+    // Waits before showing the info.
+    IEnumerator waitToShow()
+    {
+        yield return new WaitForSeconds(0.2f);
+        info.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        StartCoroutine(FadeOutCoroutine());
+    }
+
+    // Fades out the info over time.
+    IEnumerator FadeOutCoroutine()
+    {
+        float duration = 2f;
+        float startAlpha = 1f;
+        float endAlpha = 0f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float newAlpha = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / duration);
+            canvasGroup.alpha = newAlpha;
+            yield return null;
+        }
+        canvasGroup.alpha = endAlpha;
     }
 
     // Swap between virtual cameras
