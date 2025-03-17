@@ -202,28 +202,28 @@ public class inventoryController : MonoBehaviour
                 recordsContainer.SetActive(true);
                 currentContainer = recordsContainer;
                 rows = 2; cols = 5;
-                SetInitialSelection(recordBubbles);
+                SetInitialSelection(recordBubbles, selectedBubble);
             }
             else
             {
                 objectsContainer.SetActive(true);
                 currentContainer = objectsContainer;
                 rows = 3; cols = 5;
-                SetInitialSelection(objectBubbles);
+                SetInitialSelection(objectBubbles, selectedBubble);
             }
         }
     }
 
     // Sets the initial selection for a section.
-    void SetInitialSelection(GameObject[] bubbles)
+    void SetInitialSelection(GameObject[] bubbles, int bubbleType)
     {
         selectedRow = 0;
         selectedCol = 0;
-        UpdateBubbleSelection(bubbles);
+        UpdateBubbleSelection(bubbles, bubbleType);
     }
 
     // Updates the selection visual effect.
-    void UpdateBubbleSelection(GameObject[] bubbles)
+    void UpdateBubbleSelection(GameObject[] bubbles, int bubbleType)
     {
         foreach (var bubble in bubbles)
         {
@@ -234,8 +234,14 @@ public class inventoryController : MonoBehaviour
         if (index >= 0 && index < bubbles.Length && IsUnlocked(index))
         {
             bubbles[index].transform.localScale = Vector3.one * 1.2f;
-            objectsText.text = itemsNames[index];
-            recordsText.text = recordsNames[index];
+            if (bubbleType == 0)
+            {
+                recordsText.text = recordsNames[index];
+            } 
+            else
+            {
+                objectsText.text = itemsNames[index];
+            }
         }
     }
 
@@ -244,14 +250,17 @@ public class inventoryController : MonoBehaviour
     {
         GameObject[] currentBubbles;
         bool[] unlockedItems;
+        int bubbleType;
 
         if (currentContainer == recordsContainer)
         {
+            bubbleType = 0;
             currentBubbles = recordBubbles;
             unlockedItems = unlockedRecords;
         }
         else
         {
+            bubbleType = 1;
             currentBubbles = objectBubbles;
             unlockedItems = unlockedObjects;
         }
@@ -261,7 +270,7 @@ public class inventoryController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftArrow)) MoveSelection(0, -1, unlockedItems);
         if (Input.GetKeyDown(KeyCode.RightArrow)) MoveSelection(0, 1, unlockedItems);
 
-        UpdateBubbleSelection(currentBubbles);
+        UpdateBubbleSelection(currentBubbles, bubbleType);
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
