@@ -35,6 +35,7 @@ TagManager:
   - book
   - verticalDoor
   - kit
+  - dirt
   layers:
   - Default
   - TransparentFX
