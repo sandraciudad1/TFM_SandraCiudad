@@ -9,21 +9,25 @@ public class mission8Controller : MonoBehaviour
     Animator playerAnim;
     CharacterController cc;
     PlayerMovement playerMov;
-    Vector3 playerPos = new Vector3(117.927f, 25.67f, 49.789f);
-    Quaternion playerRot = Quaternion.Euler(new Vector3(0f, 180f, 0f));
+    Vector3 playerPos = new Vector3(124.41f, 20.679f, 69.42f);
+    Quaternion playerRot = Quaternion.Euler(new Vector3(0f, 90f, 0f));
     bool change = false;
 
     [SerializeField] GameObject vacuum;
+    [SerializeField] GameObject vacuumMobile;
     [SerializeField] GameObject letterX;
 
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam13;
+    [SerializeField] CinemachineVirtualCamera vcam14;
 
+    bool enableControl = false;
+    float speed = 1f;
 
     // 
     void Start()
     {
-        SwapCameras(1, 0);
+        SwapCameras(1, 0, 0);
         playerAnim = player.GetComponent<Animator>();
         cc = player.GetComponent<CharacterController>();
         playerMov = player.GetComponent<PlayerMovement>();
@@ -32,7 +36,12 @@ public class mission8Controller : MonoBehaviour
     // 
     void Update()
     {
-        
+        if (enableControl)
+        {
+            float moveY = Input.GetAxis("Vertical") * speed * Time.deltaTime; 
+            float moveZ = -Input.GetAxis("Horizontal") * speed * Time.deltaTime; 
+            vacuumMobile.transform.position += new Vector3(0, moveY, moveZ);
+        }
     }
 
     // Shows 'X' when leaving book.  
@@ -59,34 +68,40 @@ public class mission8Controller : MonoBehaviour
         if (other.gameObject.CompareTag("grids") && vacuum.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
         {
             letterX.SetActive(false);
-            SwapCameras(0, 1);
+            SwapCameras(0, 1, 0);
             playerMov.canMove = false;
             cc.enabled = false;
             player.transform.position = playerPos;
             player.transform.rotation = playerRot;
             if (player.transform.position == playerPos && !change)
             {
-                // animacion del personaje sbiendo la aspiradora
-                //se acerca la camara
-                //controlar aspiradora con flechas y mensaje informativo
+                playerAnim.SetBool("vacuum", true);
+                StartCoroutine(waitFinishAnimation());
+
+                // controlar aspiradora con flechas y mensaje informativo
                 // detectar si el trigger de la aspiradora permanece por dos segundos en los de la suciedad
                 // desactivar suciedad
                 // contador de suciedad regresivo que cuando llegue a 0 se vuelve a alejar la camara
-
-
-                /*inventoryCont.blockInventory = true;
-                playerAnim.SetBool("clipboard", true);
-                StartCoroutine(waitEndAnimation());*/
                 change = true;
             }
         }
     }
 
+    IEnumerator waitFinishAnimation()
+    {
+        yield return new WaitForSeconds(3f);
+        vacuum.SetActive(false);
+        vacuumMobile.SetActive(true);
+        SwapCameras(0, 0, 1);
+        enableControl = true;
+    }
+
     // Swap between virtual cameras
-    void SwapCameras(int priority1, int priority2)
+    void SwapCameras(int priority1, int priority2, int priority3)
     {
         vcam1.Priority = priority1;
         vcam13.Priority = priority2;
+        vcam14.Priority = priority3;
     }
 
 }
