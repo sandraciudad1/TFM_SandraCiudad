@@ -56,6 +56,7 @@ public class inventoryController : MonoBehaviour
     [SerializeField] Sprite wireCuttersSprite;
     [SerializeField] Sprite clipboardSprite;
     [SerializeField] Sprite emergencyKitSprite;
+    [SerializeField] Sprite vacuumSprite;
     Sprite[] objectsSprites;
 
     // records
@@ -102,6 +103,7 @@ public class inventoryController : MonoBehaviour
     [SerializeField] GameObject wireCutters;
     [SerializeField] GameObject clipboard;
     [SerializeField] GameObject emergencyKit;
+    [SerializeField] GameObject vacuum;
     GameObject[] collectable3dObjects = new GameObject[15];
 
     public bool blockInventory = false;
@@ -118,7 +120,7 @@ public class inventoryController : MonoBehaviour
 
         collectableItemsImgs = new Image[] { object1, object2, object3, object4, object5, object6, object7, object8, object9, object10, object11, object12, object13, object14, object15 };
         objectsSprites = new Sprite[] { crowbarSprite, sample1Sprite, sample2Sprite, sample3Sprite, sample4Sprite, spannerwrenchSprite, securityCardSprite, wireCuttersSprite, clipboardSprite,
-                                         emergencyKitSprite };
+                                         emergencyKitSprite, vacuumSprite };
         collectableRecordsImgs = new Image[] { record1Img, record2Img, record3Img, record4Img, record5Img, record6Img, record7Img, record8Img, record9Img, record10Img };
         recordsSprites = new Sprite[] { record1Sprite, record2Sprite, record3Sprite, record4Sprite, record5Sprite, record6Sprite, record7Sprite, record8Sprite, record9Sprite, record10Sprite };
         recordsNames = new string[] { "Grabacion 5: Sala de Comunicaciones", "Grabacion 2: Laboratorio cientifico", "Grabacion 3: Sala de Comunicaciones", "Grabacion 1: Zona de Observacion",
@@ -263,19 +265,15 @@ public class inventoryController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            Debug.Log("return pressed");
             for (int i = 0; i < GameManager.GameManagerInstance.objectIndex; i++)
             {
                 collectable3dObjects[i].SetActive(false);
             }
 
             int index = selectedRow * cols + selectedCol;
-            Debug.Log("index " + index);
             if (index >= 0 && index < currentBubbles.Length && unlockedItems[index])
             {
-                Debug.Log("object " + collectable3dObjects[index].name);
                 collectable3dObjects[index].SetActive(true);
-                Debug.Log("active " + collectable3dObjects[index].activeInHierarchy);
                 playerAnim.SetBool("closeHand", true);
             }
         }
@@ -357,6 +355,7 @@ public class inventoryController : MonoBehaviour
             case 7: return "Cortador de Cables";
             case 8: return "Tabla de traduccion";
             case 9: return "Kit de emergencia";
+            case 10: return "Aspiradora";
             default: return "";
         }
     }
@@ -376,6 +375,7 @@ public class inventoryController : MonoBehaviour
             case 7: return wireCutters;
             case 8: return clipboard;
             case 9: return emergencyKit;
+            case 10: return vacuum;
             default: return null;
         }
     }

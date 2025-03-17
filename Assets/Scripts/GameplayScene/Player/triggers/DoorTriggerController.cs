@@ -25,6 +25,12 @@ public class DoorTriggerController : MonoBehaviour
     [SerializeField] Image doorImg13;
     [SerializeField] Image doorImg14;
     [SerializeField] Image doorImg15;
+    [SerializeField] Image doorImg16;
+    [SerializeField] Image doorImg17;
+    [SerializeField] Image doorImg18;
+    [SerializeField] Image doorImg19;
+    [SerializeField] Image doorImg20;
+    [SerializeField] Image doorImg21;
     Image[] doorImages;
 
     int doorNum = -1;
@@ -47,6 +53,12 @@ public class DoorTriggerController : MonoBehaviour
     [SerializeField] GameObject door13;
     [SerializeField] GameObject door14;
     [SerializeField] GameObject door15;
+    [SerializeField] GameObject door16;
+    [SerializeField] GameObject door17;
+    [SerializeField] GameObject door18;
+    [SerializeField] GameObject door19;
+    [SerializeField] GameObject door20;
+    [SerializeField] GameObject door21;
 
     Animator door1Anim;
     Animator door2Anim;
@@ -65,6 +77,12 @@ public class DoorTriggerController : MonoBehaviour
     Animator door13Anim;
     Animator door14Anim;
     Animator door15Anim;
+    Animator door16Anim;
+    Animator door17Anim;
+    Animator door18Anim;
+    Animator door19Anim;
+    Animator door20Anim;
+    Animator door21Anim;
     Animator[] doorsAnim;
 
     [SerializeField] GameObject crowbar;
@@ -85,7 +103,7 @@ public class DoorTriggerController : MonoBehaviour
     {
         SwapCameras(1, 0);
         doorImages = new Image[] { doorImg1, doorImg2, doorImg3, doorImg4, doorImg5, metallicDoorImg, switchboardDoorImg, doorImg6, doorImg7, doorImg8, doorImg9, 
-                                   doorImg10, doorImg11, doorImg12, doorImg13, doorImg14, doorImg15 };
+                                   doorImg10, doorImg11, doorImg12, doorImg13, doorImg14, doorImg15, doorImg16, doorImg17, doorImg18, doorImg19, doorImg20, doorImg21 };
 
         door1Anim = door1.GetComponent<Animator>();
         door2Anim = door2.GetComponent<Animator>();
@@ -104,8 +122,14 @@ public class DoorTriggerController : MonoBehaviour
         door13Anim = door13.GetComponent<Animator>();
         door14Anim = door14.GetComponent<Animator>();
         door15Anim = door15.GetComponent<Animator>();
-        doorsAnim = new Animator[] { door1Anim, door2Anim, door3Anim, door4Anim, door5Anim, metallicDoorAnim, switchboardDoorAnim, door6Anim, door7Anim, door8Anim, 
-                                     door9Anim, door10Anim, door11Anim, door12Anim, door13Anim, door14Anim, door15Anim };
+        door16Anim = door16.GetComponent<Animator>();
+        door17Anim = door17.GetComponent<Animator>();
+        door18Anim = door18.GetComponent<Animator>();
+        door19Anim = door19.GetComponent<Animator>();
+        door20Anim = door20.GetComponent<Animator>();
+        door21Anim = door21.GetComponent<Animator>();
+        doorsAnim = new Animator[] { door1Anim, door2Anim, door3Anim, door4Anim, door5Anim, metallicDoorAnim, switchboardDoorAnim, door6Anim, door7Anim, door8Anim, door9Anim,
+                                     door10Anim, door11Anim, door12Anim, door13Anim, door14Anim, door15Anim, door16Anim, door17Anim, door18Anim, door19Anim, door20Anim, door21Anim };
         doorsOpen = new bool[doorsAnim.Length];
         playerAnimator = player.GetComponent<Animator>();
     }
@@ -163,6 +187,8 @@ public class DoorTriggerController : MonoBehaviour
         allowCollectObject(doorsOpen[15], 8);
         // mission 7 - emergencyKit
         allowCollectObject(doorsOpen[13], 9);
+        // mission 8 - vacuum
+        allowCollectObject(doorsOpen[22], 10);
 
     }
 
@@ -314,6 +340,36 @@ public class DoorTriggerController : MonoBehaviour
             activateImg(16);
             doorNum = 16;
         }
+        else if (other.CompareTag("door16"))
+        {
+            activateImg(17);
+            doorNum = 17;
+        }
+        else if (other.CompareTag("door17"))
+        {
+            activateImg(18);
+            doorNum = 18;
+        }
+        else if (other.CompareTag("door18"))
+        {
+            activateImg(19);
+            doorNum = 19;
+        }
+        else if (other.CompareTag("door19"))
+        {
+            activateImg(20);
+            doorNum = 20;
+        }
+        else if (other.CompareTag("door20"))
+        {
+            activateImg(21);
+            doorNum = 21;
+        }
+        else if (other.CompareTag("door21"))
+        {
+            activateImg(22);
+            doorNum = 22;
+        }
     }
 
     // Activates the corresponding door image.
@@ -402,6 +458,30 @@ public class DoorTriggerController : MonoBehaviour
         else if (other.CompareTag("door15"))
         {
             desactivateImg(16);
+        }
+        else if (other.CompareTag("door16"))
+        {
+            desactivateImg(17);
+        }
+        else if (other.CompareTag("door17"))
+        {
+            desactivateImg(18);
+        }
+        else if (other.CompareTag("door18"))
+        {
+            desactivateImg(19);
+        }
+        else if (other.CompareTag("door19"))
+        {
+            desactivateImg(20);
+        }
+        else if (other.CompareTag("door20"))
+        {
+            desactivateImg(21);
+        }
+        else if (other.CompareTag("door21"))
+        {
+            desactivateImg(22);
         }
         doorNum = -1;
     }

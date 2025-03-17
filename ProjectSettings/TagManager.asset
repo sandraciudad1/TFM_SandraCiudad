@@ -36,6 +36,13 @@ TagManager:
   - verticalDoor
   - kit
   - dirt
+  - door16
+  - door17
+  - door18
+  - door19
+  - door20
+  - door21
+  - grids
   layers:
   - Default
   - TransparentFX

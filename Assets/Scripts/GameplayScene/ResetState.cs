@@ -16,6 +16,7 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject wireCutters;
     [SerializeField] GameObject clipboard;
     [SerializeField] GameObject emergencyKit;
+    [SerializeField] GameObject vacuum;
     GameObject[] inventoryObjects = new GameObject[15];
 
     // records
@@ -26,6 +27,7 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject record4;
     [SerializeField] GameObject record6;
     [SerializeField] GameObject record7;
+    [SerializeField] GameObject record8;
 
     // crates
     [SerializeField] GameObject crate1;
@@ -35,6 +37,7 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject crate5;
     [SerializeField] GameObject crate6;
     [SerializeField] GameObject crate7;
+    [SerializeField] GameObject crate8;
     Animator crate1Anim;
     Animator crate2Anim;
     Animator crate3Anim;
@@ -42,6 +45,7 @@ public class ResetState : MonoBehaviour
     Animator crate5Anim;
     Animator crate6Anim;
     Animator crate7Anim;
+    Animator crate8Anim;
 
     // doors
     [SerializeField] GameObject observationDoor;
@@ -77,7 +81,7 @@ public class ResetState : MonoBehaviour
     {
         mision5 = playerTrigger.GetComponent<mission5Controller>();
         inventoryObjects = new GameObject[] { crowbar, sample1, sample2, sample3, sample4, spannerwrench, securityCard, wireCutters, clipboard, 
-                                              emergencyKit, null, null, null, null, null };
+                                              emergencyKit, vacuum, null, null, null, null };
         GameManager.GameManagerInstance.LoadProgress();
         objectsUnlocked = GameManager.GameManagerInstance.objectsUnlocked;
         
@@ -114,6 +118,7 @@ public class ResetState : MonoBehaviour
         crate5Anim = crate5.GetComponent<Animator>();
         crate6Anim = crate6.GetComponent<Animator>();
         crate7Anim = crate7.GetComponent<Animator>();
+        crate8Anim = crate8.GetComponent<Animator>();
 
         // doors Animators
         observationDoorAnim = observationDoor.GetComponent<Animator>();
@@ -173,10 +178,10 @@ public class ResetState : MonoBehaviour
                 inputText2.text = "PU3RT4";
                 inputText3.text = "5726";
                 break;
-            /*case 9: // kit de emergencia
+            case 9: // kit de emergencia
                 crate7Anim.SetBool("open", true);
                 break;
-            case 10:
+            /*case 10: // aspiradora
 
                 break;
             case 11:
@@ -220,10 +225,10 @@ public class ResetState : MonoBehaviour
                 record6.SetActive(false);
                 break;
             case 6:
-
+                record7.SetActive(false);
                 break;
             case 7:
-
+                //record8.SetActive(false);
                 break;
             case 8:
 

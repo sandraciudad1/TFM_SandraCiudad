@@ -17,6 +17,7 @@ public class CollectiblesController : MonoBehaviour
     [SerializeField] GameObject wireCutters;
     [SerializeField] GameObject clipboard;
     [SerializeField] GameObject emergencyKit;
+    [SerializeField] GameObject vacuum;
 
     // records
     [SerializeField] GameObject record5;
@@ -56,6 +57,7 @@ public class CollectiblesController : MonoBehaviour
                 canAddToInventory(other, "wireCutters", 7, wireCutters);
                 canAddToInventory(other, "clipboard", 8, clipboard);
                 canAddToInventory(other, "emergencyKit", 9, emergencyKit);
+                canAddToInventory(other, "vacuum", 10, vacuum);
             }
         }
 
