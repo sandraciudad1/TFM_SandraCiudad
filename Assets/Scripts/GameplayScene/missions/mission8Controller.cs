@@ -21,7 +21,9 @@ public class mission8Controller : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam13;
     [SerializeField] CinemachineVirtualCamera vcam14;
 
-    bool enableControl = false;
+    public bool enableControl = false;
+    public bool finish = false;
+    bool exit = false;
     float speed = 1f;
 
     // 
@@ -41,6 +43,15 @@ public class mission8Controller : MonoBehaviour
             float moveY = Input.GetAxis("Vertical") * speed * Time.deltaTime; 
             float moveZ = -Input.GetAxis("Horizontal") * speed * Time.deltaTime; 
             vacuumMobile.transform.position += new Vector3(0, moveY, moveZ);
+        }
+
+        if (finish && !exit)
+        {
+            vacuumMobile.SetActive(false);
+            playerMov.canMove = true;
+            cc.enabled = true;
+            SwapCameras(1, 0, 0);
+            exit = true;
         }
     }
 
@@ -77,11 +88,6 @@ public class mission8Controller : MonoBehaviour
             {
                 playerAnim.SetBool("vacuum", true);
                 StartCoroutine(waitFinishAnimation());
-
-                // controlar aspiradora con flechas y mensaje informativo
-                // detectar si el trigger de la aspiradora permanece por dos segundos en los de la suciedad
-                // desactivar suciedad
-                // contador de suciedad regresivo que cuando llegue a 0 se vuelve a alejar la camara
                 change = true;
             }
         }
@@ -92,6 +98,7 @@ public class mission8Controller : MonoBehaviour
         yield return new WaitForSeconds(3f);
         vacuum.SetActive(false);
         vacuumMobile.SetActive(true);
+        playerAnim.SetBool("vacuum", false);
         SwapCameras(0, 0, 1);
         enableControl = true;
     }
