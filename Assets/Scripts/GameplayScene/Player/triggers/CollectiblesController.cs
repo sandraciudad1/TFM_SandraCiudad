@@ -27,12 +27,14 @@ public class CollectiblesController : MonoBehaviour
     [SerializeField] GameObject record4;
     [SerializeField] GameObject record6;
     [SerializeField] GameObject record7;
+    [SerializeField] GameObject record8;
+    [SerializeField] GameObject record9;
+    [SerializeField] GameObject record10;
 
     [SerializeField] GameObject pinCodeCanvas;
     [SerializeField] GameObject missionsControllers;
 
     pinCodeController codeController;
-
 
     // Initializes the pin code controller reference.
     void Start()
@@ -90,6 +92,18 @@ public class CollectiblesController : MonoBehaviour
             else if (other.name.Equals("record7"))
             {
                 recordsManager(7, record7);
+            }
+            else if (other.name.Equals("record8"))
+            {
+                recordsManager(8, record8);
+            }
+            else if (other.name.Equals("record9"))
+            {
+                recordsManager(9, record9);
+            }
+            else if (other.name.Equals("record10"))
+            {
+                recordsManager(10, record10);
             }
         } 
     }

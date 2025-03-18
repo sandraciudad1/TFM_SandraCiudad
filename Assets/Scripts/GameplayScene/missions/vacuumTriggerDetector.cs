@@ -8,13 +8,13 @@ public class vacuumTriggerDetector : MonoBehaviour
     mission8Controller mission8;
     bool finish = false;
 
-    // Start is called before the first frame update
+    // Initializes mission8Controller from the playerTrigger component.
     void Start()
     {
         mission8 = playerTrigger.GetComponent<mission8Controller>();
     }
 
-    // Update is called once per frame
+    // Checks if all dirt objects are disabled to finish the mission.
     void Update()
     {
         if (allDirtDisabled() && !finish)
@@ -22,9 +22,9 @@ public class vacuumTriggerDetector : MonoBehaviour
             mission8.finish = true;
             finish = true;
         }
-        
     }
 
+    // Returns true if all dirt objects are inactive.
     bool allDirtDisabled()
     {
         GameObject[] dirtObjects = GameObject.FindGameObjectsWithTag("dirt");
@@ -38,6 +38,7 @@ public class vacuumTriggerDetector : MonoBehaviour
         return true;
     }
 
+    // Starts fading out dirt objects when staying in the trigger.
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("dirt") && mission8.enableControl)
@@ -46,6 +47,7 @@ public class vacuumTriggerDetector : MonoBehaviour
         }
     }
 
+    // Gradually fades out and disables the dirt object.
     IEnumerator fadeOutDisable(GameObject dirtObject)
     {
         Renderer renderer = dirtObject.GetComponent<Renderer>();
@@ -53,9 +55,7 @@ public class vacuumTriggerDetector : MonoBehaviour
 
         Color initialColor = renderer.material.color;
         Color targetColor = new Color(initialColor.r, initialColor.g, initialColor.b, 0); 
-
-        float duration = 2f;
-        float elapsedTime = 0f;
+        float duration = 2f, elapsedTime = 0f;
 
         while (elapsedTime < duration)
         {

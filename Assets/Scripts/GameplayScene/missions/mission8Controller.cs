@@ -21,12 +21,15 @@ public class mission8Controller : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam13;
     [SerializeField] CinemachineVirtualCamera vcam14;
 
+    [SerializeField] GameObject screen;
+    [SerializeField] GameObject screenCode;
+
     public bool enableControl = false;
     public bool finish = false;
     bool exit = false;
     float speed = 1f;
 
-    // 
+    // Initializes components and sets the initial camera configuration.
     void Start()
     {
         SwapCameras(1, 0, 0);
@@ -35,7 +38,7 @@ public class mission8Controller : MonoBehaviour
         playerMov = player.GetComponent<PlayerMovement>();
     }
 
-    // 
+    // Handles movement and controls the game's finishing sequence.
     void Update()
     {
         if (enableControl)
@@ -47,6 +50,8 @@ public class mission8Controller : MonoBehaviour
 
         if (finish && !exit)
         {
+            screen.SetActive(false);
+            screenCode.SetActive(true);
             vacuumMobile.SetActive(false);
             playerMov.canMove = true;
             cc.enabled = true;
@@ -93,6 +98,7 @@ public class mission8Controller : MonoBehaviour
         }
     }
 
+    // Waits for animation to finish before enabling vacuum mode.
     IEnumerator waitFinishAnimation()
     {
         yield return new WaitForSeconds(3f);
@@ -103,12 +109,11 @@ public class mission8Controller : MonoBehaviour
         enableControl = true;
     }
 
-    // Swap between virtual cameras
+    // Swap between virtual cameras.
     void SwapCameras(int priority1, int priority2, int priority3)
     {
         vcam1.Priority = priority1;
         vcam13.Priority = priority2;
         vcam14.Priority = priority3;
     }
-
 }

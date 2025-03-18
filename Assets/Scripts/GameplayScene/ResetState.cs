@@ -28,6 +28,8 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject record6;
     [SerializeField] GameObject record7;
     [SerializeField] GameObject record8;
+    [SerializeField] GameObject record9;
+    [SerializeField] GameObject record10;
 
     // crates
     [SerializeField] GameObject crate1;
@@ -38,6 +40,8 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject crate6;
     [SerializeField] GameObject crate7;
     [SerializeField] GameObject crate8;
+    [SerializeField] GameObject crate9;
+    [SerializeField] GameObject crate10;
     Animator crate1Anim;
     Animator crate2Anim;
     Animator crate3Anim;
@@ -46,6 +50,8 @@ public class ResetState : MonoBehaviour
     Animator crate6Anim;
     Animator crate7Anim;
     Animator crate8Anim;
+    Animator crate9Anim;
+    Animator crate10Anim;
 
     // doors
     [SerializeField] GameObject observationDoor;
@@ -66,6 +72,8 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject smoke3;
     [SerializeField] GameObject smoke4;
     [SerializeField] GameObject code4;
+    [SerializeField] GameObject screen8;
+    [SerializeField] GameObject screenCode8;
 
     GameObject[] inventoryRecords = new GameObject[10];
 
@@ -84,7 +92,6 @@ public class ResetState : MonoBehaviour
                                               emergencyKit, vacuum, null, null, null, null };
         GameManager.GameManagerInstance.LoadProgress();
         objectsUnlocked = GameManager.GameManagerInstance.objectsUnlocked;
-        
 
         recordsUnlocked = GameManager.GameManagerInstance.recordsUnlocked;
         initializeAnimators();
@@ -119,6 +126,8 @@ public class ResetState : MonoBehaviour
         crate6Anim = crate6.GetComponent<Animator>();
         crate7Anim = crate7.GetComponent<Animator>();
         crate8Anim = crate8.GetComponent<Animator>();
+        crate9Anim = crate9.GetComponent<Animator>();
+        crate10Anim = crate10.GetComponent<Animator>();
 
         // doors Animators
         observationDoorAnim = observationDoor.GetComponent<Animator>();
@@ -181,11 +190,18 @@ public class ResetState : MonoBehaviour
             case 9: // kit de emergencia
                 crate7Anim.SetBool("open", true);
                 break;
-            /*case 10: // aspiradora
-
+            case 10: // aspiradora
+                crate8Anim.SetBool("open", true);
+                GameObject[] dirtObjects = GameObject.FindGameObjectsWithTag("dirt");
+                foreach (GameObject dirt in dirtObjects)
+                {
+                    dirt.SetActive(false);
+                }
+                screen8.SetActive(false);
+                screenCode8.SetActive(true);
                 break;
-            case 11:
-
+            /*case 11:
+                
                 break;
             case 12:
 
@@ -199,6 +215,11 @@ public class ResetState : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    void DisableAllDirtObjects()
+    {
+        
     }
 
     // Manages record visibility based on unlocked items.
@@ -228,13 +249,13 @@ public class ResetState : MonoBehaviour
                 record7.SetActive(false);
                 break;
             case 7:
-                //record8.SetActive(false);
+                record8.SetActive(false);
                 break;
             case 8:
-
+                //record9.SetActive(false);
                 break;
             case 9:
-
+                //record10.SetActive(false);
                 break;
             default:
                 break;
