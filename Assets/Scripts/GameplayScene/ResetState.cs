@@ -74,6 +74,8 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject code4;
     [SerializeField] GameObject screen8;
     [SerializeField] GameObject screenCode8;
+    [SerializeField] GameObject navigationScreen;
+    [SerializeField] GameObject puzzleGame;
 
     GameObject[] inventoryRecords = new GameObject[10];
 
@@ -199,6 +201,8 @@ public class ResetState : MonoBehaviour
                 }
                 screen8.SetActive(false);
                 screenCode8.SetActive(true);
+                navigationScreen.SetActive(true);
+                puzzleGame.SetActive(true);
                 break;
             /*case 11:
                 
