@@ -191,6 +191,10 @@ public class DoorTriggerController : MonoBehaviour
         allowCollectObject(doorsOpen[22], 10);
         // mission 9 - compass
         allowCollectObject(doorsOpen[19], 11);
+        // mission 10 - UV light and tape
+        allowCollectObject(doorsOpen[16], 12); // UV light
+        allowCollectObject(doorsOpen[17], 13); // tape
+
     }
 
     // Unlocks and saves an object if conditions are met.

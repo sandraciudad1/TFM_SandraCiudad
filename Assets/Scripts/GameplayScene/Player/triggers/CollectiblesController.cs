@@ -19,6 +19,8 @@ public class CollectiblesController : MonoBehaviour
     [SerializeField] GameObject emergencyKit;
     [SerializeField] GameObject vacuum;
     [SerializeField] GameObject compass;
+    [SerializeField] GameObject uvLight;
+    [SerializeField] GameObject tape;
 
     // records
     [SerializeField] GameObject record5;
@@ -62,6 +64,8 @@ public class CollectiblesController : MonoBehaviour
                 canAddToInventory(other, "emergencyKit", 9, emergencyKit);
                 canAddToInventory(other, "vacuum", 10, vacuum);
                 canAddToInventory(other, "compass", 11, compass);
+                canAddToInventory(other, "uvLight", 12, uvLight);
+                canAddToInventory(other, "tape", 13, tape);
             }
         }
 

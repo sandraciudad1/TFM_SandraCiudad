@@ -18,6 +18,8 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject emergencyKit;
     [SerializeField] GameObject vacuum;
     [SerializeField] GameObject compass;
+    [SerializeField] GameObject uvLight;
+    [SerializeField] GameObject tape;
     GameObject[] inventoryObjects = new GameObject[15];
 
     // records
@@ -91,7 +93,7 @@ public class ResetState : MonoBehaviour
     {
         mision5 = playerTrigger.GetComponent<mission5Controller>();
         inventoryObjects = new GameObject[] { crowbar, sample1, sample2, sample3, sample4, spannerwrench, securityCard, wireCutters, clipboard, 
-                                              emergencyKit, vacuum, compass, null, null, null };
+                                              emergencyKit, vacuum, compass, uvLight, tape, null };
         GameManager.GameManagerInstance.LoadProgress();
         objectsUnlocked = GameManager.GameManagerInstance.objectsUnlocked;
 
