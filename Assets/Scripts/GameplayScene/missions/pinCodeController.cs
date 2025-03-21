@@ -39,7 +39,7 @@ public class pinCodeController : MonoBehaviour
     // Initializes the correct codes and gets the crate animator.
     void Start()
     {
-        correctCodes = new string[] { "4141", "6375", "4360", "0938", "1235", "0134", "7615", "3962", "0000", "0000" };
+        correctCodes = new string[] { "4141", "6375", "4360", "0938", "1235", "0134", "7615", "3962", "8870", "0000" };
 
         crateAnim1 = crate1.GetComponent<Animator>();
         crateAnim2 = crate2.GetComponent<Animator>();

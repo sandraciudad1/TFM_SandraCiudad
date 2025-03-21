@@ -203,10 +203,10 @@ public class ResetState : MonoBehaviour
                 screenCode8.SetActive(true);
                 navigationScreen.SetActive(true);
                 break;
-            /*case 11: // brujula
-                
+            case 11: // brujula
+                crate9Anim.SetBool("open", true);
                 break;
-            case 12:
+            /*case 12:
 
                 break;
             case 13:
@@ -255,7 +255,7 @@ public class ResetState : MonoBehaviour
                 record8.SetActive(false);
                 break;
             case 8:
-                //record9.SetActive(false);
+                record9.SetActive(false);
                 break;
             case 9:
                 //record10.SetActive(false);

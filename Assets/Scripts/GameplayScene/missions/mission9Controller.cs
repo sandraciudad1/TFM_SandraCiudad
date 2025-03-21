@@ -9,7 +9,7 @@ public class mission9Controller : MonoBehaviour
     Animator playerAnim;
     CharacterController cc;
     PlayerMovement playerMov;
-    Vector3 playerPos = new Vector3(117.063f, 20.679f, 88.062f);
+    Vector3 playerPos = new Vector3(117.063f, 20.679f, 87.984f);
     Vector3 playerFinalPos = new Vector3(118.02f, 20.679f, 87.24f);
     Quaternion playerRot = Quaternion.Euler(new Vector3(0f, 0f, 0f));
     bool change = false;
@@ -18,6 +18,7 @@ public class mission9Controller : MonoBehaviour
 
     [SerializeField] GameObject compass;
     [SerializeField] GameObject letterX;
+    [SerializeField] GameObject navigationScreen;
     [SerializeField] GameObject syncronizationScreen;
     [SerializeField] GameObject puzzle;
     puzzleController puzzlecontroller;
@@ -95,7 +96,9 @@ public class mission9Controller : MonoBehaviour
         syncronizationScreen.SetActive(true);
         puzzle.SetActive(true);
         yield return new WaitForSeconds(5f);
-        playerAnim.SetBool("compass", true);
+        navigationScreen.SetActive(false);
+        syncronizationScreen.SetActive(false);
+        playerAnim.SetBool("compass", false);
         compass.SetActive(false);
         SwapCameras(0, 0, 1);
         puzzlecontroller.canMove = true;
