@@ -43,6 +43,7 @@ TagManager:
   - door20
   - door21
   - grids
+  - console
   layers:
   - Default
   - TransparentFX

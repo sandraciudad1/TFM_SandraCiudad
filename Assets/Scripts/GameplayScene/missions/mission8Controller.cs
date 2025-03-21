@@ -23,9 +23,7 @@ public class mission8Controller : MonoBehaviour
 
     [SerializeField] GameObject screen;
     [SerializeField] GameObject screenCode;
-
     [SerializeField] GameObject navigationScreen;
-    [SerializeField] GameObject puzzleGame;
 
     public bool enableControl = false;
     public bool finish = false;
@@ -60,12 +58,11 @@ public class mission8Controller : MonoBehaviour
             cc.enabled = true;
             SwapCameras(1, 0, 0);
             navigationScreen.SetActive(true);
-            puzzleGame.SetActive(true);
             exit = true;
         }
     }
 
-    // Shows 'X' when leaving book.  
+    // Shows 'X' when leaving grids.  
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("grids"))
@@ -74,7 +71,7 @@ public class mission8Controller : MonoBehaviour
         }
     }
 
-    // Hides 'X' when leaving book.
+    // Hides 'X' when leaving grids.
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("grids"))
