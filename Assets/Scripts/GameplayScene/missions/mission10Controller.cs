@@ -58,6 +58,7 @@ public class mission10Controller : MonoBehaviour
     Sprite[] part2;
     Sprite[] part3;
     Sprite[] part4;
+    List<Sprite[]> spriteList;
 
     [SerializeField] Image part1Img;
     [SerializeField] Image part2Img;
@@ -88,9 +89,14 @@ public class mission10Controller : MonoBehaviour
     [SerializeField] Image leftArrow4;
     Image[] leftArrows;
 
-
+    [SerializeField] Image code10;
     bool enableFind = false;
+    bool finish = false;
+    static int completed = 0;
 
+    [SerializeField] GameObject verticalExitDoor;
+    Animator doorAnim;
+    AudioSource doorAudio;
 
     // 
     void Start()
@@ -111,9 +117,13 @@ public class mission10Controller : MonoBehaviour
         fp2 = new Sprite[] { fp21, fp22, fp23, fp24 };
         fp3 = new Sprite[] { fp31, fp32, fp33, fp34 };
         partsImg = new Image[] { part1Img, part2Img, part3Img, part4Img };
+        
 
         rightArrows = new Image[] { rightArrow1, rightArrow2, rightArrow3, rightArrow4 };
         leftArrows = new Image[] { leftArrow1, leftArrow2, leftArrow3, leftArrow4 };
+
+        doorAnim = verticalExitDoor.GetComponent<Animator>();
+        doorAudio = verticalExitDoor.GetComponent<AudioSource>();
     }
 
     // 
@@ -137,13 +147,43 @@ public class mission10Controller : MonoBehaviour
 
         if (frameCounter == 4)
         {
-            fpObjects[indexFp].SetActive(false);
             cam18Controller.startMovement = true;
             SwapCameras(0, 0, 1, 0);
-            enableFind = false;
-            frameCounter = 0;
-            imageIndex = 0;
+            completed++;
+            resetValues();
         }
+
+        if (completed >= 3 && !finish)
+        {
+            StartCoroutine(FadeIn());
+            StartCoroutine(waitUntilMoveDoor());
+        }
+    }
+
+
+    IEnumerator waitUntilMoveDoor()
+    {
+        yield return new WaitForSeconds(3f);
+        SwapCameras(1, 0, 0, 0);
+        playerMov.canMove = true;
+        cc.enabled = true;
+        cam18Controller.startMovement = false;
+        uvLightInteractable.SetActive(false);
+        doorAnim.SetBool("open", true);
+        doorAudio.Play();
+        finish = true;
+    }
+    
+
+    void resetValues()
+    {
+        fingerprint1Img.gameObject.SetActive(false);
+        fingerprint2Img.gameObject.SetActive(false);
+        fingerprint3Img.gameObject.SetActive(false);
+        fpObjects[indexFp].SetActive(false);
+        enableFind = false;
+        imageIndex = 0;
+        frameCounter = 0;
     }
 
     static int imageIndex = 0;
@@ -154,7 +194,7 @@ public class mission10Controller : MonoBehaviour
         {
             rightArrows[frameCounter].gameObject.SetActive(true);
             imageIndex++;
-            checkFingerprint();
+            partsImg[frameCounter].sprite = spriteList[frameCounter][imageIndex];
         } else
         {
             rightArrows[frameCounter].gameObject.SetActive(false);
@@ -167,32 +207,16 @@ public class mission10Controller : MonoBehaviour
         {
             leftArrows[frameCounter].gameObject.SetActive(true);
             imageIndex--;
-            checkFingerprint();
+            partsImg[frameCounter].sprite = spriteList[frameCounter][imageIndex];
         } else
         {
             leftArrows[frameCounter].gameObject.SetActive(false);
         }
     }
 
-    void checkFingerprint()
-    {
-        if (indexFp == 0)
-        {
-            partsImg[frameCounter].sprite = fp1[imageIndex];
-        }
-        else if (indexFp == 1)
-        {
-            partsImg[frameCounter].sprite = fp2[imageIndex];
-        }
-        else if (indexFp == 2)
-        {
-            partsImg[frameCounter].sprite = fp3[imageIndex];
-        }
-    }
 
     void checkCorrectAnswer()
     {
-        
         if (partsImg[frameCounter].sprite == fp1[frameCounter] || partsImg[frameCounter].sprite == fp2[frameCounter] || partsImg[frameCounter].sprite == fp3[frameCounter])
         {
             frameCounter++;
@@ -206,20 +230,16 @@ public class mission10Controller : MonoBehaviour
     {
         indexFp = index;
         SwapCameras(0, 0, 0, 1);
-        // se activa la imagen de la huella de referencia correspondiente
         fingerprints[index].gameObject.SetActive(true);
-        // se inicializan aleatoriamente los 4 arrays de sprites en funcion del indice
         initializeFingerprintParts(index);
-        // se activa el primer sprite de cada array
+
         part1Img.sprite = part1[0];
         part2Img.sprite = part2[0];
         part3Img.sprite = part3[0];
         part4Img.sprite = part4[0];
-        // se posiciona el marco y las flechas sobre el primer array
         updateFrameArrows();
 
         enableFind = true;
-
     }
 
     void updateFrameArrows()
@@ -262,28 +282,10 @@ public class mission10Controller : MonoBehaviour
         part2 = new Sprite[] { imagesToShuffle[1], imagesToShuffle[3], imagesToShuffle[2], imagesToShuffle[0] };
         part3 = new Sprite[] { imagesToShuffle[2], imagesToShuffle[0], imagesToShuffle[3], imagesToShuffle[1] };
         part4 = new Sprite[] { imagesToShuffle[3], imagesToShuffle[1], imagesToShuffle[0], imagesToShuffle[2] };
+
+        spriteList = new List<Sprite[]> { part1, part2, part3, part4 };
+
     }
-    /*if (index == 0)
-    {
-        part1 = new Image[] { fp12, fp13, fp11, fp14 };
-        part2 = new Image[] { fp11, fp13, fp14, fp12 };
-        part3 = new Image[] { fp14, fp13, fp12, fp11 };
-        part4 = new Image[] { fp13, fp11, fp12, fp14 };
-    }
-    else if (index == 1)
-    {
-        part1 = new Image[] { fp22, fp23, fp21, fp24 };
-        part2 = new Image[] { fp21, fp23, fp24, fp22 };
-        part3 = new Image[] { fp24, fp23, fp22, fp21 };
-        part4 = new Image[] { fp23, fp21, fp22, fp24 };
-    } 
-    else if (index == 2)
-    {
-        part1 = new Image[] { fp32, fp33, fp31, fp34 };
-        part2 = new Image[] { fp31, fp33, fp34, fp32 };
-        part3 = new Image[] { fp34, fp33, fp32, fp31 };
-        part4 = new Image[] { fp33, fp31, fp32, fp34 };
-    }*/
 
 
     // Shows 'X' when leaving grids.  
@@ -332,6 +334,24 @@ public class mission10Controller : MonoBehaviour
         info.SetActive(true);
         yield return new WaitForSeconds(3f);
         StartCoroutine(FadeOutCoroutine());
+    }
+
+    IEnumerator FadeIn()
+    {
+        float elapsedTime = 0f;
+        Color color = code10.color;
+        color.a = 0f; 
+        code10.color = color;
+
+        while (elapsedTime < 2f)
+        {
+            elapsedTime += Time.deltaTime;
+            color.a = Mathf.Clamp01(elapsedTime / 2f); 
+            code10.color = color;
+            yield return null; 
+        }
+        color.a = 1f; 
+        code10.color = color;
     }
 
     // Fades out the info over time.
