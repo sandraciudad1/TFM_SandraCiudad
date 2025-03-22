@@ -2,6 +2,8 @@ using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using System.Linq;
 
 public class mission10Controller : MonoBehaviour
 {
@@ -23,17 +25,66 @@ public class mission10Controller : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam17;
     [SerializeField] CinemachineVirtualCamera vcam18;
+    [SerializeField] CinemachineVirtualCamera vcam19;
+    camera18Controller cam18Controller;
+
+    [SerializeField] Image fingerprint1Img;
+    [SerializeField] Image fingerprint2Img;
+    [SerializeField] Image fingerprint3Img;
+    Image[] fingerprints;
+
+    [SerializeField] Sprite fp11;
+    [SerializeField] Sprite fp12;
+    [SerializeField] Sprite fp13;
+    [SerializeField] Sprite fp14;
+    [SerializeField] Sprite fp21;
+    [SerializeField] Sprite fp22;
+    [SerializeField] Sprite fp23;
+    [SerializeField] Sprite fp24;
+    [SerializeField] Sprite fp31;
+    [SerializeField] Sprite fp32;
+    [SerializeField] Sprite fp33;
+    [SerializeField] Sprite fp34;
+    Sprite[] part1;
+    Sprite[] part2;
+    Sprite[] part3;
+    Sprite[] part4;
+
+    [SerializeField] Image part1Img;
+    [SerializeField] Image part2Img;
+    [SerializeField] Image part3Img;
+    [SerializeField] Image part4Img;
+
+    int frameCounter = 0;
+    [SerializeField] Image frame1;
+    [SerializeField] Image frame2;
+    [SerializeField] Image frame3;
+    [SerializeField] Image frame4;
+    Image[] frames;
+    [SerializeField] Image arrows1;
+    [SerializeField] Image arrows2;
+    [SerializeField] Image arrows3;
+    [SerializeField] Image arrows4;
+    Image[] arrows;
+
+    bool enableFind = false;
 
 
     // 
     void Start()
     {
-        SwapCameras(1, 0, 0);
+        SwapCameras(1, 0, 0, 0);
         playerAnim = player.GetComponent<Animator>();
         cc = player.GetComponent<CharacterController>();
         playerMov = player.GetComponent<PlayerMovement>();
 
         canvasGroup = info.GetComponent<CanvasGroup>();
+        cam18Controller = vcam18.GetComponent<camera18Controller>();
+
+        fingerprints = new Image[] { fingerprint1Img, fingerprint2Img, fingerprint3Img };
+        frames = new Image[] { frame1, frame2, frame3, frame4 };
+        arrows = new Image[] { arrows1, arrows2, arrows3, arrows4 };
+
     }
 
     // 
@@ -44,7 +95,88 @@ public class mission10Controller : MonoBehaviour
         /// 2. capturar la huella
         /// 3. en el detector replicarla
         /// 
+
+        if (enableFind)
+        {
+            if (indexFp == 0)
+            {
+                if (frameCounter == 0)
+                {
+
+                }
+            }
+        }
     }
+    static int indexFp;
+    public void analyzeFingerprint(int index)
+    {
+        indexFp = index;
+        SwapCameras(0, 0, 0, 1);
+        // se activa la imagen de la huella de referencia correspondiente
+        fingerprints[index].gameObject.SetActive(true);
+        // se inicializan aleatoriamente los 4 arrays de sprites en funcion del indice
+        initializeFingerprintParts(index);
+        // se activa el primer sprite de cada array
+        part1Img.sprite = part1[0];
+        part2Img.sprite = part2[0];
+        part3Img.sprite = part3[0];
+        part4Img.sprite = part4[0];
+        // se posiciona el marco y las flechas sobre el primer array
+        frames[frameCounter].gameObject.SetActive(true);
+        arrows[frameCounter].gameObject.SetActive(true);
+
+        enableFind = true;
+
+    }
+
+    void initializeFingerprintParts(int index)
+    {
+        List<Sprite> imagesToShuffle = new List<Sprite>();
+
+        switch (index)
+        {
+            case 0:
+                imagesToShuffle.AddRange(new Sprite[] { fp11, fp12, fp13, fp14 });
+                break;
+            case 1:
+                imagesToShuffle.AddRange(new Sprite[] { fp21, fp22, fp23, fp24 });
+                break;
+            case 2:
+                imagesToShuffle.AddRange(new Sprite[] { fp31, fp32, fp33, fp34 });
+                break;
+            default:
+                return;
+        }
+
+        imagesToShuffle = imagesToShuffle.OrderBy(img => Random.value).ToList();
+
+        part1 = new Sprite[] { imagesToShuffle[0], imagesToShuffle[2], imagesToShuffle[1], imagesToShuffle[3] };
+        part2 = new Sprite[] { imagesToShuffle[1], imagesToShuffle[3], imagesToShuffle[2], imagesToShuffle[0] };
+        part3 = new Sprite[] { imagesToShuffle[2], imagesToShuffle[0], imagesToShuffle[3], imagesToShuffle[1] };
+        part4 = new Sprite[] { imagesToShuffle[3], imagesToShuffle[1], imagesToShuffle[0], imagesToShuffle[2] };
+    }
+    /*if (index == 0)
+    {
+        part1 = new Image[] { fp12, fp13, fp11, fp14 };
+        part2 = new Image[] { fp11, fp13, fp14, fp12 };
+        part3 = new Image[] { fp14, fp13, fp12, fp11 };
+        part4 = new Image[] { fp13, fp11, fp12, fp14 };
+    }
+    else if (index == 1)
+    {
+        part1 = new Image[] { fp22, fp23, fp21, fp24 };
+        part2 = new Image[] { fp21, fp23, fp24, fp22 };
+        part3 = new Image[] { fp24, fp23, fp22, fp21 };
+        part4 = new Image[] { fp23, fp21, fp22, fp24 };
+    } 
+    else if (index == 2)
+    {
+        part1 = new Image[] { fp32, fp33, fp31, fp34 };
+        part2 = new Image[] { fp31, fp33, fp34, fp32 };
+        part3 = new Image[] { fp34, fp33, fp32, fp31 };
+        part4 = new Image[] { fp33, fp31, fp32, fp34 };
+    }*/
+
 
     // Shows 'X' when leaving grids.  
     private void OnTriggerEnter(Collider other)
@@ -70,7 +202,7 @@ public class mission10Controller : MonoBehaviour
         if (other.gameObject.CompareTag("fpDetector") && uvLight.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
         {
             letterX.SetActive(false);
-            SwapCameras(0, 1, 0);
+            SwapCameras(0, 1, 0, 0);
             playerMov.canMove = false;
             cc.enabled = false;
             player.transform.position = firstPos;
@@ -118,17 +250,21 @@ public class mission10Controller : MonoBehaviour
         yield return new WaitForSeconds(3f);
         player.transform.position = secondPos;
         playerAnim.SetBool("uvLight", false);
+        vcam18.gameObject.SetActive(true);
         uvLightInteractable.SetActive(true);
         uvLight.SetActive(false);
-        SwapCameras(0, 0, 1);
+        SwapCameras(0, 0, 1, 0);
+        //habilitar movimiento de la camara 18
+        cam18Controller.startMovement = true;
 
     }
 
     // Swap between virtual cameras.
-    void SwapCameras(int priority1, int priority2, int priority3)
+    void SwapCameras(int priority1, int priority2, int priority3, int priority4)
     {
         vcam1.Priority = priority1;
         vcam17.Priority = priority2;
         vcam18.Priority = priority3;
+        vcam19.Priority = priority4;
     }
 }

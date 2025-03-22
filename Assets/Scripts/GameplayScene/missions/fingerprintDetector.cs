@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +16,10 @@ public class fingerprintDetector : MonoBehaviour
     [SerializeField] GameObject letterR3;
     GameObject[] lettersR;
 
-
+    [SerializeField] CinemachineVirtualCamera vcam18;
+    camera18Controller cam18Controller;
+    [SerializeField] GameObject playerTrigger;
+    mission10Controller mission10;
 
     // 
     void Start()
@@ -23,6 +27,8 @@ public class fingerprintDetector : MonoBehaviour
         fingerprints = new Image[] { fingerprint1, fingerprint2, fingerprint3 };
         lettersR = new GameObject[] { letterR1, letterR2, letterR3 };
 
+        cam18Controller = vcam18.GetComponent<camera18Controller>();
+        mission10 = playerTrigger.GetComponent<mission10Controller>();
     }
 
     // 
@@ -52,14 +58,32 @@ public class fingerprintDetector : MonoBehaviour
 
     void activateFingerprint(int index)
     {
-        Color color = fingerprints[index].color;
-        color.a = 1f; 
-        fingerprints[index].color = color;
-        lettersR[index].SetActive(true);
+        cam18Controller.startMovement = false;
+        StartCoroutine(fadeToFullAlpha(fingerprints[index], index));
+        
 
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Debug.Log("press r");
+            mission10.analyzeFingerprint(index);
         }
+    }
+
+    IEnumerator fadeToFullAlpha(Image image, int index)
+    {
+        float elapsedTime = 0f;
+        Color color = image.color;
+        color.a = 0f; 
+        image.color = color;
+
+        while (elapsedTime < 2f)
+        {
+            elapsedTime += Time.deltaTime;
+            color.a = Mathf.Clamp01(elapsedTime / 2f);
+            image.color = color;
+            yield return null; 
+        }
+        color.a = 1f;
+        image.color = color;
+        lettersR[index].SetActive(true);
     }
 }
