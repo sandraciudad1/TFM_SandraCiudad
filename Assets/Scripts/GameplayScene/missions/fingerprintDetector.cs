@@ -34,6 +34,10 @@ public class fingerprintDetector : MonoBehaviour
     // 
     void Update()
     {
+        if (completed == 3)
+        {
+            Debug.Log("finish game");
+        }
         
     }
 
@@ -56,16 +60,18 @@ public class fingerprintDetector : MonoBehaviour
         }
     }
 
+    static int completed = 0;
+
     void activateFingerprint(int index)
     {
         cam18Controller.startMovement = false;
         StartCoroutine(fadeToFullAlpha(fingerprints[index], index));
         
-
         if (Input.GetKeyDown(KeyCode.R))
         {
             mission10.analyzeFingerprint(index);
         }
+        completed++;
     }
 
     IEnumerator fadeToFullAlpha(Image image, int index)

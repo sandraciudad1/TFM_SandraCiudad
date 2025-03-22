@@ -28,6 +28,11 @@ public class mission10Controller : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam19;
     camera18Controller cam18Controller;
 
+    [SerializeField] GameObject fp1Object;
+    [SerializeField] GameObject fp2Object;
+    [SerializeField] GameObject fp3Object;
+    GameObject[] fpObjects;
+
     [SerializeField] Image fingerprint1Img;
     [SerializeField] Image fingerprint2Img;
     [SerializeField] Image fingerprint3Img;
@@ -45,6 +50,10 @@ public class mission10Controller : MonoBehaviour
     [SerializeField] Sprite fp32;
     [SerializeField] Sprite fp33;
     [SerializeField] Sprite fp34;
+    Sprite[] fp1;
+    Sprite[] fp2;
+    Sprite[] fp3;
+
     Sprite[] part1;
     Sprite[] part2;
     Sprite[] part3;
@@ -54,6 +63,7 @@ public class mission10Controller : MonoBehaviour
     [SerializeField] Image part2Img;
     [SerializeField] Image part3Img;
     [SerializeField] Image part4Img;
+    Image[] partsImg;
 
     int frameCounter = 0;
     [SerializeField] Image frame1;
@@ -61,11 +71,23 @@ public class mission10Controller : MonoBehaviour
     [SerializeField] Image frame3;
     [SerializeField] Image frame4;
     Image[] frames;
-    [SerializeField] Image arrows1;
-    [SerializeField] Image arrows2;
-    [SerializeField] Image arrows3;
-    [SerializeField] Image arrows4;
-    Image[] arrows;
+    [SerializeField] GameObject arrows1;
+    [SerializeField] GameObject arrows2;
+    [SerializeField] GameObject arrows3;
+    [SerializeField] GameObject arrows4;
+    GameObject[] arrows;
+
+    [SerializeField] Image rightArrow1;
+    [SerializeField] Image rightArrow2;
+    [SerializeField] Image rightArrow3;
+    [SerializeField] Image rightArrow4;
+    Image[] rightArrows;
+    [SerializeField] Image leftArrow1;
+    [SerializeField] Image leftArrow2;
+    [SerializeField] Image leftArrow3;
+    [SerializeField] Image leftArrow4;
+    Image[] leftArrows;
+
 
     bool enableFind = false;
 
@@ -81,32 +103,104 @@ public class mission10Controller : MonoBehaviour
         canvasGroup = info.GetComponent<CanvasGroup>();
         cam18Controller = vcam18.GetComponent<camera18Controller>();
 
+        fpObjects = new GameObject[] { fp1Object, fp2Object, fp3Object };
         fingerprints = new Image[] { fingerprint1Img, fingerprint2Img, fingerprint3Img };
         frames = new Image[] { frame1, frame2, frame3, frame4 };
-        arrows = new Image[] { arrows1, arrows2, arrows3, arrows4 };
+        arrows = new GameObject[] { arrows1, arrows2, arrows3, arrows4 };
+        fp1 = new Sprite[] { fp11, fp12, fp13, fp14 };
+        fp2 = new Sprite[] { fp21, fp22, fp23, fp24 };
+        fp3 = new Sprite[] { fp31, fp32, fp33, fp34 };
+        partsImg = new Image[] { part1Img, part2Img, part3Img, part4Img };
 
+        rightArrows = new Image[] { rightArrow1, rightArrow2, rightArrow3, rightArrow4 };
+        leftArrows = new Image[] { leftArrow1, leftArrow2, leftArrow3, leftArrow4 };
     }
 
     // 
     void Update()
     {
-        /// pasos:
-        /// 1. buscar huellas en la puerta con la lintera
-        /// 2. capturar la huella
-        /// 3. en el detector replicarla
-        /// 
-
-        if (enableFind)
+        if (enableFind && frameCounter<4)
         {
-            if (indexFp == 0)
+            if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                if (frameCounter == 0)
-                {
-
-                }
+                nextImage();
+            }
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            {
+                previousImage();
+            }
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                checkCorrectAnswer();
             }
         }
+
+        if (frameCounter == 4)
+        {
+            fpObjects[indexFp].SetActive(false);
+            cam18Controller.startMovement = true;
+            SwapCameras(0, 0, 1, 0);
+            enableFind = false;
+            frameCounter = 0;
+            imageIndex = 0;
+        }
     }
+
+    static int imageIndex = 0;
+
+    void nextImage()
+    {
+        if (imageIndex < 3)
+        {
+            rightArrows[frameCounter].gameObject.SetActive(true);
+            imageIndex++;
+            checkFingerprint();
+        } else
+        {
+            rightArrows[frameCounter].gameObject.SetActive(false);
+        }
+    }
+
+    void previousImage()
+    {
+        if (imageIndex > 0)
+        {
+            leftArrows[frameCounter].gameObject.SetActive(true);
+            imageIndex--;
+            checkFingerprint();
+        } else
+        {
+            leftArrows[frameCounter].gameObject.SetActive(false);
+        }
+    }
+
+    void checkFingerprint()
+    {
+        if (indexFp == 0)
+        {
+            partsImg[frameCounter].sprite = fp1[imageIndex];
+        }
+        else if (indexFp == 1)
+        {
+            partsImg[frameCounter].sprite = fp2[imageIndex];
+        }
+        else if (indexFp == 2)
+        {
+            partsImg[frameCounter].sprite = fp3[imageIndex];
+        }
+    }
+
+    void checkCorrectAnswer()
+    {
+        
+        if (partsImg[frameCounter].sprite == fp1[frameCounter] || partsImg[frameCounter].sprite == fp2[frameCounter] || partsImg[frameCounter].sprite == fp3[frameCounter])
+        {
+            frameCounter++;
+            updateFrameArrows();
+            imageIndex=0;
+        }
+    }
+
     static int indexFp;
     public void analyzeFingerprint(int index)
     {
@@ -122,11 +216,25 @@ public class mission10Controller : MonoBehaviour
         part3Img.sprite = part3[0];
         part4Img.sprite = part4[0];
         // se posiciona el marco y las flechas sobre el primer array
-        frames[frameCounter].gameObject.SetActive(true);
-        arrows[frameCounter].gameObject.SetActive(true);
+        updateFrameArrows();
 
         enableFind = true;
 
+    }
+
+    void updateFrameArrows()
+    {
+        for(int i = 0; i < 4; i++)
+        {
+            frames[i].gameObject.SetActive(false);
+            arrows[i].SetActive(false);
+        }
+        if (frameCounter < 4)
+        {
+            frames[frameCounter].gameObject.SetActive(true);
+            arrows[frameCounter].SetActive(true);
+        }
+        
     }
 
     void initializeFingerprintParts(int index)
