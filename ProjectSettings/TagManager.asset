@@ -44,6 +44,8 @@ TagManager:
   - door21
   - grids
   - console
+  - fingerprint
+  - fpDetector
   layers:
   - Default
   - TransparentFX
