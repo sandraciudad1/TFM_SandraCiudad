@@ -21,7 +21,7 @@ public class fingerprintDetector : MonoBehaviour
     [SerializeField] GameObject playerTrigger;
     mission10Controller mission10;
 
-    // 
+    // Initializes fingerprint and mission-related components.
     void Start()
     {
         fingerprints = new Image[] { fingerprint1, fingerprint2, fingerprint3 };
@@ -31,12 +31,7 @@ public class fingerprintDetector : MonoBehaviour
         mission10 = playerTrigger.GetComponent<mission10Controller>();
     }
 
-    // 
-    void Update()
-    {
-        
-    }
-
+    // Detects fingerprint triggers and activates corresponding fingerprint.
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject.CompareTag("fingerprint"))
@@ -56,6 +51,7 @@ public class fingerprintDetector : MonoBehaviour
         }
     }
 
+    // Stops movement and starts fingerprint analysis.
     void activateFingerprint(int index)
     {
         cam18Controller.startMovement = false;
@@ -67,6 +63,7 @@ public class fingerprintDetector : MonoBehaviour
         }
     }
 
+    // Gradually fades in the fingerprint image.
     IEnumerator fadeToFullAlpha(Image image, int index)
     {
         float elapsedTime = 0f;

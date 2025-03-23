@@ -8,14 +8,9 @@ public class camera18Controller : MonoBehaviour
     float verticalClamp = 80f;
     float xRotation = 0f;
     public bool startMovement = false;
-    
-    // 
-    void Start()
-    {
-        
-    }
 
-    // 
+
+    // Handles camera movement based on mouse input.
     void Update()
     {
         if (startMovement)

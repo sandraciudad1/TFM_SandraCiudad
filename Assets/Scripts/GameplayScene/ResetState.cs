@@ -61,6 +61,10 @@ public class ResetState : MonoBehaviour
     Animator observationDoorAnim;
     [SerializeField] GameObject labDoor;
     Animator labDoorAnim;
+    [SerializeField] GameObject verticalExitDoor;
+    Animator verticalExitDoorAnim;
+    [SerializeField] GameObject scifiCrate;
+    Animator scifiCrateAnim;
 
     int[] objectsUnlocked;
     int[] recordsUnlocked;
@@ -136,6 +140,8 @@ public class ResetState : MonoBehaviour
         // doors Animators
         observationDoorAnim = observationDoor.GetComponent<Animator>();
         labDoorAnim = labDoor.GetComponent<Animator>();
+        verticalExitDoorAnim = verticalExitDoor.GetComponent<Animator>();
+        scifiCrateAnim = scifiCrate.GetComponent<Animator>();
     }
 
     // Executes actions when an object is collected.
@@ -208,10 +214,12 @@ public class ResetState : MonoBehaviour
             case 11: // brujula
                 crate9Anim.SetBool("open", true);
                 break;
-            /*case 12:
-
+            case 12: // luz ultravioleta
+                crate10Anim.SetBool("open", true);
+                verticalExitDoorAnim.SetBool("open", true);
+                scifiCrateAnim.SetBool("move", true);
                 break;
-            case 13:
+            /*case 13:
 
                 break;
             case 14:
@@ -222,10 +230,6 @@ public class ResetState : MonoBehaviour
         }
     }
 
-    void DisableAllDirtObjects()
-    {
-        
-    }
 
     // Manages record visibility based on unlocked items.
     void checkRecordsIndex(int index)
@@ -260,7 +264,7 @@ public class ResetState : MonoBehaviour
                 record9.SetActive(false);
                 break;
             case 9:
-                //record10.SetActive(false);
+                record10.SetActive(false);
                 break;
             default:
                 break;

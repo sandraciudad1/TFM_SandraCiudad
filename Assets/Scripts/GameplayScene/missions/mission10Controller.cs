@@ -92,13 +92,17 @@ public class mission10Controller : MonoBehaviour
     [SerializeField] Image code10;
     bool enableFind = false;
     bool finish = false;
+    static int indexFp;
     static int completed = 0;
+    static int imageIndex = 0;
 
+    [SerializeField] GameObject scifiCrate;
+    Animator scifiCrateAnim;
     [SerializeField] GameObject verticalExitDoor;
     Animator doorAnim;
     AudioSource doorAudio;
 
-    // 
+    // Initializes variables and assigns components.
     void Start()
     {
         SwapCameras(1, 0, 0, 0);
@@ -118,15 +122,15 @@ public class mission10Controller : MonoBehaviour
         fp3 = new Sprite[] { fp31, fp32, fp33, fp34 };
         partsImg = new Image[] { part1Img, part2Img, part3Img, part4Img };
         
-
         rightArrows = new Image[] { rightArrow1, rightArrow2, rightArrow3, rightArrow4 };
         leftArrows = new Image[] { leftArrow1, leftArrow2, leftArrow3, leftArrow4 };
 
+        scifiCrateAnim = scifiCrate.GetComponent<Animator>();
         doorAnim = verticalExitDoor.GetComponent<Animator>();
         doorAudio = verticalExitDoor.GetComponent<AudioSource>();
     }
 
-    // 
+    // Handles user input and updates game state.
     void Update()
     {
         if (enableFind && frameCounter<4)
@@ -160,21 +164,23 @@ public class mission10Controller : MonoBehaviour
         }
     }
 
-
+    // Waits and moves the door after 5 seconds.
     IEnumerator waitUntilMoveDoor()
     {
-        yield return new WaitForSeconds(3f);
+        SwapCameras(0, 0, 0, 1);
+        yield return new WaitForSeconds(5f);
         SwapCameras(1, 0, 0, 0);
         playerMov.canMove = true;
         cc.enabled = true;
         cam18Controller.startMovement = false;
         uvLightInteractable.SetActive(false);
         doorAnim.SetBool("open", true);
+        scifiCrateAnim.SetBool("move", true);
         doorAudio.Play();
         finish = true;
     }
-    
 
+    // Resets fingerprint detection values.
     void resetValues()
     {
         fingerprint1Img.gameObject.SetActive(false);
@@ -186,8 +192,7 @@ public class mission10Controller : MonoBehaviour
         frameCounter = 0;
     }
 
-    static int imageIndex = 0;
-
+    // Advances to the next fingerprint image.
     void nextImage()
     {
         if (imageIndex < 3)
@@ -201,6 +206,7 @@ public class mission10Controller : MonoBehaviour
         }
     }
 
+    // Moves back to the previous fingerprint image.
     void previousImage()
     {
         if (imageIndex > 0)
@@ -214,7 +220,7 @@ public class mission10Controller : MonoBehaviour
         }
     }
 
-
+    // Checks if the selected fingerprint part is correct.
     void checkCorrectAnswer()
     {
         if (partsImg[frameCounter].sprite == fp1[frameCounter] || partsImg[frameCounter].sprite == fp2[frameCounter] || partsImg[frameCounter].sprite == fp3[frameCounter])
@@ -225,7 +231,7 @@ public class mission10Controller : MonoBehaviour
         }
     }
 
-    static int indexFp;
+    // Starts fingerprint analysis based on the given index.
     public void analyzeFingerprint(int index)
     {
         indexFp = index;
@@ -242,6 +248,7 @@ public class mission10Controller : MonoBehaviour
         enableFind = true;
     }
 
+    // Updates UI arrows based on the frame counter.
     void updateFrameArrows()
     {
         for(int i = 0; i < 4; i++)
@@ -257,6 +264,7 @@ public class mission10Controller : MonoBehaviour
         
     }
 
+    // Randomizes fingerprint image parts for selection.
     void initializeFingerprintParts(int index)
     {
         List<Sprite> imagesToShuffle = new List<Sprite>();
@@ -284,11 +292,10 @@ public class mission10Controller : MonoBehaviour
         part4 = new Sprite[] { imagesToShuffle[3], imagesToShuffle[1], imagesToShuffle[0], imagesToShuffle[2] };
 
         spriteList = new List<Sprite[]> { part1, part2, part3, part4 };
-
     }
 
 
-    // Shows 'X' when leaving grids.  
+    // Shows 'X' when leaving fingerprint detector.  
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("fpDetector"))
@@ -297,7 +304,7 @@ public class mission10Controller : MonoBehaviour
         }
     }
 
-    // Hides 'X' when leaving grids.
+    // Hides 'X' when leaving fingerprint detector.
     private void OnTriggerExit(Collider other)
     {
         if (other.gameObject.CompareTag("fpDetector"))
@@ -336,6 +343,7 @@ public class mission10Controller : MonoBehaviour
         StartCoroutine(FadeOutCoroutine());
     }
 
+    // Gradually increases code10's opacity.
     IEnumerator FadeIn()
     {
         float elapsedTime = 0f;
@@ -382,7 +390,6 @@ public class mission10Controller : MonoBehaviour
         uvLightInteractable.SetActive(true);
         uvLight.SetActive(false);
         SwapCameras(0, 0, 1, 0);
-        //habilitar movimiento de la camara 18
         cam18Controller.startMovement = true;
 
     }
