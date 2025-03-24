@@ -46,6 +46,7 @@ TagManager:
   - console
   - fingerprint
   - fpDetector
+  - recordsObj
   layers:
   - Default
   - TransparentFX

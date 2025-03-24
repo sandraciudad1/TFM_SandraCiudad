@@ -1,0 +1,154 @@
+using Cinemachine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Video;
+
+public class videoPlayerController : MonoBehaviour
+{
+    [SerializeField] GameObject player;
+    Animator playerAnim;
+    CharacterController cc;
+    PlayerMovement playerMov;
+    Vector3 firstPos = new Vector3(117.394f, 20.679f, 52.173f);
+    Vector3 secondPos = new Vector3(117.394f, 20.679f, 50.833f);
+    Quaternion playerRot = Quaternion.Euler(new Vector3(0f, 0f, 0f));
+    bool change = false;
+
+    [SerializeField] GameObject letterX;
+    [SerializeField] CinemachineVirtualCamera vcam1;
+    [SerializeField] CinemachineVirtualCamera vcam20;
+    [SerializeField] CinemachineVirtualCamera vcam21;
+
+    [SerializeField] VideoPlayer videoPlayer;
+    [SerializeField] VideoClip[] videoClips;
+
+    // 
+    void Start()
+    {
+        SwapCameras(1, 0, 0);
+        playerAnim = player.GetComponent<Animator>();
+        cc = player.GetComponent<CharacterController>();
+        playerMov = player.GetComponent<PlayerMovement>();
+
+        videoPlayer.loopPointReached += OnVideoFinished;
+        // Configurar el VideoPlayer
+        videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+
+        // Verificar si el AudioSource ya está presente
+        AudioSource audioSource = videoPlayer.GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = videoPlayer.gameObject.AddComponent<AudioSource>();
+        }
+        videoPlayer.SetTargetAudioSource(0, audioSource);
+        videoPlayer.EnableAudioTrack(0, true);
+        videoPlayer.SetDirectAudioMute(0, false);
+        videoPlayer.SetDirectAudioVolume(0, 1.0f);
+    }
+
+    // 
+    void Update()
+    {
+        AudioSource audioSource = videoPlayer.GetComponent<AudioSource>();
+        if (audioSource != null)
+        {
+            Debug.Log("AudioSource Volume: " + audioSource.volume);
+            Debug.Log("AudioSource isPlaying: " + audioSource.isPlaying);
+        }
+    }
+
+    // Shows 'X' when enter videoplayer.  
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("recordsObj"))
+        {
+            letterX.SetActive(true);
+        }
+    }
+
+    // Hides 'X' when leaving videoplayer.
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("recordsObj"))
+        {
+            letterX.SetActive(false);
+        }
+    }
+
+    // Detects continuous presence in a trigger area.  
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.CompareTag("recordsObj") && Input.GetKeyDown(KeyCode.X))
+        {
+            letterX.SetActive(false);
+            SwapCameras(0, 1, 0);
+            playerMov.canMove = false;
+            cc.enabled = false;
+            player.transform.position = firstPos;
+            player.transform.rotation = playerRot;
+            if (player.transform.position == firstPos && !change)
+            {
+                playerAnim.SetBool("handleRecord", true);
+                StartCoroutine(waitUntilFinishAnim(other.gameObject.name));
+                change = true;
+            }
+        }
+    }
+
+    IEnumerator waitUntilFinishAnim(string name)
+    {
+        yield return new WaitForSeconds(3f);
+        player.transform.position = secondPos;
+        SwapCameras(0, 0, 1);
+        playerAnim.SetBool("closeHand", false);
+        playerAnim.SetBool("handleRecord", false);
+        checkVideo(name);
+    }
+
+    void checkVideo(string name)
+    {
+        videoPlayer.gameObject.SetActive(true);
+
+        if (name.StartsWith("record") && int.TryParse(name.Substring(6), out int index) && index >= 1 && index <= 10)
+        {
+            videoPlayer.clip = videoClips[index - 1];
+            videoPlayer.Prepare();
+            StartCoroutine(PlayVideoWhenReady());
+        }
+    }
+
+    IEnumerator PlayVideoWhenReady()
+    {
+        while (!videoPlayer.isPrepared)
+        {
+            yield return null;
+        }
+
+        videoPlayer.Play();
+    }
+
+
+    void OnVideoFinished(VideoPlayer vp)
+    {
+        StartCoroutine(waitUntilMovePlayer());
+    }
+
+    IEnumerator waitUntilMovePlayer()
+    {
+        videoPlayer.gameObject.SetActive(false);
+        yield return new WaitForSeconds(2f);
+        SwapCameras(1, 0, 0);
+        playerMov.canMove = true;
+        cc.enabled = true;
+    }
+
+    
+    // Swap between virtual cameras.
+    void SwapCameras(int priority1, int priority2, int priority3)
+    {
+        vcam1.Priority = priority1;
+        vcam20.Priority = priority2;
+        vcam21.Priority = priority3;
+    }
+}
