@@ -74,7 +74,7 @@ public class inventoryController : MonoBehaviour
     [SerializeField] Image record9Img;
     [SerializeField] Image record10Img;
     Image[] collectableRecordsImgs;
-    string[] recordsNames;
+    string[] recordsNames = new string[10];
 
     // records sprites
     [SerializeField] Sprite record1Sprite;
@@ -111,7 +111,20 @@ public class inventoryController : MonoBehaviour
     [SerializeField] GameObject uvLight;
     [SerializeField] GameObject tape;
 
+    // 3d records
+    [SerializeField] GameObject record1;
+    [SerializeField] GameObject record2;
+    [SerializeField] GameObject record3;
+    [SerializeField] GameObject record4;
+    [SerializeField] GameObject record5;
+    [SerializeField] GameObject record6;
+    [SerializeField] GameObject record7;
+    [SerializeField] GameObject record8;
+    [SerializeField] GameObject record9;
+    [SerializeField] GameObject record10;
+
     GameObject[] collectable3dObjects = new GameObject[15];
+    GameObject[] collectable3dRecords = new GameObject[10];
 
     public bool blockInventory = false;
 
@@ -130,10 +143,10 @@ public class inventoryController : MonoBehaviour
                                          emergencyKitSprite, vacuumSprite, compassSprite, uvLightSprite, tapeSprite };
         collectableRecordsImgs = new Image[] { record1Img, record2Img, record3Img, record4Img, record5Img, record6Img, record7Img, record8Img, record9Img, record10Img };
         recordsSprites = new Sprite[] { record1Sprite, record2Sprite, record3Sprite, record4Sprite, record5Sprite, record6Sprite, record7Sprite, record8Sprite, record9Sprite, record10Sprite };
-        recordsNames = new string[] { "Grabacion 5: Sala de Comunicaciones", "Grabacion 2: Laboratorio cientifico", "Grabacion 3: Sala de Comunicaciones", "Grabacion 1: Zona de Observacion",
+        /*recordsNames = new string[] { "Grabacion 5: Sala de Comunicaciones", "Grabacion 2: Laboratorio cientifico", "Grabacion 3: Sala de Comunicaciones", "Grabacion 1: Zona de Observacion",
                                       "Grabacion 4: Zona de Inteligencia Artificial", "Grabacion 6: Zona de Despresurizacion", "Grabacion 7: Puente de Mando", "Grabacion 8: Bahía de Mantenimiento " +
                                       "Tecnologico", "Grabacion 9: Pasillos Centrales", "Grabacion 10: Zona de Observacion" };
-
+        */
         unlockedObjects = new bool[objectBubbles.Length];
         unlockedRecords = new bool[recordBubbles.Length];
 
@@ -163,7 +176,7 @@ public class inventoryController : MonoBehaviour
             inventoryBg.SetActive(false);
             isBrowsingSection = false;
             recordsContainer.SetActive(false);
-            objectsContainer.SetActive(false);
+            objectsContainer.SetActive(false); 
             recordsBubble.SetActive(true);
             objectsBubble.SetActive(true);
             playerMov = true;
@@ -281,16 +294,33 @@ public class inventoryController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            for (int i = 0; i < GameManager.GameManagerInstance.objectIndex; i++)
+            if (bubbleType == 0)
             {
-                collectable3dObjects[i].SetActive(false);
-            }
+                for (int i = 0; i < GameManager.GameManagerInstance.recordIndex; i++)
+                {
+                    collectable3dRecords[i].SetActive(false);
+                }
 
-            int index = selectedRow * cols + selectedCol;
-            if (index >= 0 && index < currentBubbles.Length && unlockedItems[index])
+                int index = selectedRow * cols + selectedCol;
+                if (index >= 0 && index < currentBubbles.Length && unlockedRecords[index])
+                {
+                    collectable3dRecords[index].SetActive(true);
+                    playerAnim.SetBool("closeHand", true);
+                }
+            } 
+            else if (bubbleType == 1)
             {
-                collectable3dObjects[index].SetActive(true);
-                playerAnim.SetBool("closeHand", true);
+                for (int i = 0; i < GameManager.GameManagerInstance.objectIndex; i++)
+                {
+                    collectable3dObjects[i].SetActive(false);
+                }
+
+                int index = selectedRow * cols + selectedCol;
+                if (index >= 0 && index < currentBubbles.Length && unlockedItems[index])
+                {
+                    collectable3dObjects[index].SetActive(true);
+                    playerAnim.SetBool("closeHand", true);
+                }
             }
         }
 
@@ -338,6 +368,8 @@ public class inventoryController : MonoBehaviour
     // Adds a record to the inventory.
     public void addRecord(int index, int id)
     {
+        recordsNames[index] = addRecordsNames(id);
+        collectable3dRecords[index] = add3DRecords(id);
         collectableRecordsImgs[index].sprite = recordsSprites[id];
         collectableRecordsImgs[index].gameObject.SetActive(true);
         unlockedRecords[index] = true;
@@ -353,6 +385,13 @@ public class inventoryController : MonoBehaviour
         {
             itemsNames[i] = addItemNames(i);
             collectable3dObjects[i] = add3DItems(i);
+        }
+
+        int recordsIndex = GameManager.GameManagerInstance.recordIndex;
+        for (int i = 0; i < recordsIndex; i++)
+        {
+            recordsNames[i] = addRecordsNames(i);
+            collectable3dRecords[i] = add3DRecords(i);
         }
     }
 
@@ -398,6 +437,44 @@ public class inventoryController : MonoBehaviour
             case 11: return compass;
             case 12: return uvLight;
             case 13: return tape;
+            default: return null;
+        }
+    }
+
+    // Returns the name of an item by its ID.
+    string addRecordsNames(int id)
+    {
+        switch (id)
+        {
+            case 0: return "Grabacion 1: Zona de Observacion";
+            case 1: return "Grabacion 2: Laboratorio cientifico";
+            case 2: return "Grabacion 3: Sala de Comunicaciones";
+            case 3: return "Grabacion 4: Zona de Inteligencia Artificial";
+            case 4: return "Grabacion 5: Sala de Comunicaciones";
+            case 5: return "Grabacion 6: Zona de Despresurizacion";
+            case 6: return "Grabacion 7: Puente de Mando";
+            case 7: return "Grabacion 8: Bahía de Mantenimiento Tecnologico";
+            case 8: return "Grabacion 9: Pasillos Centrales";
+            case 9: return "Grabacion 10: Zona de Observacion";
+            default: return "";
+        }
+    }
+
+    // Returns the 3D object corresponding to an item ID.
+    GameObject add3DRecords(int id)
+    {
+        switch (id)
+        {
+            case 0: return record1;
+            case 1: return record2;
+            case 2: return record3;
+            case 3: return record4;
+            case 4: return record5;
+            case 5: return record6;
+            case 6: return record7;
+            case 7: return record8;
+            case 8: return record9;
+            case 9: return record10;
             default: return null;
         }
     }
