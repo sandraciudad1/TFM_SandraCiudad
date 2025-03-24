@@ -36,6 +36,7 @@ public class mission7Controller : MonoBehaviour
     CanvasGroup canvasGroup;
     bool canCollect = false;
     bool finish = false;
+    bool solveMission = false;
     static int objectsCollected = 0;
 
     [SerializeField] GameObject alcohol;
@@ -94,6 +95,7 @@ public class mission7Controller : MonoBehaviour
                     {
                         doorAnimator.SetBool("open", true);
                         doorAudio.Play();
+                        StartCoroutine(hideDoor());
                         bg.SetActive(false);
                         readCode = false;
                     } 
@@ -108,12 +110,20 @@ public class mission7Controller : MonoBehaviour
 
         if (objectsCollected >= 8 && !finish)
         {
+            solveMission = true;
             movePlayer();
             code.SetActive(true);
             playerMov.canMove = true;
             cc.enabled = true;
             finish = true;
         }
+    }
+
+    // Hides the door after a 3-second delay.
+    IEnumerator hideDoor()
+    {
+        yield return new WaitForSeconds(3f);
+        verticalDoor.SetActive(false);
     }
 
     // Moves the player to a specific position and rotation.
@@ -128,7 +138,7 @@ public class mission7Controller : MonoBehaviour
     // Activates letter X when player enters the "kit" trigger area.
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("kit"))
+        if (other.gameObject.CompareTag("kit") && !solveMission)
         {
             letterX.SetActive(true);
         }
@@ -141,7 +151,7 @@ public class mission7Controller : MonoBehaviour
         {
             bg.SetActive(false);
         }
-        if (other.gameObject.CompareTag("kit"))
+        if (other.gameObject.CompareTag("kit") && !solveMission)
         {
             letterX.SetActive(false);
         }
@@ -156,7 +166,7 @@ public class mission7Controller : MonoBehaviour
             readCode = true;            
         }
 
-        if (other.gameObject.CompareTag("kit") && emergencyKit.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        if (other.gameObject.CompareTag("kit") && emergencyKit.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
         {
             letterX.SetActive(false);
             movePlayer();

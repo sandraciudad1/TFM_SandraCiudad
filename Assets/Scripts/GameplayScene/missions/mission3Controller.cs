@@ -20,6 +20,7 @@ public class mission3Controller : MonoBehaviour
     [SerializeField] GameObject spannerwrench;
     [SerializeField] GameObject letterX;
     bool finish = false;
+    bool solveMission = false;
 
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam4;
@@ -104,6 +105,7 @@ public class mission3Controller : MonoBehaviour
         } 
         else if (solved == 3 && !updatePos)
         {
+            solveMission = true;
             gradientBg.SetActive(false);
             code3.SetActive(true);
             SwapCameras(1, 0, 0, 0);
@@ -233,7 +235,7 @@ public class mission3Controller : MonoBehaviour
     // Shows 'X' when near modular pipes.
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("modularPipes") && !finish)
+        if (other.gameObject.CompareTag("modularPipes") && !finish && !solveMission)
         {
             letterX.SetActive(true);
         }
@@ -242,7 +244,7 @@ public class mission3Controller : MonoBehaviour
     // Hides 'X' when leaving modular pipes.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("modularPipes"))
+        if (other.gameObject.CompareTag("modularPipes") && !solveMission)
         {
             letterX.SetActive(false);
         }
@@ -251,7 +253,7 @@ public class mission3Controller : MonoBehaviour
     // Manages actions when staying near modular pipes.
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("modularPipes") && spannerwrench.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        if (other.gameObject.CompareTag("modularPipes") && spannerwrench.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
         {
             StartCoroutine(waitToShow());
             letterX.SetActive(false);

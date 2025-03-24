@@ -50,6 +50,7 @@ public class mission5Controller : MonoBehaviour
     static int spacePressed = 0;
     bool finish = false;
     bool isShowing = false;
+    bool solveMission = false;
 
     // Initializes variables and resets cable colors. 
     void Start()
@@ -88,6 +89,7 @@ public class mission5Controller : MonoBehaviour
         
         if (finish && !isShowing)
         {
+            solveMission = true;
             StartCoroutine(showPinCode());
         }
     }
@@ -200,7 +202,7 @@ public class mission5Controller : MonoBehaviour
         {
             // se le quita vida
         }
-        if (other.gameObject.CompareTag("securitySystem"))
+        if (other.gameObject.CompareTag("securitySystem") && !solveMission)
         {
             letterX.SetActive(true);
         }
@@ -209,7 +211,7 @@ public class mission5Controller : MonoBehaviour
     // Hides 'X' when leaving scifi terminal.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("securitySystem"))
+        if (other.gameObject.CompareTag("securitySystem") && !solveMission)
         {
             letterX.SetActive(false);
         }
@@ -218,7 +220,7 @@ public class mission5Controller : MonoBehaviour
     // Detects continuous presence in a trigger area.  
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("securitySystem") && wireCutters.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        if (other.gameObject.CompareTag("securitySystem") && wireCutters.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
         {
             letterX.SetActive(false);
             SwapCameras(0, 1);

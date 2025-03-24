@@ -41,12 +41,13 @@ public class mission4Controller : MonoBehaviour
     string userInput = "";
     string[] codes;
     bool hasFinish = false;
+    bool solveMission = false;
 
     [SerializeField] GameObject labDoor;
     Animator labDoorAnim;
     AudioSource audioDoor;
 
-    // 
+    // Initializes components and sets up the game state.
     void Start()
     {
         SwapCameras(1, 0);
@@ -60,8 +61,7 @@ public class mission4Controller : MonoBehaviour
         audioDoor = labDoor.GetComponent<AudioSource>();
     }
 
-    
-    // 
+    // Checks user input and triggers mission completion events.
     void Update()
     {
         if (readSequence)
@@ -71,6 +71,7 @@ public class mission4Controller : MonoBehaviour
 
         if (charCounter > 5 && !hasFinish)
         {
+            solveMission = true;
             inputTextBg.SetActive(false);
             SwapCameras(1, 0);
             playerMov.canMove = true;
@@ -82,6 +83,7 @@ public class mission4Controller : MonoBehaviour
         }
     }
 
+    // Reads and validates the player's input code.
     void readUserInput()
     {
         foreach (char c in Input.inputString)
@@ -114,11 +116,10 @@ public class mission4Controller : MonoBehaviour
         inputText.text = userInput;
     }
 
-
     // Shows 'X' when near scifi terminal.
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("scifi_terminal") && !finish)
+        if (other.gameObject.CompareTag("scifi_terminal") && !finish && !solveMission)
         {
             letterX.SetActive(true);
         }
@@ -127,7 +128,7 @@ public class mission4Controller : MonoBehaviour
     // Hides 'X' when leaving scifi terminal.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("scifi_terminal"))
+        if (other.gameObject.CompareTag("scifi_terminal") && !solveMission)
         {
             letterX.SetActive(false);
         }
@@ -136,7 +137,7 @@ public class mission4Controller : MonoBehaviour
     // Manages actions when staying near scifi terminal.
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("scifi_terminal") && securityCard.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        if (other.gameObject.CompareTag("scifi_terminal") && securityCard.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
         {
             letterX.SetActive(false);
             SwapCameras(0, 1);
@@ -153,6 +154,7 @@ public class mission4Controller : MonoBehaviour
         }
     }
 
+    // Displays security card analysis and loading screens.
     IEnumerator showVideos()
     {
         cardReader.gameObject.SetActive(false);
@@ -167,6 +169,7 @@ public class mission4Controller : MonoBehaviour
         checkSequence();
     }
 
+    // Checks and updates the input sequence.
     void checkSequence()
     {
         if (charCounter == 3)
@@ -183,6 +186,7 @@ public class mission4Controller : MonoBehaviour
         }
     }
 
+    // Plays and manages video sequences.
     IEnumerator showSequences(float wait1, float wait2, VideoPlayer sequence)
     {
         yield return new WaitForSeconds(wait1);

@@ -29,8 +29,6 @@ public class mission1Controller : MonoBehaviour
     [SerializeField] GameObject btn5;
     GameObject[] buttons;
 
-    
-
     [SerializeField] GameObject observationDoor;
     Animator observationDoorAnim;
     AudioSource audioDoor;
@@ -51,7 +49,6 @@ public class mission1Controller : MonoBehaviour
             buttons[i].transform.rotation = initialRot;
         }
 
-        
         observationDoorAnim = observationDoor.GetComponent<Animator>();
         audioDoor = observationDoor.GetComponent<AudioSource>();
     }

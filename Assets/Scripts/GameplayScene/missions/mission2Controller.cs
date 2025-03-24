@@ -27,6 +27,7 @@ public class mission2Controller : MonoBehaviour
     [SerializeField] VideoPlayer code2;
     [SerializeField] VideoPlayer unknownSamples;
     bool finish = false;
+    bool solveMission = false;
 
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam3;
@@ -74,6 +75,7 @@ public class mission2Controller : MonoBehaviour
 
         if (GameManager.GameManagerInstance.samplesCounter == 4)
         {
+            solveMission = true;
             code2.gameObject.SetActive(true);
             code2.Play();
             unknownSamples.gameObject.SetActive(true);
@@ -86,7 +88,7 @@ public class mission2Controller : MonoBehaviour
     // Shows 'X' when near an analytical instrument.
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("analyticalInstrument") && !finish)
+        if (other.gameObject.CompareTag("analyticalInstrument") && !finish && !solveMission)
         {
             letterX.SetActive(true);
         }
@@ -95,7 +97,7 @@ public class mission2Controller : MonoBehaviour
     // Hides 'X' when leaving an analytical instrument.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("analyticalInstrument"))
+        if (other.gameObject.CompareTag("analyticalInstrument") && !solveMission)
         {
             letterX.SetActive(false);
         }
@@ -104,7 +106,7 @@ public class mission2Controller : MonoBehaviour
     // Analyzes a sample when pressing 'X' near an instrument.
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("analyticalInstrument") && sampleActive()>0 && Input.GetKeyDown(KeyCode.X))
+        if (other.gameObject.CompareTag("analyticalInstrument") && sampleActive()>0 && Input.GetKeyDown(KeyCode.X) && !solveMission)
         {
             if (checkSample(sampleActive()))
             {

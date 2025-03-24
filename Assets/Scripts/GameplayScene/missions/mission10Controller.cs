@@ -92,6 +92,7 @@ public class mission10Controller : MonoBehaviour
     [SerializeField] Image code10;
     bool enableFind = false;
     bool finish = false;
+    bool solveMission = false;
     static int indexFp;
     static int completed = 0;
     static int imageIndex = 0;
@@ -159,6 +160,7 @@ public class mission10Controller : MonoBehaviour
 
         if (completed >= 3 && !finish)
         {
+            solveMission = true;
             StartCoroutine(FadeIn());
             StartCoroutine(waitUntilMoveDoor());
         }
@@ -298,7 +300,7 @@ public class mission10Controller : MonoBehaviour
     // Shows 'X' when leaving fingerprint detector.  
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("fpDetector"))
+        if (other.gameObject.CompareTag("fpDetector") && !solveMission)
         {
             letterX.SetActive(true);
         }
@@ -307,7 +309,7 @@ public class mission10Controller : MonoBehaviour
     // Hides 'X' when leaving fingerprint detector.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("fpDetector"))
+        if (other.gameObject.CompareTag("fpDetector") && !solveMission)
         {
             letterX.SetActive(false);
         }
@@ -316,7 +318,7 @@ public class mission10Controller : MonoBehaviour
     // Detects continuous presence in a trigger area.  
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("fpDetector") && uvLight.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        if (other.gameObject.CompareTag("fpDetector") && uvLight.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
         {
             letterX.SetActive(false);
             SwapCameras(0, 1, 0, 0);

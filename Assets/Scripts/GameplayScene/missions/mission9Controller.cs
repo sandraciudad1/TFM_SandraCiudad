@@ -15,11 +15,15 @@ public class mission9Controller : MonoBehaviour
     bool change = false;
     public bool finishGame = false;
     bool finish = false;
+    bool solveMission = false;
 
     [SerializeField] GameObject compass;
     [SerializeField] GameObject letterX;
     [SerializeField] GameObject navigationScreen;
     [SerializeField] GameObject syncronizationScreen;
+    [SerializeField] GameObject info;
+    CanvasGroup canvasGroup;
+
     [SerializeField] GameObject puzzle;
     puzzleController puzzlecontroller;
 
@@ -34,6 +38,8 @@ public class mission9Controller : MonoBehaviour
         playerAnim = player.GetComponent<Animator>();
         cc = player.GetComponent<CharacterController>();
         playerMov = player.GetComponent<PlayerMovement>();
+
+        canvasGroup = info.GetComponent<CanvasGroup>();
         puzzlecontroller = puzzle.GetComponent<puzzleController>();
     }
 
@@ -42,6 +48,7 @@ public class mission9Controller : MonoBehaviour
     {
         if (finishGame && !finish)
         {
+            solveMission = true;
             SwapCameras(1, 0, 0);
             player.transform.position = playerFinalPos;
             playerMov.canMove = true;
@@ -54,7 +61,7 @@ public class mission9Controller : MonoBehaviour
     // Shows 'X' when leaving grids.  
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("console"))
+        if (other.gameObject.CompareTag("console") && !solveMission)
         {
             letterX.SetActive(true);
         }
@@ -63,7 +70,7 @@ public class mission9Controller : MonoBehaviour
     // Hides 'X' when leaving grids.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("console"))
+        if (other.gameObject.CompareTag("console") && !solveMission)
         {
             letterX.SetActive(false);
         }
@@ -72,7 +79,7 @@ public class mission9Controller : MonoBehaviour
     // Detects continuous presence in a trigger area.  
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("console") && compass.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        if (other.gameObject.CompareTag("console") && compass.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
         {
             letterX.SetActive(false);
             SwapCameras(0, 1, 0);
@@ -96,12 +103,40 @@ public class mission9Controller : MonoBehaviour
         syncronizationScreen.SetActive(true);
         puzzle.SetActive(true);
         yield return new WaitForSeconds(5f);
+        StartCoroutine(waitToShow());
         navigationScreen.SetActive(false);
         syncronizationScreen.SetActive(false);
         playerAnim.SetBool("compass", false);
         compass.SetActive(false);
         SwapCameras(0, 0, 1);
         puzzlecontroller.canMove = true;
+    }
+
+    // Waits before showing the info.
+    IEnumerator waitToShow()
+    {
+        yield return new WaitForSeconds(0.2f);
+        info.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        StartCoroutine(FadeOutCoroutine());
+    }
+
+    // Fades out the info over time.
+    IEnumerator FadeOutCoroutine()
+    {
+        float duration = 2f;
+        float startAlpha = 1f;
+        float endAlpha = 0f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float newAlpha = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / duration);
+            canvasGroup.alpha = newAlpha;
+            yield return null;
+        }
+        canvasGroup.alpha = endAlpha;
     }
 
     // Swap between virtual cameras.

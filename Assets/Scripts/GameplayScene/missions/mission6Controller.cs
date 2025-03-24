@@ -37,6 +37,7 @@ public class mission6Controller : MonoBehaviour
     string[] correctAnswers = { "C0D1GO", "PU3RT4", "5726" };
     static int wordCounter = 0;
     bool canCheck = true;
+    bool solveMission = false;
 
     [SerializeField] GameObject inventory;
     inventoryController inventoryCont;
@@ -60,6 +61,7 @@ public class mission6Controller : MonoBehaviour
     {
         if (wordCounter >= 3)
         {
+            solveMission = true;
             canCheck = false;
             SwapCameras(1, 0, 0);
             player.transform.position = endPosition;
@@ -109,14 +111,13 @@ public class mission6Controller : MonoBehaviour
             {
                 enableTextBox();
             }
-            
         }
     }
 
     // Shows 'X' when leaving book.  
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("book"))
+        if (other.gameObject.CompareTag("book") && !solveMission)
         {
             letterX.SetActive(true);
         }
@@ -125,7 +126,7 @@ public class mission6Controller : MonoBehaviour
     // Hides 'X' when leaving book.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("book"))
+        if (other.gameObject.CompareTag("book") && !solveMission)
         {
             letterX.SetActive(false);
         }
@@ -134,7 +135,7 @@ public class mission6Controller : MonoBehaviour
     // Detects continuous presence in a trigger area.  
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("book") && clipboard.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        if (other.gameObject.CompareTag("book") && clipboard.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
         {
             letterX.SetActive(false);
             SwapCameras(0, 1, 0);

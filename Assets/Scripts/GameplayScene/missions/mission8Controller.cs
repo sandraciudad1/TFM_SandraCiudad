@@ -15,12 +15,15 @@ public class mission8Controller : MonoBehaviour
 
     [SerializeField] GameObject vacuum;
     [SerializeField] GameObject vacuumMobile;
+    [SerializeField] GameObject limits;
     [SerializeField] GameObject letterX;
 
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam13;
     [SerializeField] CinemachineVirtualCamera vcam14;
 
+    [SerializeField] GameObject info;
+    CanvasGroup canvasGroup;
     [SerializeField] GameObject screen;
     [SerializeField] GameObject screenCode;
     [SerializeField] GameObject navigationScreen;
@@ -28,6 +31,7 @@ public class mission8Controller : MonoBehaviour
     public bool enableControl = false;
     public bool finish = false;
     bool exit = false;
+    bool solveMission = false;
     float speed = 1f;
 
     // Initializes components and sets the initial camera configuration.
@@ -37,6 +41,8 @@ public class mission8Controller : MonoBehaviour
         playerAnim = player.GetComponent<Animator>();
         cc = player.GetComponent<CharacterController>();
         playerMov = player.GetComponent<PlayerMovement>();
+
+        canvasGroup = info.GetComponent<CanvasGroup>();
     }
 
     // Handles movement and controls the game's finishing sequence.
@@ -51,6 +57,8 @@ public class mission8Controller : MonoBehaviour
 
         if (finish && !exit)
         {
+            solveMission = true;
+            limits.SetActive(false);
             screen.SetActive(false);
             screenCode.SetActive(true);
             vacuumMobile.SetActive(false);
@@ -65,7 +73,7 @@ public class mission8Controller : MonoBehaviour
     // Shows 'X' when leaving grids.  
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("grids"))
+        if (other.gameObject.CompareTag("grids") && !solveMission)
         {
             letterX.SetActive(true);
         }
@@ -74,7 +82,7 @@ public class mission8Controller : MonoBehaviour
     // Hides 'X' when leaving grids.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("grids"))
+        if (other.gameObject.CompareTag("grids") && !solveMission)
         {
             letterX.SetActive(false);
         }
@@ -83,7 +91,7 @@ public class mission8Controller : MonoBehaviour
     // Detects continuous presence in a trigger area.  
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("grids") && vacuum.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        if (other.gameObject.CompareTag("grids") && vacuum.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
         {
             letterX.SetActive(false);
             SwapCameras(0, 1, 0);
@@ -104,11 +112,40 @@ public class mission8Controller : MonoBehaviour
     IEnumerator waitFinishAnimation()
     {
         yield return new WaitForSeconds(3f);
+        StartCoroutine(waitToShow());
         vacuum.SetActive(false);
         vacuumMobile.SetActive(true);
         playerAnim.SetBool("vacuum", false);
         SwapCameras(0, 0, 1);
+        limits.SetActive(true);
         enableControl = true;
+    }
+
+    // Waits before showing the info.
+    IEnumerator waitToShow()
+    {
+        yield return new WaitForSeconds(0.2f);
+        info.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        StartCoroutine(FadeOutCoroutine());
+    }
+
+    // Fades out the info over time.
+    IEnumerator FadeOutCoroutine()
+    {
+        float duration = 2f;
+        float startAlpha = 1f;
+        float endAlpha = 0f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float newAlpha = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / duration);
+            canvasGroup.alpha = newAlpha;
+            yield return null;
+        }
+        canvasGroup.alpha = endAlpha;
     }
 
     // Swap between virtual cameras.
