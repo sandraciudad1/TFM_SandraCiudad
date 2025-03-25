@@ -9,8 +9,8 @@ public class PlayerMovement : MonoBehaviour
     Vector3 velocity;
     bool isGrounded;
 
-    float speed = 5.0f;
-    float jumpHeight = 1.0f;
+    public float speed = 5.0f;
+    public float jumpHeight = 1.0f;
     float gravity = -9.81f;
 
     [SerializeField] GameObject inventory;

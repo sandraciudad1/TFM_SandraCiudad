@@ -48,7 +48,6 @@ public class mission1Controller : MonoBehaviour
         {
             buttons[i].transform.rotation = initialRot;
         }
-
         observationDoorAnim = observationDoor.GetComponent<Animator>();
         audioDoor = observationDoor.GetComponent<AudioSource>();
     }
@@ -63,7 +62,24 @@ public class mission1Controller : MonoBehaviour
                 lockPlayerMov();
             }
             checkButtons();
+            checkFailCondition();
         }
+    }
+
+    static int keyPressCount = 0;
+    void checkFailCondition()
+    {
+        if (Input.anyKeyDown)
+        {
+            keyPressCount++;
+        }
+
+        // para resolver la mision se necesitan 12 pulsaciones
+        // de 12-15 no pasa nada
+        // de 15-20
+        // de 20-30
+        // mas de 30
+
     }
 
     // Locks player movement and sets a fixed position and rotation.
