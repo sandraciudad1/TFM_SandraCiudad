@@ -22,11 +22,13 @@ public class puzzleController : MonoBehaviour
     [SerializeField] GameObject playerTrigger;
     mission9Controller mission9;
     bool finish = false;
+    playerUI ui;
 
     // Initializes mission and puzzle setup.
     void Start()
     {
         mission9 = playerTrigger.GetComponent<mission9Controller>();
+        ui = playerTrigger.GetComponent<playerUI>();
 
         initializePieces();
         initializePositions();
@@ -69,6 +71,8 @@ public class puzzleController : MonoBehaviour
         yPositions[7] = 22.36164f;
     }
 
+    static int movements = 0;
+
     // Checks if the puzzle is solved and starts the end sequence.
     void Update()
     {
@@ -76,18 +80,22 @@ public class puzzleController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
+                checkMovements();
                 MovePiece(Vector2Int.up);
             }
             else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
+                checkMovements();
                 MovePiece(Vector2Int.down);
             }
             else if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
+                checkMovements();
                 MovePiece(Vector2Int.right);
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
+                checkMovements();
                 MovePiece(Vector2Int.left);
             }
         }
@@ -96,6 +104,16 @@ public class puzzleController : MonoBehaviour
         {
             canMove = false;
             StartCoroutine(waiitUntilEnd());
+        }
+    }
+
+    // Tracks movements and applies damage if limit exceeded.
+    void checkMovements()
+    {
+        movements++;
+        if (movements > 25)
+        {
+            ui.takeDamage(5f);
         }
     }
 

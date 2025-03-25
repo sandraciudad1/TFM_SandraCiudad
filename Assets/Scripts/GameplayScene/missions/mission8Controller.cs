@@ -1,6 +1,7 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class mission8Controller : MonoBehaviour
@@ -34,6 +35,15 @@ public class mission8Controller : MonoBehaviour
     bool solveMission = false;
     float speed = 1f;
 
+    [SerializeField] GameObject playerTrigger;
+    playerUI ui;
+
+    static int actualSample = 0;
+    float startTime = 300f;
+    float currentTime;
+    TextMeshProUGUI timerText;
+    bool startTimer = false, isRunning = true;
+
     // Initializes components and sets the initial camera configuration.
     void Start()
     {
@@ -43,6 +53,8 @@ public class mission8Controller : MonoBehaviour
         playerMov = player.GetComponent<PlayerMovement>();
 
         canvasGroup = info.GetComponent<CanvasGroup>();
+        ui = playerTrigger.GetComponent<playerUI>();
+        currentTime = startTime;
     }
 
     // Handles movement and controls the game's finishing sequence.
@@ -53,6 +65,27 @@ public class mission8Controller : MonoBehaviour
             float moveY = Input.GetAxis("Vertical") * speed * Time.deltaTime; 
             float moveZ = -Input.GetAxis("Horizontal") * speed * Time.deltaTime; 
             vacuumMobile.transform.position += new Vector3(0, moveY, moveZ);
+        }
+
+        if (startTimer && !isRunning)
+        {
+            isRunning = true;
+        }
+
+        if (isRunning)
+        {
+            currentTime -= Time.deltaTime;
+
+            if (currentTime <= 0)
+            {
+                currentTime = 0;
+                timerEnded();
+                isRunning = false;
+            }
+
+            int minutes = Mathf.FloorToInt(currentTime / 60);
+            int seconds = Mathf.FloorToInt(currentTime % 60);
+            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
         }
 
         if (finish && !exit)
@@ -68,6 +101,14 @@ public class mission8Controller : MonoBehaviour
             navigationScreen.SetActive(true);
             exit = true;
         }
+    }
+
+    // Releases particles, consuming energy and wasting oxygen.
+    void timerEnded()
+    {
+        // se desprenden particulas al aire
+        ui.useEnergy(40f);
+        ui.wasteOxygen(40f);
     }
 
     // Shows 'X' when leaving grids.  

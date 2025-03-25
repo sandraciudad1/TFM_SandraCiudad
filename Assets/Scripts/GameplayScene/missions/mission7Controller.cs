@@ -58,6 +58,15 @@ public class mission7Controller : MonoBehaviour
     GameObject[] objectsArray;
     GameObject[] objectsKitArray;
 
+    [SerializeField] GameObject playerTrigger;
+    playerUI ui;
+
+    static int actualSample = 0;
+    float startTime = 300f;
+    float currentTime;
+    TextMeshProUGUI timerText;
+    bool startTimer = false, isRunning = true;
+
     // Initializes references and sets up objects at the start of the game.
     void Start()
     {
@@ -72,11 +81,35 @@ public class mission7Controller : MonoBehaviour
         canvasGroup = info.GetComponent<CanvasGroup>();
         objectsArray = new GameObject[] { alcohol, bandAidRoll, medicalPackage, burnCream, oxyWater, scissor, miniAidBox, hydroCream };
         objectsKitArray = new GameObject[] { alcoholKit, bandAidRollKit, medicalPackageKit, burnCreamKit, oxyWaterKit, scissorkit, miniAidBoxKit, hydroCreamKit };
+
+        ui = playerTrigger.GetComponent<playerUI>();
+        currentTime = startTime;
     }
 
     // Checks for input and manages object collection and door code input.
     void Update()
     {
+        if (startTimer && !isRunning)
+        {
+            isRunning = true;
+        }
+
+        if (isRunning)
+        {
+            currentTime -= Time.deltaTime;
+
+            if (currentTime <= 0)
+            {
+                currentTime = 0;
+                timerEnded();
+                isRunning = false;
+            }
+
+            int minutes = Mathf.FloorToInt(currentTime / 60);
+            int seconds = Mathf.FloorToInt(currentTime % 60);
+            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
+
         if (readCode)
         {
             foreach (char c in Input.inputString)
@@ -117,6 +150,13 @@ public class mission7Controller : MonoBehaviour
             cc.enabled = true;
             finish = true;
         }
+    }
+
+    // Restarts mission and applies heavy energy loss.
+    void timerEnded()
+    {
+        // se reinicia la mision y se pierde energia
+        ui.useEnergy(40f);
     }
 
     // Hides the door after a 3-second delay.

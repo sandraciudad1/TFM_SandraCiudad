@@ -39,7 +39,14 @@ public class mission2Controller : MonoBehaviour
     [SerializeField] TextMeshProUGUI percentage;
     float fillTime = 3f;
 
+    [SerializeField] GameObject playerTrigger;
+    playerUI ui;
+
     static int actualSample = 0;
+    float startTime = 300f;
+    float currentTime;
+    TextMeshProUGUI timerText;
+    bool startTimer = false, isRunning = true;
 
     // Initializes variables and resets sample progress.
     void Start()
@@ -56,15 +63,37 @@ public class mission2Controller : MonoBehaviour
         }
         GameManager.GameManagerInstance.samplesCounter = 0;
         GameManager.GameManagerInstance.SaveProgress();
-        
+
+        ui = playerTrigger.GetComponent<playerUI>();
         counterAnalyzer.text = GameManager.GameManagerInstance.samplesCounter.ToString() + "/4";
         linelBar.fillAmount = (float)GameManager.GameManagerInstance.samplesCounter / 4;
-        
+        currentTime = startTime;
     }
 
     // Handles player repositioning and checks mission completion.
     void Update()
     {
+        if (startTimer && !isRunning)
+        {
+            isRunning = true;
+        }
+
+        if (isRunning)
+        {
+            currentTime -= Time.deltaTime;
+
+            if (currentTime <= 0)
+            {
+                currentTime = 0;
+                timerEnded();
+                isRunning = false;
+            }
+
+            int minutes = Mathf.FloorToInt(currentTime / 60);
+            int seconds = Mathf.FloorToInt(currentTime % 60);
+            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
+
         if (changePos)
         {
             cc.enabled = false;  
@@ -85,6 +114,13 @@ public class mission2Controller : MonoBehaviour
         }
     }
 
+    // Triggers lab explosion and applies major damage to player
+    void timerEnded()
+    {
+        // efectos de explosion y contaminacion del laboratorio
+        ui.takeDamage(40f);
+    }
+
     // Shows 'X' when near an analytical instrument.
     private void OnTriggerEnter(Collider other)
     {
@@ -103,6 +139,7 @@ public class mission2Controller : MonoBehaviour
         }
     }
 
+
     // Analyzes a sample when pressing 'X' near an instrument.
     private void OnTriggerStay(Collider other)
     {
@@ -110,6 +147,7 @@ public class mission2Controller : MonoBehaviour
         {
             if (checkSample(sampleActive()))
             {
+                startTimer = true;
                 playerMov.canMove = false;
                 cc.enabled = false;
                 player.transform.position = playerPos;
@@ -121,9 +159,10 @@ public class mission2Controller : MonoBehaviour
                     StartCoroutine(waitAnalyzeAnim());
                     swap = true;
                 }
-            } else
+            } 
+            else
             {
-                Debug.Log("ya ha sido analizada");
+                ui.useEnergy(15f);
             }
         }
     }

@@ -52,6 +52,9 @@ public class mission5Controller : MonoBehaviour
     bool isShowing = false;
     bool solveMission = false;
 
+    [SerializeField] GameObject playerTrigger;
+    playerUI ui;
+
     // Initializes variables and resets cable colors. 
     void Start()
     {
@@ -65,6 +68,8 @@ public class mission5Controller : MonoBehaviour
         {
             cableMaterials[i].SetColor("_Color", Color.white);
         }
+
+        ui = playerTrigger.GetComponent<playerUI>();
     }
 
     // Manages game state and updates player position and UI.
@@ -78,6 +83,7 @@ public class mission5Controller : MonoBehaviour
         else if (cableCounter == 4 && !finish)
         {
             desactivateAlarms();
+            lightInteraction(true);
             playerAnim.SetBool("wireCutters", false);
             progressBar.SetActive(false);
             SwapCameras(1, 0);
@@ -200,11 +206,22 @@ public class mission5Controller : MonoBehaviour
     {
         if (other.gameObject.CompareTag("alarm"))
         {
-            // se le quita vida
+            // corte de electricidad 
+            lightInteraction(false);
+            ui.useEnergy(15f);
         }
         if (other.gameObject.CompareTag("securitySystem") && !solveMission)
         {
             letterX.SetActive(true);
+        }
+    }
+
+    void lightInteraction(bool active)
+    {
+        Light[] lights = Resources.FindObjectsOfTypeAll<Light>();
+        foreach (Light light in lights)
+        {
+            light.gameObject.SetActive(active);
         }
     }
 

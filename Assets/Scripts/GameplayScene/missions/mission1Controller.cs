@@ -11,6 +11,7 @@ public class mission1Controller : MonoBehaviour
     PlayerMovement playerMov;
     DoorTriggerController doorController;
     CollectiblesController collectiblesController;
+    playerUI ui;
 
     bool[] swichtboardState;
     bool firstPhaseComplete = false;
@@ -32,8 +33,10 @@ public class mission1Controller : MonoBehaviour
     [SerializeField] GameObject observationDoor;
     Animator observationDoorAnim;
     AudioSource audioDoor;
-
     [SerializeField] VideoPlayer code1;
+
+    [SerializeField] AudioSource alarmSound;
+    static int keyPressCount = 0;
 
     // Initializes variables and sets up the button states.
     void Start()
@@ -41,6 +44,8 @@ public class mission1Controller : MonoBehaviour
         doorController = triggerDetector.GetComponent<DoorTriggerController>();
         collectiblesController = triggerDetector.GetComponent<CollectiblesController>();
         playerMov = player.GetComponent<PlayerMovement>();
+        ui = triggerDetector.GetComponent<playerUI>();
+
         swichtboardState = new bool[] { true, true, true, true, true, true };
         buttons = new GameObject[] { btn0, btn1, btn2, btn3, btn4, btn5 };
 
@@ -66,20 +71,41 @@ public class mission1Controller : MonoBehaviour
         }
     }
 
-    static int keyPressCount = 0;
+    // Checks key presses and applies damage if threshold passed.
     void checkFailCondition()
     {
         if (Input.anyKeyDown)
         {
             keyPressCount++;
+
+            if (keyPressCount >= 15 && keyPressCount < 20)
+            {
+                ui.takeDamage(2f);
+            }
+            else if (keyPressCount >= 20 && keyPressCount < 30)
+            {
+                ui.takeDamage(5f);
+            }
+            else if (keyPressCount >= 30)
+            {
+                ui.takeDamage(8f);
+            }
+
+            checkAlarm();
         }
+    }
 
-        // para resolver la mision se necesitan 12 pulsaciones
-        // de 12-15 no pasa nada
-        // de 15-20
-        // de 20-30
-        // mas de 30
-
+    // Plays alarm sound if key press limit is exceeded.
+    void checkAlarm()
+    {
+        if (keyPressCount < 30)
+        {
+            alarmSound.Stop();
+        } 
+        else
+        {
+            alarmSound.Play();
+        }
     }
 
     // Locks player movement and sets a fixed position and rotation.

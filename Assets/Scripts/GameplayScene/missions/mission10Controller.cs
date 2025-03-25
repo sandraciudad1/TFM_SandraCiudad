@@ -103,6 +103,10 @@ public class mission10Controller : MonoBehaviour
     Animator doorAnim;
     AudioSource doorAudio;
 
+    [SerializeField] AudioSource alarmSound;
+    [SerializeField] GameObject playerTrigger;
+    playerUI ui;
+
     // Initializes variables and assigns components.
     void Start()
     {
@@ -110,6 +114,7 @@ public class mission10Controller : MonoBehaviour
         playerAnim = player.GetComponent<Animator>();
         cc = player.GetComponent<CharacterController>();
         playerMov = player.GetComponent<PlayerMovement>();
+        ui = playerTrigger.GetComponent<playerUI>();
 
         canvasGroup = info.GetComponent<CanvasGroup>();
         cam18Controller = vcam18.GetComponent<camera18Controller>();
@@ -131,6 +136,8 @@ public class mission10Controller : MonoBehaviour
         doorAudio = verticalExitDoor.GetComponent<AudioSource>();
     }
 
+    static int countReturnKey = 0;
+
     // Handles user input and updates game state.
     void Update()
     {
@@ -146,6 +153,7 @@ public class mission10Controller : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.Return))
             {
+                checkKeyPressed();
                 checkCorrectAnswer();
             }
         }
@@ -164,6 +172,17 @@ public class mission10Controller : MonoBehaviour
             StartCoroutine(FadeIn());
             StartCoroutine(waitUntilMoveDoor());
         }
+    }
+
+    void checkKeyPressed()
+    {
+        countReturnKey++;
+        if (countReturnKey > 5)
+        {
+            alarmSound.Play();
+            ui.useEnergy(15f);
+        }
+
     }
 
     // Waits and moves the door after 5 seconds.

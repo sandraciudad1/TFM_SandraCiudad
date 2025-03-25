@@ -48,6 +48,9 @@ public class mission3Controller : MonoBehaviour
     [SerializeField] GameObject spaceKeyInfo;
     CanvasGroup canvasGroup;
 
+    [SerializeField] GameObject playerTrigger;
+    playerUI ui;
+
     // Initializes necessary components and calculates limits.
     void Start()
     {
@@ -59,6 +62,7 @@ public class mission3Controller : MonoBehaviour
 
         calculateLimits();
         canvasGroup = spaceKeyInfo.GetComponent<CanvasGroup>();
+        ui = playerTrigger.GetComponent<playerUI>();
     }
 
     // Recalculates limits when rect transform changes.
@@ -135,23 +139,27 @@ public class mission3Controller : MonoBehaviour
     // Checks the arrow's value and updates game state.
     void checkValue(float value)
     {
-        if (value > 296.25f && value < 493.75f) 
+        if (value > 296.25f && value < 493.75f) // cada 3 veces bien se pasa al siguiente
         {
             updateSmoke(0.1f);
             counter -= 1;  
         }
         else if ((value > 128.38f && value <= 296.25f) || (value >= 493.75f && value < 661.63f))
         {
+            // animcion de fuga de gas pequeña
+            ui.wasteOxygen(15f);
             updateSmoke(0.05f);
             counter -= 0.5f;
         }
         else if(value <= 128.38f || value >= 661.63f) 
         {
+            // animcion de fuga de gas mas grande
+            ui.wasteOxygen(30f);
             StartCoroutine(waitToReset());
         }
 
         if (counter <= 0)
-        {
+        {   
             gradientBg.SetActive(false);
             StartCoroutine(waitUntilChange());
         }

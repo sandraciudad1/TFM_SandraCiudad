@@ -47,6 +47,9 @@ public class mission4Controller : MonoBehaviour
     Animator labDoorAnim;
     AudioSource audioDoor;
 
+    [SerializeField] GameObject playerTrigger;
+    playerUI ui;
+
     // Initializes components and sets up the game state.
     void Start()
     {
@@ -59,6 +62,8 @@ public class mission4Controller : MonoBehaviour
         codes = new string[] { "DBK", "ASLZ", "OYLWP" };
         labDoorAnim = labDoor.GetComponent<Animator>();
         audioDoor = labDoor.GetComponent<AudioSource>();
+
+        ui = playerTrigger.GetComponent<playerUI>();
     }
 
     // Checks user input and triggers mission completion events.
@@ -108,7 +113,9 @@ public class mission4Controller : MonoBehaviour
                 }
                 else
                 {
-                    // pierde vida
+                    // animacion de cortocircuito
+                    ui.takeDamage(20f);
+                    ui.wasteOxygen(15f);
                     userInput = "";
                 }
             }
