@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class ResetState : MonoBehaviour
 {
@@ -57,6 +58,8 @@ public class ResetState : MonoBehaviour
     Animator crate10Anim;
 
     // doors
+    [SerializeField] GameObject metallicDoor;
+    Animator metallicDoorAnim;
     [SerializeField] GameObject observationDoor;
     Animator observationDoorAnim;
     [SerializeField] GameObject labDoor;
@@ -66,6 +69,7 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject scifiCrate;
     Animator scifiCrateAnim;
 
+    int[] missionsCompleted;
     int[] objectsUnlocked;
     int[] recordsUnlocked;
 
@@ -73,15 +77,18 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject inventory;
 
     // other objects
-    [SerializeField] GameObject code3;
     [SerializeField] GameObject smoke1;
     [SerializeField] GameObject smoke2;
     [SerializeField] GameObject smoke3;
     [SerializeField] GameObject smoke4;
-    [SerializeField] GameObject code4;
     [SerializeField] GameObject screen8;
-    [SerializeField] GameObject screenCode8;
     [SerializeField] GameObject navigationScreen;
+
+    // codes
+    [SerializeField] VideoPlayer code1;
+    [SerializeField] GameObject code3;
+    [SerializeField] GameObject code4;
+    [SerializeField] GameObject screenCode8;
 
     GameObject[] inventoryRecords = new GameObject[10];
 
@@ -99,17 +106,17 @@ public class ResetState : MonoBehaviour
         inventoryObjects = new GameObject[] { crowbar, sample1, sample2, sample3, sample4, spannerwrench, securityCard, wireCutters, clipboard, 
                                               emergencyKit, vacuum, compass, uvLight, tape, null };
         GameManager.GameManagerInstance.LoadProgress();
+        missionsCompleted = GameManager.GameManagerInstance.missionsCompleted;
         objectsUnlocked = GameManager.GameManagerInstance.objectsUnlocked;
-
         recordsUnlocked = GameManager.GameManagerInstance.recordsUnlocked;
         initializeAnimators();
 
-        for (int i = 0; i < GameManager.GameManagerInstance.objectIndex; i++)
+        for (int i = 0; i < 10; i++)
         {
-            if (objectsUnlocked[i] == 1)
+            if (missionsCompleted[i] == 1)
             {
                 inventoryObjects[i].SetActive(false);
-                additionalActions(i);
+                resetMissionsStates(i);
             }
         }
 
@@ -138,6 +145,7 @@ public class ResetState : MonoBehaviour
         crate10Anim = crate10.GetComponent<Animator>();
 
         // doors Animators
+        metallicDoorAnim = metallicDoor.GetComponent<Animator>();
         observationDoorAnim = observationDoor.GetComponent<Animator>();
         labDoorAnim = labDoor.GetComponent<Animator>();
         verticalExitDoorAnim = verticalExitDoor.GetComponent<Animator>();
@@ -150,17 +158,9 @@ public class ResetState : MonoBehaviour
         switch (index)
         {
             case 0: // crowbar
-                crate1Anim.SetBool("open", true);
-                //activar el video del codigo
-                observationDoorAnim.SetBool("open", true);
-                Light[] lights = Resources.FindObjectsOfTypeAll<Light>();
-                foreach (Light light in lights)
-                {
-                    light.gameObject.SetActive(true);
-                }
+                
                 break;
             case 1: //muestra1
-                crate2Anim.SetBool("open", true);
                 //activar el video del codigo
                 break;
             case 2: //muestra 2
@@ -173,7 +173,6 @@ public class ResetState : MonoBehaviour
 
                 break;
             case 5: // llave inglesa
-                crate3Anim.SetBool("open", true);
                 code3.SetActive(true);
                 smoke1.SetActive(false);
                 smoke2.SetActive(false);
@@ -181,27 +180,22 @@ public class ResetState : MonoBehaviour
                 smoke4.SetActive(false);
                 break;
             case 6: // tarjeta de seguridad
-                crate4Anim.SetBool("open", true);
                 code4.SetActive(true);
                 labDoorAnim.SetBool("open", true);
                 mision5.initializeAlarms();
                 break;
             case 7: // cortador de cables
-                crate5Anim.SetBool("open", true);
                 mision5.desactivateAlarms();
                 mision5.showPinCode();
                 break;
             case 8: // tabla de traduccion 
-                crate6Anim.SetBool("open", true);
                 inputText1.text = "C0D1GO";
                 inputText2.text = "PU3RT4";
                 inputText3.text = "5726";
                 break;
             case 9: // kit de emergencia
-                crate7Anim.SetBool("open", true);
                 break;
             case 10: // aspiradora
-                crate8Anim.SetBool("open", true);
                 GameObject[] dirtObjects = GameObject.FindGameObjectsWithTag("dirt");
                 foreach (GameObject dirt in dirtObjects)
                 {
@@ -212,10 +206,8 @@ public class ResetState : MonoBehaviour
                 navigationScreen.SetActive(true);
                 break;
             case 11: // brujula
-                crate9Anim.SetBool("open", true);
                 break;
             case 12: // luz ultravioleta
-                crate10Anim.SetBool("open", true);
                 verticalExitDoorAnim.SetBool("open", true);
                 scifiCrateAnim.SetBool("move", true);
                 break;
@@ -230,6 +222,43 @@ public class ResetState : MonoBehaviour
         }
     }
 
+    void resetMissionsStates(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                code1.gameObject.SetActive(true);
+                code1.Play();
+                metallicDoorAnim.SetBool("open", true);
+                observationDoorAnim.SetBool("open", true);
+                Light[] lights = Resources.FindObjectsOfTypeAll<Light>();
+                foreach (Light light in lights)
+                {
+                    light.gameObject.SetActive(true);
+                }
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            case 8:
+                break;
+            case 9:
+                break;
+            default:
+                break;
+        }
+    }
 
     // Manages record visibility based on unlocked items.
     void checkRecordsIndex(int index)
@@ -249,6 +278,7 @@ public class ResetState : MonoBehaviour
                 record4.SetActive(false);
                 break;
             case 4:
+                crate1Anim.SetBool("open", true);
                 record5.SetActive(false);
                 break;
             case 5:

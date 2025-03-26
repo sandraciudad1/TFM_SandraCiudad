@@ -102,7 +102,8 @@ public class DoorTriggerController : MonoBehaviour
 
     bool[] setArrayUnlocked = new bool[15];
     public bool swichtInteraction = false;
-    bool opened = false;
+    int opened;
+    bool resetState = false;
 
     // Initialize arrays and get door animators.
     void Start()
@@ -141,6 +142,15 @@ public class DoorTriggerController : MonoBehaviour
                                      door10Anim, door11Anim, door12Anim, door13Anim, door14Anim, door15Anim, door16Anim, door17Anim, door18Anim, door19Anim, door20Anim, door21Anim };
         doorsOpen = new bool[doorsAnim.Length];
         playerAnimator = player.GetComponent<Animator>();
+
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[0];
+
+        if(opened==1 && !resetState)
+        {
+            desactivateImg(6);
+            resetState = true;
+        }
     }
 
     // Toggle door animation when pressing 'E'.
@@ -167,7 +177,7 @@ public class DoorTriggerController : MonoBehaviour
                         change = true;
                     }
                 }
-                else if (doorNum == 6 && !opened)
+                else if (doorNum == 6)
                 {
                     anim.SetBool("open", true); 
                     desactivateImg(6); 
@@ -247,7 +257,8 @@ public class DoorTriggerController : MonoBehaviour
     IEnumerator swichtboardInteraction()
     {
         yield return new WaitForSeconds(3.2f);
-        opened = true;
+        GameManager.GameManagerInstance.missionsCompleted[0] = 1;
+        GameManager.GameManagerInstance.SaveProgress();
         switchboardLeverImg.gameObject.SetActive(true);
         switchboardDoorAnim.enabled = false;
         swichtInteraction = true;
@@ -278,6 +289,8 @@ public class DoorTriggerController : MonoBehaviour
     // Detects when the player enters a door trigger.
     private void OnTriggerEnter(Collider other)
     {
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[0];
         if (other.CompareTag("door1"))
         {
             activateImg(0);
@@ -303,12 +316,12 @@ public class DoorTriggerController : MonoBehaviour
             activateImg(4);
             doorNum = 4;
         } 
-        else if (other.CompareTag("metallicDoor"))
+        else if (other.CompareTag("metallicDoor") && opened == 0)
         {
             activateImg(5);
             doorNum = 5;
         }
-        else if (other.CompareTag("swichtboard"))
+        else if (other.CompareTag("swichtboard") && opened == 0)
         {
             activateImg(6);
             doorNum = 6;

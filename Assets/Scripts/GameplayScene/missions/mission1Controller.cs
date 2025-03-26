@@ -43,6 +43,8 @@ public class mission1Controller : MonoBehaviour
     static int keyPressCount = 0;
     bool win = false;
 
+    
+
     // Initializes variables and sets up the button states.
     void Start()
     {
@@ -81,7 +83,6 @@ public class mission1Controller : MonoBehaviour
     {
         if (Input.anyKeyDown && !win)
         {
-            Debug.Log("press");
             keyPressCount++;
 
             if (keyPressCount >= 15 && keyPressCount < 20)
