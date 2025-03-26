@@ -489,6 +489,7 @@ public class inventoryController : MonoBehaviour
             int num = GameManager.GameManagerInstance.objectsCollected[i];
             collectableItemsImgs[i].sprite = objectsSprites[num];
             itemsNames[i] = addItemNames(num);
+            collectable3dObjects[i] = add3DItems(num);
             unlockedObjects[i] = true;
         }
 
@@ -496,6 +497,10 @@ public class inventoryController : MonoBehaviour
         for (int i = 0; i < recordsIndex; i++)
         {
             collectableRecordsImgs[i].gameObject.SetActive(true);
+            int num = GameManager.GameManagerInstance.recordsCollected[i];
+            collectableRecordsImgs[i].sprite = recordsSprites[num];
+            recordsNames[i] = addRecordsNames(num);
+            collectable3dRecords[i] = add3DRecords(num);
             unlockedRecords[i] = true;
         }
     }
