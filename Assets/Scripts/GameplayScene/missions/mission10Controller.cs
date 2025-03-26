@@ -177,12 +177,11 @@ public class mission10Controller : MonoBehaviour
     void checkKeyPressed()
     {
         countReturnKey++;
-        if (countReturnKey > 5)
+        if (countReturnKey > 15)
         {
             alarmSound.Play();
             ui.useEnergy(15f);
         }
-
     }
 
     // Waits and moves the door after 5 seconds.

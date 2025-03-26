@@ -13,7 +13,7 @@ public class playerUI : MonoBehaviour
     public float playerEnergy;
     public float playerOxygen;
 
-    float regenerationSpeed = 5f;
+    float regenerationSpeed = 3f;
 
     [SerializeField] Image lifeBg;
     [SerializeField] AudioSource breatheAudio;
@@ -46,6 +46,7 @@ public class playerUI : MonoBehaviour
     {
         if (playerLife > 0 && playerLife < 100)
         {
+            Debug.Log("aumentando la vida " + playerLife);
             playerLife += regenerationSpeed * Time.deltaTime;
             playerLife = Mathf.Clamp(playerLife, 0, 100);
         }
@@ -57,6 +58,7 @@ public class playerUI : MonoBehaviour
 
         if (playerEnergy < 100)
         {
+            //Debug.Log("aumentando la energia");
             if (!breatheAudio.isPlaying)
             {
                 breatheAudio.Play();
@@ -72,6 +74,7 @@ public class playerUI : MonoBehaviour
 
         if (playerOxygen < 100)
         {
+            //Debug.Log("aumentando el oxigeno");
             playerOxygen += (regenerationSpeed / 2) * Time.deltaTime;
             playerOxygen = Mathf.Clamp(playerOxygen, 0, 100);
             checkOxygenAlerts();
@@ -86,6 +89,7 @@ public class playerUI : MonoBehaviour
     // Adjusts screen transparency based on player life.
     void updateLifeTransparency()
     {
+        //Debug.Log("actualizando transparencia");
         float alpha = 1f - (playerLife / 100f);
         Color color = lifeBg.color;
         color.a = alpha;
@@ -95,6 +99,7 @@ public class playerUI : MonoBehaviour
     // Reduces player life when taking damage.
     public void takeDamage(float amount)
     {
+        //Debug.Log("DAÑO " + amount);
         playerLife -= amount;
         playerLife = Mathf.Clamp(playerLife, 0, 100);
     }
@@ -102,6 +107,7 @@ public class playerUI : MonoBehaviour
     // Updates movement speed and breathing volume based on energy.
     void updatePlayerMovement()
     {
+        //Debug.Log("actualizando velocidad movimiento");
         playerMov.speed = Mathf.Lerp(1.0f, 5.0f, playerEnergy / 100f);
         playerMov.jumpHeight = Mathf.Lerp(0.25f, 1.0f, playerEnergy / 100f);
         breatheAudio.volume = Mathf.Lerp(1.0f, 0.0f, playerEnergy / 100f);
@@ -110,6 +116,7 @@ public class playerUI : MonoBehaviour
     // Reduces player energy when used.
     public void useEnergy(float amount)
     {
+       // Debug.Log("ENERGIA");
         playerEnergy -= amount;
         playerEnergy = Mathf.Clamp(playerEnergy, 0, 100);
     }
@@ -117,9 +124,10 @@ public class playerUI : MonoBehaviour
     // Adjusts blur and camera shake based on oxygen level.
     void updateOxygenEffects()
     {
+        //Debug.Log("aztualizando oxigeno");
         if (depthOfField != null)
         {
-            float blurIntensity = Mathf.Lerp(0.0f, 2.0f, 1 - (playerOxygen / 100f));
+            float blurIntensity = Mathf.Lerp(0.0f, 2.0f, (playerOxygen / 100f));
             depthOfField.focusDistance.value = blurIntensity;
         }
 
@@ -164,6 +172,7 @@ public class playerUI : MonoBehaviour
     // Decreases oxygen level when used.
     public void wasteOxygen(float amount)
     {
+        //Debug.Log("OXIGENO");
         playerOxygen -= amount;
         playerOxygen = Mathf.Clamp(playerOxygen, 0, 100);
     }

@@ -141,7 +141,7 @@ public class mission3Controller : MonoBehaviour
     {
         if (value > 296.25f && value < 493.75f) // cada 3 veces bien se pasa al siguiente
         {
-            updateSmoke(0.1f);
+            updateSmoke(0.1f); // revisar
             counter -= 1;  
         }
         else if ((value > 128.38f && value <= 296.25f) || (value >= 493.75f && value < 661.63f))

@@ -45,8 +45,8 @@ public class mission2Controller : MonoBehaviour
     static int actualSample = 0;
     float startTime = 300f;
     float currentTime;
-    TextMeshProUGUI timerText;
-    bool startTimer = false, isRunning = true;
+    [SerializeField] TextMeshProUGUI timerText;
+    bool startTimer = false, isRunning = false;
 
     // Initializes variables and resets sample progress.
     void Start()
@@ -80,6 +80,7 @@ public class mission2Controller : MonoBehaviour
 
         if (isRunning)
         {
+            Debug.Log("en el timer de 2");
             currentTime -= Time.deltaTime;
 
             if (currentTime <= 0)

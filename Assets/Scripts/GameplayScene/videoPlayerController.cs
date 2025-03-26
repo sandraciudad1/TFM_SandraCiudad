@@ -53,8 +53,8 @@ public class videoPlayerController : MonoBehaviour
         AudioSource audioSource = videoPlayer.GetComponent<AudioSource>();
         if (audioSource != null)
         {
-            Debug.Log("AudioSource Volume: " + audioSource.volume);
-            Debug.Log("AudioSource isPlaying: " + audioSource.isPlaying);
+            //Debug.Log("AudioSource Volume: " + audioSource.volume);
+            //Debug.Log("AudioSource isPlaying: " + audioSource.isPlaying);
         }
     }
 
