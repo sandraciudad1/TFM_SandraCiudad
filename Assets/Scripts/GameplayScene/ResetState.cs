@@ -111,7 +111,7 @@ public class ResetState : MonoBehaviour
         recordsUnlocked = GameManager.GameManagerInstance.recordsUnlocked;
         initializeAnimators();
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < GameManager.GameManagerInstance.objectIndex; i++)
         {
             if (missionsCompleted[i] == 1)
             {

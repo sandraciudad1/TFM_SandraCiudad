@@ -143,10 +143,7 @@ public class inventoryController : MonoBehaviour
                                          emergencyKitSprite, vacuumSprite, compassSprite, uvLightSprite, tapeSprite };
         collectableRecordsImgs = new Image[] { record1Img, record2Img, record3Img, record4Img, record5Img, record6Img, record7Img, record8Img, record9Img, record10Img };
         recordsSprites = new Sprite[] { record1Sprite, record2Sprite, record3Sprite, record4Sprite, record5Sprite, record6Sprite, record7Sprite, record8Sprite, record9Sprite, record10Sprite };
-        /*recordsNames = new string[] { "Grabacion 5: Sala de Comunicaciones", "Grabacion 2: Laboratorio cientifico", "Grabacion 3: Sala de Comunicaciones", "Grabacion 1: Zona de Observacion",
-                                      "Grabacion 4: Zona de Inteligencia Artificial", "Grabacion 6: Zona de Despresurizacion", "Grabacion 7: Puente de Mando", "Grabacion 8: Bahía de Mantenimiento " +
-                                      "Tecnologico", "Grabacion 9: Pasillos Centrales", "Grabacion 10: Zona de Observacion" };
-        */
+        
         unlockedObjects = new bool[objectBubbles.Length];
         unlockedRecords = new bool[recordBubbles.Length];
 
@@ -358,6 +355,7 @@ public class inventoryController : MonoBehaviour
     // Adds an item to the inventory.
     public void addItem(int index, int id)
     {
+        Debug.Log("added id " + id + " in index " + index);
         itemsNames[index] = addItemNames(id);
         collectable3dObjects[index] = add3DItems(id);
         collectableItemsImgs[index].sprite = objectsSprites[id];
@@ -488,6 +486,9 @@ public class inventoryController : MonoBehaviour
         for (int i = 0; i < objectsIndex; i++)
         {
             collectableItemsImgs[i].gameObject.SetActive(true);
+            int num = GameManager.GameManagerInstance.objectsCollected[i];
+            collectableItemsImgs[i].sprite = objectsSprites[num];
+            itemsNames[i] = addItemNames(num);
             unlockedObjects[i] = true;
         }
 

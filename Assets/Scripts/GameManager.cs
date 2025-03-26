@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
 
     public int correctCodeCounter;
     public int[] missionsCompleted = new int[10];
+    public int[] objectsCollected = new int[15];
 
     // Ensures only one instance of GameManager exists (Singleton pattern).
     private void Awake()
@@ -67,6 +68,11 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("missionsCompleted" + i, missionsCompleted[i]);
         }
 
+        for (int i = 0; i < objectsCollected.Length; i++)
+        {
+            PlayerPrefs.SetInt("objectsCollected" + i, objectsCollected[i]);
+        }
+
         PlayerPrefs.Save();
     }
 
@@ -101,6 +107,11 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < missionsCompleted.Length; i++)
         {
             missionsCompleted[i] = PlayerPrefs.GetInt("missionsCompleted" + i, 0);
+        }
+
+        for (int i = 0; i < objectsCollected.Length; i++)
+        {
+            objectsCollected[i] = PlayerPrefs.GetInt("objectsCollected" + i, 0);
         }
     }
 

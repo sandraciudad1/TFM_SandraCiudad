@@ -138,11 +138,21 @@ public class CollectiblesController : MonoBehaviour
     void canAddToInventory(Collider other, string name, int index, GameObject gameobject)
     {
         GameManager.GameManagerInstance.LoadProgress();
+        
+
         if (other.name.Equals(name) && (GameManager.GameManagerInstance.GetArrayUnlocked("objects", GameManager.GameManagerInstance.objectIndex) == 1))
         {
+            Debug.Log("can add to inventory " + name + " with index " + index);
+            int i = GameManager.GameManagerInstance.objectIndex;
+            Debug.Log("object index " + i);
+            GameManager.GameManagerInstance.objectsCollected[i] = index;
+            GameManager.GameManagerInstance.SaveProgress();
+            GameManager.GameManagerInstance.LoadProgress();
+            Debug.Log("se va a añadir el indice " + index + " en el objectsCollected" + i + ": " + GameManager.GameManagerInstance.objectsCollected[i]);
             gameobject.SetActive(false);
             addToInventory(0, index);
         }
+        GameManager.GameManagerInstance.SaveProgress();
     }
 
     // Clears pin code input when the player enters a record trigger.

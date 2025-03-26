@@ -23,6 +23,15 @@ public class resetGame : MonoBehaviour
             GameManager.GameManagerInstance.samplesUnlocked[i] = 0;
         }
         GameManager.GameManagerInstance.correctCodeCounter = 0;
+
+        for (int i = 0; i < 10; i++)
+        {
+            GameManager.GameManagerInstance.missionsCompleted[i] = 0;
+        }
+        for (int i = 0; i < 15; i++)
+        {
+            GameManager.GameManagerInstance.objectsCollected[i] = 0;
+        }
         GameManager.GameManagerInstance.SaveProgress();
     }
 }
