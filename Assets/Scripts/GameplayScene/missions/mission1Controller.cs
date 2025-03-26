@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Video;
+using Cinemachine;
 
 public class mission1Controller : MonoBehaviour
 {
@@ -30,6 +31,9 @@ public class mission1Controller : MonoBehaviour
     [SerializeField] GameObject btn5;
     GameObject[] buttons;
 
+    [SerializeField] CinemachineVirtualCamera vcam1;
+    [SerializeField] CinemachineVirtualCamera vcamExtra;
+
     [SerializeField] GameObject observationDoor;
     Animator observationDoorAnim;
     AudioSource audioDoor;
@@ -37,6 +41,7 @@ public class mission1Controller : MonoBehaviour
 
     [SerializeField] AudioSource alarmSound;
     static int keyPressCount = 0;
+    bool win = false;
 
     // Initializes variables and sets up the button states.
     void Start()
@@ -74,8 +79,9 @@ public class mission1Controller : MonoBehaviour
     // Checks key presses and applies damage if threshold passed.
     void checkFailCondition()
     {
-        if (Input.anyKeyDown)
+        if (Input.anyKeyDown && !win)
         {
+            Debug.Log("press");
             keyPressCount++;
 
             if (keyPressCount >= 15 && keyPressCount < 20)
@@ -121,10 +127,17 @@ public class mission1Controller : MonoBehaviour
         {
             cc.enabled = false; 
         }
-        player.transform.position = new Vector3(151.441f, 25.74532f, 52.121f);
+        SwapCameras(0, 1);
+        player.transform.position = new Vector3(151.34f, 25.74532f, 55.18f);
         player.transform.rotation = Quaternion.Euler(0, -180, 0);
-
         lockMov = true;
+    }
+
+    // Swap between virtual cameras.
+    void SwapCameras(int priority1, int priority2)
+    {
+        vcam1.Priority = priority1;
+        vcamExtra.Priority = priority2;
     }
 
     // Checks for key presses to change button states.
@@ -196,6 +209,7 @@ public class mission1Controller : MonoBehaviour
         }
         else if (firstPhaseComplete && swichtboardState.All(state => state == true))
         {
+            win = true;
             doorController.closeSwitchboardDoor(6);
             observationDoorAnim.SetBool("open", true);
             audioDoor.Play();
@@ -219,7 +233,8 @@ public class mission1Controller : MonoBehaviour
     // Waits before unlocking player movement again.
     IEnumerator waitToUnlock()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1.5f);
+        SwapCameras(1, 0);
         playerMov.canMove = true;
     }
 }

@@ -91,17 +91,26 @@ public class DoorTriggerController : MonoBehaviour
 
     [SerializeField] GameObject player;
     Animator playerAnimator;
+    CharacterController cc;
+    PlayerMovement playerMov;
+    Vector3 playerPos = new Vector3(151.49f, 25.641f, 52.42f);
+    Quaternion playerRot = Quaternion.Euler(new Vector3(0f, 180f, 0f));
+    bool change = false;
 
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam2;
 
     bool[] setArrayUnlocked = new bool[15];
     public bool swichtInteraction = false;
+    bool opened = false;
 
     // Initialize arrays and get door animators.
     void Start()
     {
         SwapCameras(1, 0);
+        cc = player.GetComponent<CharacterController>();
+        playerMov = player.GetComponent<PlayerMovement>();
+
         doorImages = new Image[] { doorImg1, doorImg2, doorImg3, doorImg4, doorImg5, metallicDoorImg, switchboardDoorImg, doorImg6, doorImg7, doorImg8, doorImg9, 
                                    doorImg10, doorImg11, doorImg12, doorImg13, doorImg14, doorImg15, doorImg16, doorImg17, doorImg18, doorImg19, doorImg20, doorImg21 };
 
@@ -145,12 +154,20 @@ public class DoorTriggerController : MonoBehaviour
                 if (doorNum == 5 && crowbar.activeInHierarchy)
                 {
                     SwapCameras(0, 1);
-                    player.transform.position = new Vector3(151.49f, 25.641f, 51.3f);
-                    player.transform.rotation = Quaternion.Euler(new Vector3 (0f, 180f, 0f));
-                    desactivateImg(5);
-                    StartCoroutine(initMission1());
+                    playerMov.canMove = false;
+                    cc.enabled = false;
+                    player.transform.position = playerPos;
+                    player.transform.rotation = playerRot;
+                    if(player.transform.position == playerPos && !change)
+                    {
+                        desactivateImg(5);
+                        StartCoroutine(initMission1());
+                        playerMov.canMove = true;
+                        cc.enabled = true;
+                        change = true;
+                    }
                 }
-                else if (doorNum == 6)
+                else if (doorNum == 6 && !opened)
                 {
                     anim.SetBool("open", true); 
                     desactivateImg(6); 
@@ -220,7 +237,7 @@ public class DoorTriggerController : MonoBehaviour
         SwapCameras(1, 0);
         playerAnimator.SetBool("open", false);
         playerAnimator.SetBool("closeHand", false);
-
+        player.transform.position = new Vector3(151.34f, 25.74532f, 53.5f);
         crowbar.SetActive(false);
         Collider collider = switchboard.GetComponent<Collider>();
         collider.enabled = true;
@@ -230,6 +247,7 @@ public class DoorTriggerController : MonoBehaviour
     IEnumerator swichtboardInteraction()
     {
         yield return new WaitForSeconds(3.2f);
+        opened = true;
         switchboardLeverImg.gameObject.SetActive(true);
         switchboardDoorAnim.enabled = false;
         swichtInteraction = true;
