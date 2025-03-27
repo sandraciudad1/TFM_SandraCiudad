@@ -161,9 +161,7 @@ public class ResetState : MonoBehaviour
         switch (index)
         {
             case 8: // tabla de traduccion 
-                inputText1.text = "C0D1GO";
-                inputText2.text = "PU3RT4";
-                inputText3.text = "5726";
+                
                 break;
             case 9: // kit de emergencia
                 break;
@@ -237,6 +235,9 @@ public class ResetState : MonoBehaviour
                 break;
             case 5:
                 clipboard.SetActive(false);
+                inputText1.text = "C0D1GO";
+                inputText2.text = "PU3RT4";
+                inputText3.text = "5726";
                 break;
             case 6:
                 emergencyKit.SetActive(false);
@@ -281,6 +282,7 @@ public class ResetState : MonoBehaviour
                 record5.SetActive(false);
                 break;
             case 5:
+                crate6Anim.SetBool("open", true);
                 record6.SetActive(false);
                 break;
             case 6:

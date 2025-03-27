@@ -42,6 +42,8 @@ public class mission6Controller : MonoBehaviour
     [SerializeField] GameObject inventory;
     inventoryController inventoryCont;
 
+    int opened;
+    bool resetState = false;
 
     // Initializes references and sets up objects at the start of the game.
     void Start()
@@ -54,6 +56,14 @@ public class mission6Controller : MonoBehaviour
         inputTexts = new TextMeshProUGUI[] { inputText1, inputText2, inputText3 };
         textBoxs = new GameObject[] { textBox1, textBox2, textBox3 };
         inventoryCont = inventory.GetComponent<inventoryController>();
+
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[5];
+        if (opened == 1 && !resetState)
+        {
+            letterX.gameObject.SetActive(false);
+            resetState = true;
+        }
     }
 
     // Checks input and manages word validation and movement restrictions.
@@ -61,6 +71,9 @@ public class mission6Controller : MonoBehaviour
     {
         if (wordCounter >= 3)
         {
+            GameManager.GameManagerInstance.LoadProgress();
+            GameManager.GameManagerInstance.missionsCompleted[5] = 1;
+            GameManager.GameManagerInstance.SaveProgress();
             solveMission = true;
             canCheck = false;
             SwapCameras(1, 0, 0);
@@ -117,7 +130,9 @@ public class mission6Controller : MonoBehaviour
     // Shows 'X' when leaving book.  
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("book") && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[5];
+        if (other.gameObject.CompareTag("book") && opened == 0)
         {
             letterX.SetActive(true);
         }
@@ -126,7 +141,7 @@ public class mission6Controller : MonoBehaviour
     // Hides 'X' when leaving book.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("book") && !solveMission)
+        if (other.gameObject.CompareTag("book"))
         {
             letterX.SetActive(false);
         }
@@ -135,7 +150,9 @@ public class mission6Controller : MonoBehaviour
     // Detects continuous presence in a trigger area.  
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("book") && clipboard.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[5];
+        if (other.gameObject.CompareTag("book") && clipboard.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
         {
             letterX.SetActive(false);
             SwapCameras(0, 1, 0);
