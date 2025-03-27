@@ -49,6 +49,8 @@ public class mission4Controller : MonoBehaviour
 
     [SerializeField] GameObject playerTrigger;
     playerUI ui;
+    int opened;
+    bool resetState = false;
 
     // Initializes components and sets up the game state.
     void Start()
@@ -64,6 +66,13 @@ public class mission4Controller : MonoBehaviour
         audioDoor = labDoor.GetComponent<AudioSource>();
 
         ui = playerTrigger.GetComponent<playerUI>();
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[3];
+        if (opened == 1 && !resetState)
+        {
+            letterX.gameObject.SetActive(false);
+            resetState = true;
+        }
     }
 
     // Checks user input and triggers mission completion events.
@@ -76,6 +85,9 @@ public class mission4Controller : MonoBehaviour
 
         if (charCounter > 5 && !hasFinish)
         {
+            GameManager.GameManagerInstance.LoadProgress();
+            GameManager.GameManagerInstance.missionsCompleted[3] = 1;
+            GameManager.GameManagerInstance.SaveProgress();
             solveMission = true;
             inputTextBg.SetActive(false);
             SwapCameras(1, 0);
@@ -126,7 +138,9 @@ public class mission4Controller : MonoBehaviour
     // Shows 'X' when near scifi terminal.
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("scifi_terminal") && !finish && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[3];
+        if (other.gameObject.CompareTag("scifi_terminal") && opened == 0)
         {
             letterX.SetActive(true);
         }
@@ -135,7 +149,7 @@ public class mission4Controller : MonoBehaviour
     // Hides 'X' when leaving scifi terminal.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("scifi_terminal") && !solveMission)
+        if (other.gameObject.CompareTag("scifi_terminal"))
         {
             letterX.SetActive(false);
         }
@@ -144,7 +158,9 @@ public class mission4Controller : MonoBehaviour
     // Manages actions when staying near scifi terminal.
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("scifi_terminal") && securityCard.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[3];
+        if (other.gameObject.CompareTag("scifi_terminal") && securityCard.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
         {
             letterX.SetActive(false);
             SwapCameras(0, 1);

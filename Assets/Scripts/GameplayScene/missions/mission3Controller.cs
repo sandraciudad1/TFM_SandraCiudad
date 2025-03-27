@@ -66,7 +66,7 @@ public class mission3Controller : MonoBehaviour
         canvasGroup = spaceKeyInfo.GetComponent<CanvasGroup>();
         ui = playerTrigger.GetComponent<playerUI>();
         GameManager.GameManagerInstance.LoadProgress();
-        opened = GameManager.GameManagerInstance.missionsCompleted[1];
+        opened = GameManager.GameManagerInstance.missionsCompleted[2];
         if (opened == 1 && !resetState)
         {
             letterX.gameObject.SetActive(false);

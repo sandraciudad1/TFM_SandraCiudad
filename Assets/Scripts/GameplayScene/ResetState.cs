@@ -180,9 +180,7 @@ public class ResetState : MonoBehaviour
                 
                 break;
             case 6: // tarjeta de seguridad
-                code4.SetActive(true);
-                labDoorAnim.SetBool("open", true);
-                mision5.initializeAlarms();
+                
                 break;
             case 7: // cortador de cables
                 mision5.desactivateAlarms();
@@ -252,6 +250,9 @@ public class ResetState : MonoBehaviour
                 smoke4.SetActive(false);
                 break;
             case 3:
+                code4.SetActive(true);
+                labDoorAnim.SetBool("open", true);
+                mision5.initializeAlarms();
                 break;
             case 4:
                 break;
@@ -276,6 +277,7 @@ public class ResetState : MonoBehaviour
         switch (index)
         {
             case 0:
+                crate4Anim.SetBool("open", true);
                 record1.SetActive(false);
                 break;
             case 1:
