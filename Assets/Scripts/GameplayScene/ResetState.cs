@@ -177,11 +177,7 @@ public class ResetState : MonoBehaviour
 
                 break;
             case 5: // llave inglesa
-                code3.SetActive(true);
-                smoke1.SetActive(false);
-                smoke2.SetActive(false);
-                smoke3.SetActive(false);
-                smoke4.SetActive(false);
+                
                 break;
             case 6: // tarjeta de seguridad
                 code4.SetActive(true);
@@ -249,6 +245,11 @@ public class ResetState : MonoBehaviour
                 unknownSamples.Play();
                 break;
             case 2:
+                code3.SetActive(true);
+                smoke1.SetActive(false);
+                smoke2.SetActive(false);
+                smoke3.SetActive(false);
+                smoke4.SetActive(false);
                 break;
             case 3:
                 break;
@@ -282,6 +283,7 @@ public class ResetState : MonoBehaviour
                 record2.SetActive(false);
                 break;
             case 2:
+                crate3Anim.SetBool("open", true);
                 record3.SetActive(false);
                 break;
             case 3:
