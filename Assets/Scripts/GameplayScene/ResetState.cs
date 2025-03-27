@@ -83,12 +83,16 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject smoke4;
     [SerializeField] GameObject screen8;
     [SerializeField] GameObject navigationScreen;
+    [SerializeField] GameObject waitingVideo;
+    [SerializeField] VideoPlayer unknownSamples;
 
     // codes
     [SerializeField] VideoPlayer code1;
+    [SerializeField] VideoPlayer code2;
     [SerializeField] GameObject code3;
     [SerializeField] GameObject code4;
     [SerializeField] GameObject screenCode8;
+    
 
     GameObject[] inventoryRecords = new GameObject[10];
 
@@ -238,6 +242,11 @@ public class ResetState : MonoBehaviour
                 }
                 break;
             case 1:
+                navigationScreen.gameObject.SetActive(false);
+                code2.gameObject.SetActive(true);
+                code2.Play();
+                unknownSamples.gameObject.SetActive(true);
+                unknownSamples.Play();
                 break;
             case 2:
                 break;
@@ -269,6 +278,7 @@ public class ResetState : MonoBehaviour
                 record1.SetActive(false);
                 break;
             case 1:
+                crate2Anim.SetBool("open", true);
                 record2.SetActive(false);
                 break;
             case 2:

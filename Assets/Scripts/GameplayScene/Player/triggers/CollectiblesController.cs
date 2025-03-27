@@ -121,11 +121,12 @@ public class CollectiblesController : MonoBehaviour
         if ((GameManager.GameManagerInstance.GetArrayUnlocked("records", index) == 1))
         {
             pinCodeCanvas.SetActive(false);
+            
             if (Input.GetKeyDown(KeyCode.R))
             {
                 GameManager.GameManagerInstance.LoadProgress();
                 int i = GameManager.GameManagerInstance.recordIndex;
-                GameManager.GameManagerInstance.recordsCollected[i] = index;
+                GameManager.GameManagerInstance.objectsCollected[i] = index;
                 GameManager.GameManagerInstance.SaveProgress();
                 GameManager.GameManagerInstance.LoadProgress();
                 record.SetActive(false);

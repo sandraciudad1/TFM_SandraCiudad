@@ -43,13 +43,15 @@ public class mission2Controller : MonoBehaviour
     playerUI ui;
 
     static int actualSample = 0;
-    float startTime = 20f;
+    float startTime = 300f;
     float currentTime;
     [SerializeField] TextMeshProUGUI timerText;
     bool startTimer = false, isRunning = false;
 
     [SerializeField] GameObject sampleAnalyzedInfo;
     CanvasGroup canvasGroup;
+    int opened;
+    bool resetState = false;
 
     // Initializes variables and resets sample progress.
     void Start()
@@ -60,7 +62,7 @@ public class mission2Controller : MonoBehaviour
         cc = player.GetComponent<CharacterController>();
 
         GameManager.GameManagerInstance.LoadProgress();
-        for(int i=0; i<GameManager.GameManagerInstance.samplesUnlocked.Length; i++)
+        for (int i=0; i<GameManager.GameManagerInstance.samplesUnlocked.Length; i++)
         {
             GameManager.GameManagerInstance.SetArrayUnlocked("samples", i, 0);
         }
@@ -70,8 +72,16 @@ public class mission2Controller : MonoBehaviour
         ui = playerTrigger.GetComponent<playerUI>();
         counterAnalyzer.text = GameManager.GameManagerInstance.samplesCounter.ToString() + "/4";
         linelBar.fillAmount = (float)GameManager.GameManagerInstance.samplesCounter / 4;
+        
         currentTime = startTime;
         canvasGroup = sampleAnalyzedInfo.GetComponent<CanvasGroup>();
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[1];
+        if (opened == 1 && !resetState)
+        {
+            letterX.gameObject.SetActive(false);
+            resetState = true;
+        }
     }
 
     // Handles player repositioning and checks mission completion.
@@ -117,6 +127,9 @@ public class mission2Controller : MonoBehaviour
 
         if (GameManager.GameManagerInstance.samplesCounter == 4)
         {
+            GameManager.GameManagerInstance.LoadProgress();
+            GameManager.GameManagerInstance.missionsCompleted[1] = 1;
+            GameManager.GameManagerInstance.SaveProgress();
             startTimer = false;
             isRunning = false;
             timerText.gameObject.SetActive(false);
@@ -135,16 +148,15 @@ public class mission2Controller : MonoBehaviour
     {
         // efectos de explosion y contaminacion del laboratorio
         ui.takeDamage(40f);
-        currentTime= 20f;
-        //startTimer = false;
-        //timerText.gameObject.SetActive(false);
-        //solveMission = true;
+        currentTime= startTime/2;
     }
 
     // Shows 'X' when near an analytical instrument.
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("analyticalInstrument") && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[1];
+        if (other.gameObject.CompareTag("analyticalInstrument") && opened == 0)
         {
             letterX.SetActive(true);
         }
@@ -163,7 +175,9 @@ public class mission2Controller : MonoBehaviour
     // Analyzes a sample when pressing 'X' near an instrument.
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("analyticalInstrument") && sampleActive()>0 && Input.GetKeyDown(KeyCode.X) && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[1];
+        if (other.gameObject.CompareTag("analyticalInstrument") && sampleActive()>0 && Input.GetKeyDown(KeyCode.X) && opened == 0)
         {
             if (checkSample(sampleActive()))
             {
