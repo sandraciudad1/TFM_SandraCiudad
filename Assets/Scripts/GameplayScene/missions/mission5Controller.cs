@@ -49,6 +49,7 @@ public class mission5Controller : MonoBehaviour
 
     static int cableCounter = 0;
     static int spacePressed = 0;
+    int lightDecrementation = 0;
     bool finish = false;
     bool isShowing = false;
     bool solveMission = false;
@@ -232,8 +233,7 @@ public class mission5Controller : MonoBehaviour
         }
     }
 
-    int lightDecrementation = 0;
-
+    // Adjust lights intensity and alarm lights state
     void lightInteraction(bool active)
     {
         Light[] lights = Resources.FindObjectsOfTypeAll<Light>();

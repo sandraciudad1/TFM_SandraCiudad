@@ -119,7 +119,6 @@ public class ResetState : MonoBehaviour
         {
             if (missionsCompleted[i] == 1)
             {
-                inventoryObjects[i].SetActive(false);
                 resetMissionsStates(i);
             }
         }
@@ -156,35 +155,11 @@ public class ResetState : MonoBehaviour
         scifiCrateAnim = scifiCrate.GetComponent<Animator>();
     }
 
-    // Executes actions when an object is collected.
+    
     void additionalActions(int index)
     {
         switch (index)
         {
-            case 0: // crowbar
-                
-                break;
-            case 1: //muestra1
-                //activar el video del codigo
-                break;
-            case 2: //muestra 2
-                
-                break;
-            case 3: // muestra 3
-
-                break;
-            case 4: // muestra 4
-
-                break;
-            case 5: // llave inglesa
-                
-                break;
-            case 6: // tarjeta de seguridad
-                
-                break;
-            case 7: // cortador de cables
-                
-                break;
             case 8: // tabla de traduccion 
                 inputText1.text = "C0D1GO";
                 inputText2.text = "PU3RT4";
@@ -208,22 +183,18 @@ public class ResetState : MonoBehaviour
                 verticalExitDoorAnim.SetBool("open", true);
                 scifiCrateAnim.SetBool("move", true);
                 break;
-            /*case 13:
-
-                break;
-            case 14:
-
-                break;*/
             default:
                 break;
         }
     }
 
+    // Executes actions when an object is collected.
     void resetMissionsStates(int index)
     {
         switch (index)
         {
             case 0:
+                crowbar.SetActive(false);
                 code1.gameObject.SetActive(true);
                 code1.Play();
                 metallicDoorAnim.SetBool("open", true);
@@ -235,6 +206,10 @@ public class ResetState : MonoBehaviour
                 }
                 break;
             case 1:
+                sample1.SetActive(false);
+                sample2.SetActive(false);
+                sample3.SetActive(false);
+                sample4.SetActive(false);
                 navigationScreen.gameObject.SetActive(false);
                 code2.gameObject.SetActive(true);
                 code2.Play();
@@ -242,6 +217,7 @@ public class ResetState : MonoBehaviour
                 unknownSamples.Play();
                 break;
             case 2:
+                spannerwrench.SetActive(false);
                 code3.SetActive(true);
                 smoke1.SetActive(false);
                 smoke2.SetActive(false);
@@ -249,23 +225,30 @@ public class ResetState : MonoBehaviour
                 smoke4.SetActive(false);
                 break;
             case 3:
+                securityCard.SetActive(false);
                 code4.SetActive(true);
                 labDoorAnim.SetBool("open", true);
                 mision5.initializeAlarms();
                 break;
             case 4:
+                wireCutters.SetActive(false);
                 mision5.desactivateAlarms();
                 mision5.showPinCode();
                 break;
             case 5:
+                clipboard.SetActive(false);
                 break;
             case 6:
+                emergencyKit.SetActive(false);
                 break;
             case 7:
+                vacuum.SetActive(false);
                 break;
             case 8:
+                compass.SetActive(false);
                 break;
             case 9:
+                uvLight.SetActive(false);
                 break;
             default:
                 break;
