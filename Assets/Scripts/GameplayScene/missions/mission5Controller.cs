@@ -21,6 +21,7 @@ public class mission5Controller : MonoBehaviour
     [SerializeField] GameObject alarm3;
     [SerializeField] GameObject alarm4;
     [SerializeField] GameObject alarm5;
+    GameObject[] alarms;
 
     [SerializeField] GameObject wireCutters;
     [SerializeField] GameObject letterX;
@@ -54,6 +55,8 @@ public class mission5Controller : MonoBehaviour
 
     [SerializeField] GameObject playerTrigger;
     playerUI ui;
+    int opened;
+    bool resetState = false;
 
     // Initializes variables and resets cable colors. 
     void Start()
@@ -69,19 +72,30 @@ public class mission5Controller : MonoBehaviour
             cableMaterials[i].SetColor("_Color", Color.white);
         }
 
+        alarms = new GameObject[] { alarm1, alarm2, alarm3, alarm4, alarm5 };
         ui = playerTrigger.GetComponent<playerUI>();
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[4];
+        if (opened == 1 && !resetState)
+        {
+            letterX.gameObject.SetActive(false);
+            resetState = true;
+        }
     }
 
     // Manages game state and updates player position and UI.
     void Update()
     {
-        if(cableCounter >= 0 && cableCounter <= 3)
+        if (cableCounter >= 0 && cableCounter <= 3)
         {
             setPlayerPosition(cableCounter);
             updateProgressBar();
-        } 
+        }
         else if (cableCounter == 4 && !finish)
         {
+            GameManager.GameManagerInstance.LoadProgress();
+            GameManager.GameManagerInstance.missionsCompleted[4] = 1;
+            GameManager.GameManagerInstance.SaveProgress();
             desactivateAlarms();
             lightInteraction(true);
             playerAnim.SetBool("wireCutters", false);
@@ -92,7 +106,7 @@ public class mission5Controller : MonoBehaviour
             cc.enabled = true;
             finish = true;
         }
-        
+
         if (finish && !isShowing)
         {
             solveMission = true;
@@ -116,7 +130,7 @@ public class mission5Controller : MonoBehaviour
                 break;
             default:
                 break;
-        } 
+        }
     }
 
     // Updates progress bar when pressing space.  
@@ -127,8 +141,8 @@ public class mission5Controller : MonoBehaviour
             spacePressed++;
             if (spacePressed < 6)
             {
-                pb.fillAmount = (float) spacePressed / 6;
-            } 
+                pb.fillAmount = (float)spacePressed / 6;
+            }
             else
             {
                 cableMaterials[cableCounter].SetColor("_Color", Color.black);
@@ -148,7 +162,7 @@ public class mission5Controller : MonoBehaviour
     // Displays a sequence of squares as a pin code.  
     public IEnumerator showPinCode()
     {
-        isShowing = true;  
+        isShowing = true;
         yield return new WaitForSeconds(0.5f);
         square1.gameObject.SetActive(true);
         yield return new WaitForSeconds(1.2f);
@@ -163,7 +177,7 @@ public class mission5Controller : MonoBehaviour
         yield return new WaitForSeconds(1.2f);
         square4.gameObject.SetActive(false);
         yield return new WaitForSeconds(1.5f);
-        isShowing = false;  
+        isShowing = false;
     }
 
     // Activates alarms with movement and visual effects.  
@@ -210,25 +224,42 @@ public class mission5Controller : MonoBehaviour
             lightInteraction(false);
             ui.useEnergy(15f);
         }
-        if (other.gameObject.CompareTag("securitySystem") && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[4];
+        if (other.gameObject.CompareTag("securitySystem") && opened == 0)
         {
             letterX.SetActive(true);
         }
     }
+
+    int lightDecrementation = 0;
 
     void lightInteraction(bool active)
     {
         Light[] lights = Resources.FindObjectsOfTypeAll<Light>();
         foreach (Light light in lights)
         {
-            light.gameObject.SetActive(active);
+            if (!active)
+            {
+                light.intensity = Mathf.Max(0.1f, light.intensity - 0.1f);
+                lightDecrementation++;
+            }
+            else
+            {
+                light.intensity = light.intensity + (0.1f * (lightDecrementation/lights.Length));
+            }
+        }
+        for (int i = 0; i < alarms.Length; i++)
+        {
+            Light alarmLight = alarms[i].GetComponent<Light>();
+            alarmLight.intensity = 5.4f;
         }
     }
 
     // Hides 'X' when leaving scifi terminal.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("securitySystem") && !solveMission)
+        if (other.gameObject.CompareTag("securitySystem"))
         {
             letterX.SetActive(false);
         }
@@ -237,7 +268,9 @@ public class mission5Controller : MonoBehaviour
     // Detects continuous presence in a trigger area.  
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("securitySystem") && wireCutters.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[4];
+        if (other.gameObject.CompareTag("securitySystem") && wireCutters.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
         {
             letterX.SetActive(false);
             SwapCameras(0, 1);

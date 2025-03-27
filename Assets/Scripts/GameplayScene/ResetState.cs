@@ -183,8 +183,7 @@ public class ResetState : MonoBehaviour
                 
                 break;
             case 7: // cortador de cables
-                mision5.desactivateAlarms();
-                mision5.showPinCode();
+                
                 break;
             case 8: // tabla de traduccion 
                 inputText1.text = "C0D1GO";
@@ -255,6 +254,8 @@ public class ResetState : MonoBehaviour
                 mision5.initializeAlarms();
                 break;
             case 4:
+                mision5.desactivateAlarms();
+                mision5.showPinCode();
                 break;
             case 5:
                 break;
@@ -289,6 +290,7 @@ public class ResetState : MonoBehaviour
                 record3.SetActive(false);
                 break;
             case 3:
+                crate5Anim.SetBool("open", true);
                 record4.SetActive(false);
                 break;
             case 4:
