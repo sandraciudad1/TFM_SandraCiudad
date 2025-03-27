@@ -50,6 +50,8 @@ public class mission3Controller : MonoBehaviour
 
     [SerializeField] GameObject playerTrigger;
     playerUI ui;
+    int opened;
+    bool resetState = false;
 
     // Initializes necessary components and calculates limits.
     void Start()
@@ -63,6 +65,13 @@ public class mission3Controller : MonoBehaviour
         calculateLimits();
         canvasGroup = spaceKeyInfo.GetComponent<CanvasGroup>();
         ui = playerTrigger.GetComponent<playerUI>();
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[1];
+        if (opened == 1 && !resetState)
+        {
+            letterX.gameObject.SetActive(false);
+            resetState = true;
+        }
     }
 
     // Recalculates limits when rect transform changes.
@@ -109,6 +118,10 @@ public class mission3Controller : MonoBehaviour
         } 
         else if (solved == 3 && !updatePos)
         {
+            spannerwrench.SetActive(false);
+            GameManager.GameManagerInstance.LoadProgress();
+            GameManager.GameManagerInstance.missionsCompleted[2] = 1;
+            GameManager.GameManagerInstance.SaveProgress();
             solveMission = true;
             gradientBg.SetActive(false);
             code3.SetActive(true);
@@ -243,7 +256,9 @@ public class mission3Controller : MonoBehaviour
     // Shows 'X' when near modular pipes.
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("modularPipes") && !finish && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[2];
+        if (other.gameObject.CompareTag("modularPipes") && opened == 0)
         {
             letterX.SetActive(true);
         }
@@ -252,7 +267,7 @@ public class mission3Controller : MonoBehaviour
     // Hides 'X' when leaving modular pipes.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("modularPipes") && !solveMission)
+        if (other.gameObject.CompareTag("modularPipes"))
         {
             letterX.SetActive(false);
         }
@@ -261,7 +276,9 @@ public class mission3Controller : MonoBehaviour
     // Manages actions when staying near modular pipes.
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("modularPipes") && spannerwrench.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[2];
+        if (other.gameObject.CompareTag("modularPipes") && spannerwrench.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
         {
             StartCoroutine(waitToShow());
             letterX.SetActive(false);
