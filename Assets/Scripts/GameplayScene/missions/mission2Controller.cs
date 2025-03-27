@@ -43,10 +43,13 @@ public class mission2Controller : MonoBehaviour
     playerUI ui;
 
     static int actualSample = 0;
-    float startTime = 300f;
+    float startTime = 20f;
     float currentTime;
     [SerializeField] TextMeshProUGUI timerText;
     bool startTimer = false, isRunning = false;
+
+    [SerializeField] GameObject sampleAnalyzedInfo;
+    CanvasGroup canvasGroup;
 
     // Initializes variables and resets sample progress.
     void Start()
@@ -68,6 +71,7 @@ public class mission2Controller : MonoBehaviour
         counterAnalyzer.text = GameManager.GameManagerInstance.samplesCounter.ToString() + "/4";
         linelBar.fillAmount = (float)GameManager.GameManagerInstance.samplesCounter / 4;
         currentTime = startTime;
+        canvasGroup = sampleAnalyzedInfo.GetComponent<CanvasGroup>();
     }
 
     // Handles player repositioning and checks mission completion.
@@ -80,7 +84,6 @@ public class mission2Controller : MonoBehaviour
 
         if (isRunning)
         {
-            Debug.Log("en el timer de 2");
             currentTime -= Time.deltaTime;
 
             if (currentTime <= 0)
@@ -93,6 +96,15 @@ public class mission2Controller : MonoBehaviour
             int minutes = Mathf.FloorToInt(currentTime / 60);
             int seconds = Mathf.FloorToInt(currentTime % 60);
             timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+            if (currentTime <= 60f)
+            {
+                timerText.color = Color.red;
+            }
+            else
+            {
+                timerText.color = Color.white; 
+            }
         }
 
         if (changePos)
@@ -105,6 +117,9 @@ public class mission2Controller : MonoBehaviour
 
         if (GameManager.GameManagerInstance.samplesCounter == 4)
         {
+            startTimer = false;
+            isRunning = false;
+            timerText.gameObject.SetActive(false);
             solveMission = true;
             code2.gameObject.SetActive(true);
             code2.Play();
@@ -120,12 +135,16 @@ public class mission2Controller : MonoBehaviour
     {
         // efectos de explosion y contaminacion del laboratorio
         ui.takeDamage(40f);
+        currentTime= 20f;
+        //startTimer = false;
+        //timerText.gameObject.SetActive(false);
+        //solveMission = true;
     }
 
     // Shows 'X' when near an analytical instrument.
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("analyticalInstrument") && !finish && !solveMission)
+        if (other.gameObject.CompareTag("analyticalInstrument") && !solveMission)
         {
             letterX.SetActive(true);
         }
@@ -134,7 +153,7 @@ public class mission2Controller : MonoBehaviour
     // Hides 'X' when leaving an analytical instrument.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("analyticalInstrument") && !solveMission)
+        if (other.gameObject.CompareTag("analyticalInstrument"))
         {
             letterX.SetActive(false);
         }
@@ -149,6 +168,8 @@ public class mission2Controller : MonoBehaviour
             if (checkSample(sampleActive()))
             {
                 startTimer = true;
+                timerText.gameObject.SetActive(true);
+                timerText.text = "05:00";
                 playerMov.canMove = false;
                 cc.enabled = false;
                 player.transform.position = playerPos;
@@ -160,10 +181,6 @@ public class mission2Controller : MonoBehaviour
                     StartCoroutine(waitAnalyzeAnim());
                     swap = true;
                 }
-            } 
-            else
-            {
-                ui.useEnergy(15f);
             }
         }
     }
@@ -174,11 +191,40 @@ public class mission2Controller : MonoBehaviour
         int value = GameManager.GameManagerInstance.GetArrayUnlocked("samples", (sampleId - 1));
         if (value == 1)
         {
+            StartCoroutine(waitToShow());
+            ui.useEnergy(5f);
             return false;
         } else
         {
             return true;
         }
+    }
+
+    // Waits before showing analyzed sample info.
+    IEnumerator waitToShow()
+    {
+        yield return new WaitForSeconds(0.5f);
+        sampleAnalyzedInfo.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        StartCoroutine(FadeOutCoroutine());
+    }
+
+    // Fades out the space key info over time.
+    IEnumerator FadeOutCoroutine()
+    {
+        float duration = 2f;
+        float startAlpha = 1f;
+        float endAlpha = 0f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float newAlpha = Mathf.Lerp(startAlpha, endAlpha, elapsedTime / duration);
+            canvasGroup.alpha = newAlpha;
+            yield return null;
+        }
+        canvasGroup.alpha = endAlpha;
     }
 
     // Plays animation and updates sample progress. 

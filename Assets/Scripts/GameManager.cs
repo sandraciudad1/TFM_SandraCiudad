@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     public int correctCodeCounter;
     public int[] missionsCompleted = new int[10];
     public int[] objectsCollected = new int[15];
-    public int[] recordsCollected = new int[15];
+    public int[] recordsCollected = new int[10];
 
     // Ensures only one instance of GameManager exists (Singleton pattern).
     private void Awake()

@@ -32,6 +32,10 @@ public class resetGame : MonoBehaviour
         {
             GameManager.GameManagerInstance.objectsCollected[i] = 0;
         }
+        for (int i = 0; i < 10; i++)
+        {
+            GameManager.GameManagerInstance.recordsCollected[i] = 0;
+        }
         GameManager.GameManagerInstance.SaveProgress();
     }
 }

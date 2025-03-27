@@ -355,7 +355,6 @@ public class inventoryController : MonoBehaviour
     // Adds an item to the inventory.
     public void addItem(int index, int id)
     {
-        Debug.Log("added id " + id + " in index " + index);
         itemsNames[index] = addItemNames(id);
         collectable3dObjects[index] = add3DItems(id);
         collectableItemsImgs[index].sprite = objectsSprites[id];
