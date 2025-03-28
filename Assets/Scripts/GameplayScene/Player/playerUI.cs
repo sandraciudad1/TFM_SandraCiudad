@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,7 +24,6 @@ public class playerUI : MonoBehaviour
     [SerializeField] PostProcessVolume postProcessVolume;
     [SerializeField] Transform cameraTransform;
     DepthOfField depthOfField;
-    Vector3 originalCameraPosition;
 
     // Initializes player stats and settings at game start.
     void Start()
@@ -34,7 +34,6 @@ public class playerUI : MonoBehaviour
 
         playerMov = player.GetComponent<PlayerMovement>();
         oxygenAlerts = new bool[] { false, false, false, false };
-        originalCameraPosition = cameraTransform.localPosition;
         if (postProcessVolume.profile.TryGetSettings(out depthOfField) && depthOfField != null)
         {
             depthOfField.active = true;
@@ -124,15 +123,11 @@ public class playerUI : MonoBehaviour
     // Adjusts blur and camera shake based on oxygen level.
     void updateOxygenEffects()
     {
-        //Debug.Log("aztualizando oxigeno");
         if (depthOfField != null)
         {
-            float blurIntensity = Mathf.Lerp(0.0f, 2.0f, (playerOxygen / 100f));
+            float blurIntensity = Mathf.Lerp(0.0f, 1.0f, (playerOxygen / 100f));
             depthOfField.focusDistance.value = blurIntensity;
         }
-
-        float cameraShakeAmount = Mathf.Lerp(0f, 0.1f, 1 - (playerOxygen / 100f));
-        cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, originalCameraPosition + (Random.insideUnitSphere * cameraShakeAmount), Time.deltaTime * 5f);
     }
 
     // Triggers oxygen alerts when oxygen drops below thresholds.
