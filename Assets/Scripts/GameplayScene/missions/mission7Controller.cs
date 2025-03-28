@@ -62,7 +62,7 @@ public class mission7Controller : MonoBehaviour
     playerUI ui;
 
     static int actualSample = 0;
-    float startTime = 300f;
+    float startTime = 150f;
     float currentTime;
     [SerializeField] TextMeshProUGUI timerText;
     bool startTimer = false, isRunning = false;

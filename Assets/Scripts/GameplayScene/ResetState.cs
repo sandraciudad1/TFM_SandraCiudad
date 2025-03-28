@@ -141,7 +141,7 @@ public class ResetState : MonoBehaviour
         firstAidObj = new GameObject[] { BandAidRollObj, MedicalPackageObj, HydroCreamObj, MiniAidBoxObj, OxyWaterObj, BurnCreamObj, ScissorObj, AlcoholObj };
         initializeAnimators();
 
-        for (int i = 0; i < GameManager.GameManagerInstance.objectIndex; i++)
+        for (int i = 0; i < 10; i++)
         {
             if (missionsCompleted[i] == 1)
             {
@@ -194,14 +194,7 @@ public class ResetState : MonoBehaviour
             case 9: // kit de emergencia
                 break;
             case 10: // aspiradora
-                GameObject[] dirtObjects = GameObject.FindGameObjectsWithTag("dirt");
-                foreach (GameObject dirt in dirtObjects)
-                {
-                    dirt.SetActive(false);
-                }
-                screen8.SetActive(false);
-                screenCode8.SetActive(true);
-                navigationScreen.SetActive(true);
+                
                 break;
             case 11: // brujula
                 break;
@@ -282,6 +275,14 @@ public class ResetState : MonoBehaviour
                 break;
             case 7:
                 vacuum.SetActive(false);
+                GameObject[] dirtObjects = GameObject.FindGameObjectsWithTag("dirt");
+                foreach (GameObject dirt in dirtObjects)
+                {
+                    dirt.SetActive(false);
+                }
+                screen8.SetActive(false);
+                screenCode8.SetActive(true);
+                navigationScreen.SetActive(true);
                 break;
             case 8:
                 compass.SetActive(false);
@@ -328,6 +329,7 @@ public class ResetState : MonoBehaviour
                 record7.SetActive(false);
                 break;
             case 7:
+                crate8Anim.SetBool("open", true);
                 record8.SetActive(false);
                 break;
             case 8:

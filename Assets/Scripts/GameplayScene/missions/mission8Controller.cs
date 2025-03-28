@@ -43,6 +43,8 @@ public class mission8Controller : MonoBehaviour
     float currentTime;
     [SerializeField] TextMeshProUGUI timerText;
     bool startTimer = false, isRunning = false;
+    int opened;
+    bool resetState = false;
 
     // Initializes components and sets the initial camera configuration.
     void Start()
@@ -55,6 +57,13 @@ public class mission8Controller : MonoBehaviour
         canvasGroup = info.GetComponent<CanvasGroup>();
         ui = playerTrigger.GetComponent<playerUI>();
         currentTime = startTime;
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[1];
+        if (opened == 1 && !resetState)
+        {
+            letterX.gameObject.SetActive(false);
+            resetState = true;
+        }
     }
 
     // Handles movement and controls the game's finishing sequence.
@@ -74,7 +83,6 @@ public class mission8Controller : MonoBehaviour
 
         if (isRunning)
         {
-            Debug.Log("en el timer de 8");
             currentTime -= Time.deltaTime;
 
             if (currentTime <= 0)
@@ -87,10 +95,25 @@ public class mission8Controller : MonoBehaviour
             int minutes = Mathf.FloorToInt(currentTime / 60);
             int seconds = Mathf.FloorToInt(currentTime % 60);
             timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+            if (currentTime <= 60f)
+            {
+                timerText.color = Color.red;
+            }
+            else
+            {
+                timerText.color = Color.white;
+            }
         }
 
         if (finish && !exit)
         {
+            GameManager.GameManagerInstance.LoadProgress();
+            GameManager.GameManagerInstance.missionsCompleted[7] = 1;
+            GameManager.GameManagerInstance.SaveProgress();
+            startTimer = false;
+            isRunning = false;
+            timerText.gameObject.SetActive(false);
             solveMission = true;
             limits.SetActive(false);
             screen.SetActive(false);
@@ -110,12 +133,15 @@ public class mission8Controller : MonoBehaviour
         // se desprenden particulas al aire
         ui.useEnergy(40f);
         ui.wasteOxygen(40f);
+        currentTime = startTime / 2;
     }
 
     // Shows 'X' when leaving grids.  
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("grids") && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[7];
+        if (other.gameObject.CompareTag("grids") && opened == 0)
         {
             letterX.SetActive(true);
         }
@@ -124,7 +150,7 @@ public class mission8Controller : MonoBehaviour
     // Hides 'X' when leaving grids.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("grids") && !solveMission)
+        if (other.gameObject.CompareTag("grids"))
         {
             letterX.SetActive(false);
         }
@@ -133,8 +159,13 @@ public class mission8Controller : MonoBehaviour
     // Detects continuous presence in a trigger area.  
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("grids") && vacuum.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[7];
+        if (other.gameObject.CompareTag("grids") && vacuum.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
         {
+            startTimer = true;
+            timerText.gameObject.SetActive(true);
+            timerText.text = "05:00";
             letterX.SetActive(false);
             SwapCameras(0, 1, 0);
             playerMov.canMove = false;
