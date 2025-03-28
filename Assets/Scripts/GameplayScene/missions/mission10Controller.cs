@@ -106,6 +106,8 @@ public class mission10Controller : MonoBehaviour
     [SerializeField] AudioSource alarmSound;
     [SerializeField] GameObject playerTrigger;
     playerUI ui;
+    int opened;
+    bool resetState = false;
 
     // Initializes variables and assigns components.
     void Start()
@@ -134,6 +136,14 @@ public class mission10Controller : MonoBehaviour
         scifiCrateAnim = scifiCrate.GetComponent<Animator>();
         doorAnim = verticalExitDoor.GetComponent<Animator>();
         doorAudio = verticalExitDoor.GetComponent<AudioSource>();
+
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[9];
+        if (opened == 1 && !resetState)
+        {
+            letterX.gameObject.SetActive(false);
+            resetState = true;
+        }
     }
 
     static int countReturnKey = 0;
@@ -168,6 +178,9 @@ public class mission10Controller : MonoBehaviour
 
         if (completed >= 3 && !finish)
         {
+            GameManager.GameManagerInstance.LoadProgress();
+            GameManager.GameManagerInstance.missionsCompleted[9] = 1;
+            GameManager.GameManagerInstance.SaveProgress();
             solveMission = true;
             StartCoroutine(FadeIn());
             StartCoroutine(waitUntilMoveDoor());
@@ -318,7 +331,9 @@ public class mission10Controller : MonoBehaviour
     // Shows 'X' when leaving fingerprint detector.  
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("fpDetector") && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[9];
+        if (other.gameObject.CompareTag("fpDetector") && opened == 0)
         {
             letterX.SetActive(true);
         }
@@ -327,7 +342,7 @@ public class mission10Controller : MonoBehaviour
     // Hides 'X' when leaving fingerprint detector.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("fpDetector") && !solveMission)
+        if (other.gameObject.CompareTag("fpDetector"))
         {
             letterX.SetActive(false);
         }
@@ -336,7 +351,9 @@ public class mission10Controller : MonoBehaviour
     // Detects continuous presence in a trigger area.  
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("fpDetector") && uvLight.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[9];
+        if (other.gameObject.CompareTag("fpDetector") && uvLight.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
         {
             letterX.SetActive(false);
             SwapCameras(0, 1, 0, 0);

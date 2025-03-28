@@ -87,7 +87,7 @@ public class mission7Controller : MonoBehaviour
         ui = playerTrigger.GetComponent<playerUI>();
         currentTime = startTime;
         GameManager.GameManagerInstance.LoadProgress();
-        opened = GameManager.GameManagerInstance.missionsCompleted[1];
+        opened = GameManager.GameManagerInstance.missionsCompleted[6];
         if (opened == 1 && !resetState)
         {
             letterX.gameObject.SetActive(false);

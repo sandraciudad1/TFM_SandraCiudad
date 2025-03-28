@@ -46,7 +46,7 @@ public class mission9Controller : MonoBehaviour
         puzzlecontroller = puzzle.GetComponent<puzzleController>();
 
         GameManager.GameManagerInstance.LoadProgress();
-        opened = GameManager.GameManagerInstance.missionsCompleted[1];
+        opened = GameManager.GameManagerInstance.missionsCompleted[8];
         if (opened == 1 && !resetState)
         {
             letterX.gameObject.SetActive(false);

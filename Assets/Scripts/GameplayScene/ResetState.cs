@@ -186,20 +186,6 @@ public class ResetState : MonoBehaviour
         kitAnim = kit.GetComponent<Animator>();
     }
 
-    
-    void additionalActions(int index)
-    {
-        switch (index)
-        {
-            case 12: // luz ultravioleta
-                verticalExitDoorAnim.SetBool("open", true);
-                scifiCrateAnim.SetBool("move", true);
-                break;
-            default:
-                break;
-        }
-    }
-
     // Executes actions when an object is collected.
     void resetMissionsStates(int index)
     {
@@ -284,6 +270,8 @@ public class ResetState : MonoBehaviour
                 break;
             case 9:
                 uvLight.SetActive(false);
+                verticalExitDoorAnim.SetBool("open", true);
+                scifiCrateAnim.SetBool("move", true);
                 break;
             default:
                 break;
@@ -332,6 +320,7 @@ public class ResetState : MonoBehaviour
                 record9.SetActive(false);
                 break;
             case 9:
+                crate10Anim.SetBool("open", true);
                 record10.SetActive(false);
                 break;
             default:
