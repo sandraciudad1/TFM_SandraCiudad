@@ -22,8 +22,10 @@ public class videoPlayerController : MonoBehaviour
 
     [SerializeField] VideoPlayer videoPlayer;
     [SerializeField] VideoClip[] videoClips;
+    [SerializeField] AudioClip[] audioClips;
+    AudioSource audiosource;
 
-    // 
+    // Initializes components and sets default camera priority.
     void Start()
     {
         SwapCameras(1, 0, 0);
@@ -32,31 +34,9 @@ public class videoPlayerController : MonoBehaviour
         playerMov = player.GetComponent<PlayerMovement>();
 
         videoPlayer.loopPointReached += OnVideoFinished;
-        // Configurar el VideoPlayer
-        videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
-
-        // Verificar si el AudioSource ya está presente
-        AudioSource audioSource = videoPlayer.GetComponent<AudioSource>();
-        if (audioSource == null)
-        {
-            audioSource = videoPlayer.gameObject.AddComponent<AudioSource>();
-        }
-        videoPlayer.SetTargetAudioSource(0, audioSource);
-        videoPlayer.EnableAudioTrack(0, true);
-        videoPlayer.SetDirectAudioMute(0, false);
-        videoPlayer.SetDirectAudioVolume(0, 1.0f);
+        audiosource = GetComponent<AudioSource>();
     }
 
-    // 
-    void Update()
-    {
-        AudioSource audioSource = videoPlayer.GetComponent<AudioSource>();
-        if (audioSource != null)
-        {
-            //Debug.Log("AudioSource Volume: " + audioSource.volume);
-            //Debug.Log("AudioSource isPlaying: " + audioSource.isPlaying);
-        }
-    }
 
     // Shows 'X' when enter videoplayer.  
     private void OnTriggerEnter(Collider other)
@@ -96,6 +76,7 @@ public class videoPlayerController : MonoBehaviour
         }
     }
 
+    // Waits for animation, then changes camera and plays video.
     IEnumerator waitUntilFinishAnim(string name)
     {
         yield return new WaitForSeconds(3f);
@@ -106,6 +87,7 @@ public class videoPlayerController : MonoBehaviour
         checkVideo(name);
     }
 
+    // Selects video and prepares it based on object name.
     void checkVideo(string name)
     {
         videoPlayer.gameObject.SetActive(true);
@@ -114,11 +96,12 @@ public class videoPlayerController : MonoBehaviour
         {
             videoPlayer.clip = videoClips[index - 1];
             videoPlayer.Prepare();
-            StartCoroutine(PlayVideoWhenReady());
+            StartCoroutine(PlayVideoWhenReady(index));
         }
     }
 
-    IEnumerator PlayVideoWhenReady()
+    // Waits until video is ready, then plays audio and video.
+    IEnumerator PlayVideoWhenReady(int index)
     {
         while (!videoPlayer.isPrepared)
         {
@@ -126,14 +109,17 @@ public class videoPlayerController : MonoBehaviour
         }
 
         videoPlayer.Play();
+        audiosource.clip = audioClips[index - 1];
+        audiosource.Play();
     }
 
-
+    // Called when video ends, starts coroutine to move player.
     void OnVideoFinished(VideoPlayer vp)
     {
         StartCoroutine(waitUntilMovePlayer());
     }
 
+    // Waits and restores player movement after video ends.
     IEnumerator waitUntilMovePlayer()
     {
         videoPlayer.gameObject.SetActive(false);
@@ -142,7 +128,6 @@ public class videoPlayerController : MonoBehaviour
         playerMov.canMove = true;
         cc.enabled = true;
     }
-
     
     // Swap between virtual cameras.
     void SwapCameras(int priority1, int priority2, int priority3)
