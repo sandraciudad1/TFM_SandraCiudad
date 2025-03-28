@@ -126,7 +126,7 @@ public class CollectiblesController : MonoBehaviour
             {
                 GameManager.GameManagerInstance.LoadProgress();
                 int i = GameManager.GameManagerInstance.recordIndex;
-                GameManager.GameManagerInstance.objectsCollected[i] = index;
+                GameManager.GameManagerInstance.recordsCollected[i] = index;
                 GameManager.GameManagerInstance.SaveProgress();
                 GameManager.GameManagerInstance.LoadProgress();
                 record.SetActive(false);
