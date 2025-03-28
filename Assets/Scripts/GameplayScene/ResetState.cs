@@ -68,6 +68,8 @@ public class ResetState : MonoBehaviour
     Animator verticalExitDoorAnim;
     [SerializeField] GameObject scifiCrate;
     Animator scifiCrateAnim;
+    [SerializeField] GameObject verticalDoor;
+    Animator verticalDoorAnim;
 
     int[] missionsCompleted;
     int[] objectsUnlocked;
@@ -85,6 +87,27 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject navigationScreen;
     [SerializeField] GameObject waitingVideo;
     [SerializeField] VideoPlayer unknownSamples;
+
+    [SerializeField] GameObject kit;
+    Animator kitAnim;
+    [SerializeField] GameObject BandAidRoll;
+    [SerializeField] GameObject MedicalPackage;
+    [SerializeField] GameObject HydroCream;
+    [SerializeField] GameObject MiniAidBox;
+    [SerializeField] GameObject OxyWater;
+    [SerializeField] GameObject BurnCream;
+    [SerializeField] GameObject Scissor;
+    [SerializeField] GameObject Alcohol;
+    GameObject[] firstAidKit;
+    [SerializeField] GameObject BandAidRollObj;
+    [SerializeField] GameObject MedicalPackageObj;
+    [SerializeField] GameObject HydroCreamObj;
+    [SerializeField] GameObject MiniAidBoxObj;
+    [SerializeField] GameObject OxyWaterObj;
+    [SerializeField] GameObject BurnCreamObj;
+    [SerializeField] GameObject ScissorObj;
+    [SerializeField] GameObject AlcoholObj;
+    GameObject[] firstAidObj;
 
     // codes
     [SerializeField] VideoPlayer code1;
@@ -113,6 +136,9 @@ public class ResetState : MonoBehaviour
         missionsCompleted = GameManager.GameManagerInstance.missionsCompleted;
         objectsUnlocked = GameManager.GameManagerInstance.objectsUnlocked;
         recordsUnlocked = GameManager.GameManagerInstance.recordsUnlocked;
+
+        firstAidKit = new GameObject[] { kit, BandAidRoll, MedicalPackage, HydroCream, MiniAidBox, OxyWater, BurnCream, Scissor, Alcohol };
+        firstAidObj = new GameObject[] { BandAidRollObj, MedicalPackageObj, HydroCreamObj, MiniAidBoxObj, OxyWaterObj, BurnCreamObj, ScissorObj, AlcoholObj };
         initializeAnimators();
 
         for (int i = 0; i < GameManager.GameManagerInstance.objectIndex; i++)
@@ -153,6 +179,8 @@ public class ResetState : MonoBehaviour
         labDoorAnim = labDoor.GetComponent<Animator>();
         verticalExitDoorAnim = verticalExitDoor.GetComponent<Animator>();
         scifiCrateAnim = scifiCrate.GetComponent<Animator>();
+        verticalDoorAnim = verticalDoor.GetComponent<Animator>();
+        kitAnim = kit.GetComponent<Animator>();
     }
 
     
@@ -241,6 +269,16 @@ public class ResetState : MonoBehaviour
                 break;
             case 6:
                 emergencyKit.SetActive(false);
+                verticalDoorAnim.SetBool("open", true);
+                for (int i = 0; i < firstAidKit.Length; i++)
+                {
+                    firstAidKit[i].SetActive(true);
+                }
+                for (int i = 0; i < firstAidObj.Length; i++)
+                {
+                    firstAidObj[i].SetActive(false);
+                }
+                kitAnim.SetBool("open", true);
                 break;
             case 7:
                 vacuum.SetActive(false);
@@ -286,6 +324,7 @@ public class ResetState : MonoBehaviour
                 record6.SetActive(false);
                 break;
             case 6:
+                crate7Anim.SetBool("open", true);
                 record7.SetActive(false);
                 break;
             case 7:

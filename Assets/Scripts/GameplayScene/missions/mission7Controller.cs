@@ -66,6 +66,8 @@ public class mission7Controller : MonoBehaviour
     float currentTime;
     [SerializeField] TextMeshProUGUI timerText;
     bool startTimer = false, isRunning = false;
+    int opened;
+    bool resetState = false;
 
     // Initializes references and sets up objects at the start of the game.
     void Start()
@@ -84,6 +86,13 @@ public class mission7Controller : MonoBehaviour
 
         ui = playerTrigger.GetComponent<playerUI>();
         currentTime = startTime;
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[1];
+        if (opened == 1 && !resetState)
+        {
+            letterX.gameObject.SetActive(false);
+            resetState = true;
+        }
     }
 
     // Checks for input and manages object collection and door code input.
@@ -96,7 +105,6 @@ public class mission7Controller : MonoBehaviour
 
         if (isRunning)
         {
-            Debug.Log("en el timer de 7");
             currentTime -= Time.deltaTime;
 
             if (currentTime <= 0)
@@ -109,6 +117,15 @@ public class mission7Controller : MonoBehaviour
             int minutes = Mathf.FloorToInt(currentTime / 60);
             int seconds = Mathf.FloorToInt(currentTime % 60);
             timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+            if (currentTime <= 60f)
+            {
+                timerText.color = Color.red;
+            }
+            else
+            {
+                timerText.color = Color.white;
+            }
         }
 
         if (readCode)
@@ -144,6 +161,12 @@ public class mission7Controller : MonoBehaviour
 
         if (objectsCollected >= 8 && !finish)
         {
+            GameManager.GameManagerInstance.LoadProgress();
+            GameManager.GameManagerInstance.missionsCompleted[6] = 1;
+            GameManager.GameManagerInstance.SaveProgress();
+            startTimer = false;
+            isRunning = false;
+            timerText.gameObject.SetActive(false);
             solveMission = true;
             movePlayer();
             code.SetActive(true);
@@ -158,6 +181,7 @@ public class mission7Controller : MonoBehaviour
     {
         // se reinicia la mision y se pierde energia
         ui.useEnergy(40f);
+        currentTime = startTime / 2;
     }
 
     // Hides the door after a 3-second delay.
@@ -179,7 +203,9 @@ public class mission7Controller : MonoBehaviour
     // Activates letter X when player enters the "kit" trigger area.
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("kit") && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[6];
+        if (other.gameObject.CompareTag("kit") && opened == 0)
         {
             letterX.SetActive(true);
         }
@@ -192,7 +218,7 @@ public class mission7Controller : MonoBehaviour
         {
             bg.SetActive(false);
         }
-        if (other.gameObject.CompareTag("kit") && !solveMission)
+        if (other.gameObject.CompareTag("kit"))
         {
             letterX.SetActive(false);
         }
@@ -207,8 +233,13 @@ public class mission7Controller : MonoBehaviour
             readCode = true;            
         }
 
-        if (other.gameObject.CompareTag("kit") && emergencyKit.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[6];
+        if (other.gameObject.CompareTag("kit") && emergencyKit.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
         {
+            startTimer = true;
+            timerText.gameObject.SetActive(true);
+            timerText.text = "05:00";
             letterX.SetActive(false);
             movePlayer();
             if (player.transform.position == playerPos && !change)
