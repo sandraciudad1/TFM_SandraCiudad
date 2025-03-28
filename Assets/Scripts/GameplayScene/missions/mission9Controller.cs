@@ -31,6 +31,9 @@ public class mission9Controller : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam15;
     [SerializeField] CinemachineVirtualCamera vcam16;
 
+    int opened;
+    bool resetState = false;
+
     // Initializes components and sets up initial camera view.
     void Start()
     {
@@ -41,6 +44,14 @@ public class mission9Controller : MonoBehaviour
 
         canvasGroup = info.GetComponent<CanvasGroup>();
         puzzlecontroller = puzzle.GetComponent<puzzleController>();
+
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[1];
+        if (opened == 1 && !resetState)
+        {
+            letterX.gameObject.SetActive(false);
+            resetState = true;
+        }
     }
 
     // Updates game state when finished and handles final movement.
@@ -48,6 +59,9 @@ public class mission9Controller : MonoBehaviour
     {
         if (finishGame && !finish)
         {
+            GameManager.GameManagerInstance.LoadProgress();
+            GameManager.GameManagerInstance.missionsCompleted[8] = 1;
+            GameManager.GameManagerInstance.SaveProgress();
             solveMission = true;
             SwapCameras(1, 0, 0);
             player.transform.position = playerFinalPos;
@@ -61,7 +75,9 @@ public class mission9Controller : MonoBehaviour
     // Shows 'X' when leaving grids.  
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("console") && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[8];
+        if (other.gameObject.CompareTag("console") && opened == 0)
         {
             letterX.SetActive(true);
         }
@@ -70,7 +86,7 @@ public class mission9Controller : MonoBehaviour
     // Hides 'X' when leaving grids.
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.CompareTag("console") && !solveMission)
+        if (other.gameObject.CompareTag("console"))
         {
             letterX.SetActive(false);
         }
@@ -79,7 +95,9 @@ public class mission9Controller : MonoBehaviour
     // Detects continuous presence in a trigger area.  
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("console") && compass.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && !solveMission)
+        GameManager.GameManagerInstance.LoadProgress();
+        opened = GameManager.GameManagerInstance.missionsCompleted[8];
+        if (other.gameObject.CompareTag("console") && compass.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
         {
             letterX.SetActive(false);
             SwapCameras(0, 1, 0);

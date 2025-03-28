@@ -111,7 +111,7 @@ public class puzzleController : MonoBehaviour
     void checkMovements()
     {
         movements++;
-        if (movements > 25)
+        if (movements > 45)
         {
             ui.takeDamage(5f);
         }

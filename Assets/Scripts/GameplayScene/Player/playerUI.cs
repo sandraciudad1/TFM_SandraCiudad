@@ -46,7 +46,7 @@ public class playerUI : MonoBehaviour
     {
         if (playerLife > 0 && playerLife < 100)
         {
-            Debug.Log("aumentando la vida " + playerLife);
+            //Debug.Log("aumentando la vida " + playerLife);
             playerLife += regenerationSpeed * Time.deltaTime;
             playerLife = Mathf.Clamp(playerLife, 0, 100);
         }

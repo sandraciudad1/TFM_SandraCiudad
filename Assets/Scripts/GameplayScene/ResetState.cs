@@ -109,6 +109,9 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject AlcoholObj;
     GameObject[] firstAidObj;
 
+    [SerializeField] GameObject puzzle;
+    [SerializeField] GameObject navigationScreen9;
+
     // codes
     [SerializeField] VideoPlayer code1;
     [SerializeField] VideoPlayer code2;
@@ -188,16 +191,6 @@ public class ResetState : MonoBehaviour
     {
         switch (index)
         {
-            case 8: // tabla de traduccion 
-                
-                break;
-            case 9: // kit de emergencia
-                break;
-            case 10: // aspiradora
-                
-                break;
-            case 11: // brujula
-                break;
             case 12: // luz ultravioleta
                 verticalExitDoorAnim.SetBool("open", true);
                 scifiCrateAnim.SetBool("move", true);
@@ -286,6 +279,8 @@ public class ResetState : MonoBehaviour
                 break;
             case 8:
                 compass.SetActive(false);
+                puzzle.SetActive(true);
+                navigationScreen9.SetActive(false);
                 break;
             case 9:
                 uvLight.SetActive(false);
@@ -333,6 +328,7 @@ public class ResetState : MonoBehaviour
                 record8.SetActive(false);
                 break;
             case 8:
+                crate9Anim.SetBool("open", true);
                 record9.SetActive(false);
                 break;
             case 9:
