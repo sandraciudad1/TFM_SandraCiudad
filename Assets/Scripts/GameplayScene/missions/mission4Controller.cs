@@ -18,7 +18,6 @@ public class mission4Controller : MonoBehaviour
     [SerializeField] GameObject securityCard;
     [SerializeField] GameObject scifi_terminal;
     [SerializeField] GameObject letterX;
-    bool finish = false;
 
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam7;
@@ -30,6 +29,7 @@ public class mission4Controller : MonoBehaviour
     [SerializeField] VideoPlayer sequence4;
     [SerializeField] VideoPlayer sequence5;
     [SerializeField] VideoPlayer code4;
+    [SerializeField] VideoPlayer electricalProblem;
     bool readSequence = false;
 
     [SerializeField] GameObject info;
@@ -41,7 +41,6 @@ public class mission4Controller : MonoBehaviour
     string userInput = "";
     string[] codes;
     bool hasFinish = false;
-    bool solveMission = false;
 
     [SerializeField] GameObject labDoor;
     Animator labDoorAnim;
@@ -88,7 +87,6 @@ public class mission4Controller : MonoBehaviour
             GameManager.GameManagerInstance.LoadProgress();
             GameManager.GameManagerInstance.missionsCompleted[3] = 1;
             GameManager.GameManagerInstance.SaveProgress();
-            solveMission = true;
             inputTextBg.SetActive(false);
             SwapCameras(1, 0);
             playerMov.canMove = true;
@@ -125,14 +123,28 @@ public class mission4Controller : MonoBehaviour
                 }
                 else
                 {
-                    // animacion de cortocircuito
-                    ui.takeDamage(20f);
-                    ui.wasteOxygen(15f);
+                    float time = 0;
+                    if (charCounter > 3)
+                    {
+                        time = 3f;
+                    }
+                    StartCoroutine(waitShowSequence(time));
+                    ui.takeDamage(40f);
+                    ui.wasteOxygen(25f);
                     userInput = "";
                 }
             }
         }
         inputText.text = userInput;
+    }
+
+    // Plays and hides particle effect before checking sequence
+    IEnumerator waitShowSequence(float time)
+    {
+        electricalProblem.gameObject.SetActive(true);
+        electricalProblem.Play();
+        yield return new WaitForSeconds(time);
+        checkSequence();
     }
 
     // Shows 'X' when near scifi terminal.
@@ -213,6 +225,8 @@ public class mission4Controller : MonoBehaviour
     IEnumerator showSequences(float wait1, float wait2, VideoPlayer sequence)
     {
         yield return new WaitForSeconds(wait1);
+        inputTextBg.SetActive(false);
+        electricalProblem.gameObject.SetActive(false);
         sequence.gameObject.SetActive(false);
         sequence.frame = 0;  
         sequence.targetTexture.Release(); 
