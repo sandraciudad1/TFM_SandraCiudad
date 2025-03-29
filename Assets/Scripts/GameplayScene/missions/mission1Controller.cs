@@ -11,7 +11,6 @@ public class mission1Controller : MonoBehaviour
     [SerializeField] GameObject triggerDetector;
     PlayerMovement playerMov;
     DoorTriggerController doorController;
-    CollectiblesController collectiblesController;
     playerUI ui;
 
     bool[] swichtboardState;
@@ -43,13 +42,14 @@ public class mission1Controller : MonoBehaviour
     static int keyPressCount = 0;
     bool win = false;
 
-    
+    [SerializeField] ParticleSystem electricityParticles;
+    [SerializeField] AudioSource effectsAudio;
+    [SerializeField] AudioClip sparks;
 
     // Initializes variables and sets up the button states.
     void Start()
     {
         doorController = triggerDetector.GetComponent<DoorTriggerController>();
-        collectiblesController = triggerDetector.GetComponent<CollectiblesController>();
         playerMov = player.GetComponent<PlayerMovement>();
         ui = triggerDetector.GetComponent<playerUI>();
 
@@ -98,8 +98,30 @@ public class mission1Controller : MonoBehaviour
                 ui.takeDamage(8f);
             }
 
+            electricalAnimation();
             checkAlarm();
         }
+    }
+
+    // Triggers animation and sound at specific key press counts
+    void electricalAnimation()
+    {
+        if (keyPressCount == 15 || keyPressCount == 20 || keyPressCount == 30)
+        {
+            StartCoroutine(playParticleSystem(electricityParticles));
+            effectsAudio.clip = sparks;
+            effectsAudio.Play();
+        }
+    }
+
+    // Plays particle system for 5 seconds then stops it
+    IEnumerator playParticleSystem(ParticleSystem particles)
+    {
+        particles.gameObject.SetActive(true);
+        particles.Play();
+        yield return new WaitForSeconds(3f);
+        particles.Stop();
+
     }
 
     // Plays alarm sound if key press limit is exceeded.

@@ -113,7 +113,6 @@ public class pinCodeController : MonoBehaviour
         GameManager.GameManagerInstance.LoadProgress();
         GameManager.GameManagerInstance.correctCodeCounter++;
         GameManager.GameManagerInstance.SaveProgress();
-        Debug.Log("correct code " + index);
         crateAnimators[index].SetBool("open", true);
         GameManager.GameManagerInstance.SetArrayUnlocked("records", index, 1);
         GameManager.GameManagerInstance.SaveProgress();

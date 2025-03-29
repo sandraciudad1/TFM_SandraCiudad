@@ -94,6 +94,7 @@ public class DoorTriggerController : MonoBehaviour
     CharacterController cc;
     PlayerMovement playerMov;
     Vector3 playerPos = new Vector3(151.49f, 25.641f, 52.42f);
+    Vector3 playerPos2 = new Vector3(151.34f, 25.74532f, 53.5f);
     Quaternion playerRot = Quaternion.Euler(new Vector3(0f, 180f, 0f));
     bool change = false;
 
@@ -247,10 +248,17 @@ public class DoorTriggerController : MonoBehaviour
         SwapCameras(1, 0);
         playerAnimator.SetBool("open", false);
         playerAnimator.SetBool("closeHand", false);
-        player.transform.position = new Vector3(151.34f, 25.74532f, 53.5f);
-        crowbar.SetActive(false);
-        Collider collider = switchboard.GetComponent<Collider>();
-        collider.enabled = true;
+        playerMov.canMove = false;
+        cc.enabled = false;
+        player.transform.position = playerPos2;
+        if(player.transform.position == playerPos2)
+        {
+            crowbar.SetActive(false);
+            Collider collider = switchboard.GetComponent<Collider>();
+            collider.enabled = true;
+            playerMov.canMove = true;
+            cc.enabled = true;
+        }
     }
 
     // Desactivate switchboard animator and enable switchboard player interactions.
