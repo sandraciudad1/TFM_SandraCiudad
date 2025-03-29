@@ -92,7 +92,6 @@ public class mission10Controller : MonoBehaviour
     [SerializeField] Image code10;
     bool enableFind = false;
     bool finish = false;
-    bool solveMission = false;
     static int indexFp;
     static int completed = 0;
     static int imageIndex = 0;
@@ -103,6 +102,8 @@ public class mission10Controller : MonoBehaviour
     Animator doorAnim;
     AudioSource doorAudio;
 
+    [SerializeField] AudioSource effectsAudio;
+    [SerializeField] AudioClip error;
     [SerializeField] AudioSource alarmSound;
     [SerializeField] GameObject playerTrigger;
     playerUI ui;
@@ -181,7 +182,6 @@ public class mission10Controller : MonoBehaviour
             GameManager.GameManagerInstance.LoadProgress();
             GameManager.GameManagerInstance.missionsCompleted[9] = 1;
             GameManager.GameManagerInstance.SaveProgress();
-            solveMission = true;
             StartCoroutine(FadeIn());
             StartCoroutine(waitUntilMoveDoor());
         }
@@ -261,6 +261,12 @@ public class mission10Controller : MonoBehaviour
             frameCounter++;
             updateFrameArrows();
             imageIndex=0;
+        } 
+        else
+        {
+            effectsAudio.clip = error;
+            effectsAudio.Play();
+            ui.takeDamage(10f);
         }
     }
 

@@ -15,7 +15,6 @@ public class mission9Controller : MonoBehaviour
     bool change = false;
     public bool finishGame = false;
     bool finish = false;
-    bool solveMission = false;
 
     [SerializeField] GameObject compass;
     [SerializeField] GameObject letterX;
@@ -62,7 +61,6 @@ public class mission9Controller : MonoBehaviour
             GameManager.GameManagerInstance.LoadProgress();
             GameManager.GameManagerInstance.missionsCompleted[8] = 1;
             GameManager.GameManagerInstance.SaveProgress();
-            solveMission = true;
             SwapCameras(1, 0, 0);
             player.transform.position = playerFinalPos;
             playerMov.canMove = true;
