@@ -19,6 +19,8 @@ public class GameManager : MonoBehaviour
     public int[] objectsCollected = new int[15];
     public int[] recordsCollected = new int[10];
 
+    public int triggerPassed;
+
     // Ensures only one instance of GameManager exists (Singleton pattern).
     private void Awake()
     {
@@ -79,6 +81,7 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("recordsCollected" + i, recordsCollected[i]);
         }
 
+        PlayerPrefs.SetInt("triggerPassed", triggerPassed);
         PlayerPrefs.Save();
     }
 
@@ -123,6 +126,8 @@ public class GameManager : MonoBehaviour
         {
             recordsCollected[i] = PlayerPrefs.GetInt("recordsCollected" + i, 0);
         }
+
+        triggerPassed = PlayerPrefs.GetInt("triggerPassed", 0);
     }
 
     // Returns the value of the specified array at the given index.
