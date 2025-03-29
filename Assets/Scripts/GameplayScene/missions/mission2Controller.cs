@@ -26,8 +26,6 @@ public class mission2Controller : MonoBehaviour
     [SerializeField] GameObject waitingVideo;
     [SerializeField] VideoPlayer code2;
     [SerializeField] VideoPlayer unknownSamples;
-    bool finish = false;
-    bool solveMission = false;
 
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam3;
@@ -43,7 +41,7 @@ public class mission2Controller : MonoBehaviour
     playerUI ui;
 
     static int actualSample = 0;
-    float startTime = 300f;
+    float startTime = 240f;
     float currentTime;
     [SerializeField] TextMeshProUGUI timerText;
     bool startTimer = false, isRunning = false;
@@ -52,6 +50,8 @@ public class mission2Controller : MonoBehaviour
     CanvasGroup canvasGroup;
     int opened;
     bool resetState = false;
+
+    [SerializeField] ParticleSystem lightingParticles;
 
     // Initializes variables and resets sample progress.
     void Start()
@@ -133,22 +133,30 @@ public class mission2Controller : MonoBehaviour
             startTimer = false;
             isRunning = false;
             timerText.gameObject.SetActive(false);
-            solveMission = true;
             code2.gameObject.SetActive(true);
             code2.Play();
             unknownSamples.gameObject.SetActive(true);
             unknownSamples.Play();
             waitingVideo.SetActive(false);
-            finish = true;
         }
     }
 
     // Triggers lab explosion and applies major damage to player
     void timerEnded()
     {
-        // efectos de explosion y contaminacion del laboratorio
-        ui.takeDamage(40f);
-        currentTime= startTime/2;
+        StartCoroutine(playParticleSystem(lightingParticles));
+        ui.takeDamage(30f);
+        ui.useEnergy(40f);
+        currentTime = startTime/3;
+    }
+
+    // Plays particle system for 5 seconds then stops it
+    IEnumerator playParticleSystem(ParticleSystem particles)
+    {
+        particles.gameObject.SetActive(true);
+        particles.Play();
+        yield return new WaitForSeconds(3f);
+        particles.Stop();
     }
 
     // Shows 'X' when near an analytical instrument.
@@ -190,7 +198,6 @@ public class mission2Controller : MonoBehaviour
                 player.transform.rotation = playerRot;
                 if (player.transform.position == playerPos && player.transform.rotation == playerRot && !swap)
                 {
-                    cc.enabled = true;
                     SwapCameras(0, 1);
                     StartCoroutine(waitAnalyzeAnim());
                     swap = true;

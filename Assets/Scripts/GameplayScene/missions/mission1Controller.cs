@@ -121,7 +121,6 @@ public class mission1Controller : MonoBehaviour
         particles.Play();
         yield return new WaitForSeconds(3f);
         particles.Stop();
-
     }
 
     // Plays alarm sound if key press limit is exceeded.

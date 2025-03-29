@@ -132,6 +132,11 @@ public class ResetState : MonoBehaviour
     // Initializes inventory and updates unlocked objects and records.
     void Start()
     {
+        GameManager.GameManagerInstance.LoadProgress();
+        GameManager.GameManagerInstance.missionsCompleted[1] = 0;
+        GameManager.GameManagerInstance.SaveProgress();
+        GameManager.GameManagerInstance.LoadProgress();
+
         mision5 = playerTrigger.GetComponent<mission5Controller>();
         inventoryObjects = new GameObject[] { crowbar, sample1, sample2, sample3, sample4, spannerwrench, securityCard, wireCutters, clipboard, 
                                               emergencyKit, vacuum, compass, uvLight, tape, null };
