@@ -133,7 +133,28 @@ public class ResetState : MonoBehaviour
     void Start()
     {
         GameManager.GameManagerInstance.LoadProgress();
-        GameManager.GameManagerInstance.missionsCompleted[3] = 1;
+
+        GameManager.GameManagerInstance.objectIndex = 13;
+        GameManager.GameManagerInstance.recordIndex = 10;
+
+        for (int i=0; i<15; i++)
+        {
+            GameManager.GameManagerInstance.objectsUnlocked[i] = 1;
+        }
+
+        for (int i = 0; i < 12; i++)
+        {
+            GameManager.GameManagerInstance.objectsCollected[i] = i;
+        }
+
+        for (int i = 0; i < 10; i++)
+        {
+            GameManager.GameManagerInstance.recordsUnlocked[i] = 1;
+            GameManager.GameManagerInstance.missionsCompleted[i] = 1;
+            GameManager.GameManagerInstance.recordsCollected[i] = i;
+        }
+        GameManager.GameManagerInstance.objectsCollected[12] = 12;
+        GameManager.GameManagerInstance.objectsCollected[13] = 13;
         GameManager.GameManagerInstance.SaveProgress();
         GameManager.GameManagerInstance.LoadProgress();
 
