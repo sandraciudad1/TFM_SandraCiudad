@@ -36,7 +36,6 @@ public class mission7Controller : MonoBehaviour
     CanvasGroup canvasGroup;
     bool canCollect = false;
     bool finish = false;
-    bool solveMission = false;
     static int objectsCollected = 0;
 
     [SerializeField] GameObject alcohol;
@@ -61,7 +60,6 @@ public class mission7Controller : MonoBehaviour
     [SerializeField] GameObject playerTrigger;
     playerUI ui;
 
-    static int actualSample = 0;
     float startTime = 150f;
     float currentTime;
     [SerializeField] TextMeshProUGUI timerText;
@@ -167,7 +165,6 @@ public class mission7Controller : MonoBehaviour
             startTimer = false;
             isRunning = false;
             timerText.gameObject.SetActive(false);
-            solveMission = true;
             movePlayer();
             code.SetActive(true);
             playerMov.canMove = true;
@@ -179,7 +176,7 @@ public class mission7Controller : MonoBehaviour
     // Restarts mission and applies heavy energy loss.
     void timerEnded()
     {
-        // se reinicia la mision y se pierde energia
+        ui.takeDamage(30f);
         ui.useEnergy(40f);
         currentTime = startTime / 2;
     }

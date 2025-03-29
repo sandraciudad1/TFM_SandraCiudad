@@ -32,19 +32,21 @@ public class mission8Controller : MonoBehaviour
     public bool enableControl = false;
     public bool finish = false;
     bool exit = false;
-    bool solveMission = false;
     float speed = 1f;
 
     [SerializeField] GameObject playerTrigger;
     playerUI ui;
 
-    static int actualSample = 0;
     float startTime = 300f;
     float currentTime;
     [SerializeField] TextMeshProUGUI timerText;
     bool startTimer = false, isRunning = false;
     int opened;
     bool resetState = false;
+
+    [SerializeField] ParticleSystem[] smokeParticles;
+    [SerializeField] AudioSource effectsAudio;
+    [SerializeField] AudioClip cough;
 
     // Initializes components and sets the initial camera configuration.
     void Start()
@@ -114,7 +116,6 @@ public class mission8Controller : MonoBehaviour
             startTimer = false;
             isRunning = false;
             timerText.gameObject.SetActive(false);
-            solveMission = true;
             limits.SetActive(false);
             screen.SetActive(false);
             screenCode.SetActive(true);
@@ -130,10 +131,27 @@ public class mission8Controller : MonoBehaviour
     // Releases particles, consuming energy and wasting oxygen.
     void timerEnded()
     {
-        // se desprenden particulas al aire
-        ui.useEnergy(40f);
+        StartCoroutine(playParticleSystem(smokeParticles));
+        effectsAudio.clip = cough;
+        effectsAudio.Play();
+        ui.takeDamage(40f);
         ui.wasteOxygen(40f);
         currentTime = startTime / 2;
+    }
+
+    // Plays particle system for 5 seconds then stops it
+    IEnumerator playParticleSystem(ParticleSystem[] particles)
+    {
+        for(int i=0; i<particles.Length; i++)
+        {
+            particles[i].gameObject.SetActive(true);
+            particles[i].Play();
+        }
+        yield return new WaitForSeconds(3f);
+        for (int i = 0; i < particles.Length; i++)
+        {
+            particles[i].Stop();
+        }
     }
 
     // Shows 'X' when leaving grids.  
