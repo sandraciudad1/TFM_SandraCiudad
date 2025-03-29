@@ -46,6 +46,7 @@ public class mission4Controller : MonoBehaviour
     Animator labDoorAnim;
     AudioSource audioDoor;
 
+    mission5Controller mision5;
     [SerializeField] GameObject playerTrigger;
     playerUI ui;
     int opened;
@@ -63,6 +64,7 @@ public class mission4Controller : MonoBehaviour
         codes = new string[] { "DBK", "ASLZ", "OYLWP" };
         labDoorAnim = labDoor.GetComponent<Animator>();
         audioDoor = labDoor.GetComponent<AudioSource>();
+        mision5 = playerTrigger.GetComponent<mission5Controller>();
 
         ui = playerTrigger.GetComponent<playerUI>();
         GameManager.GameManagerInstance.LoadProgress();
@@ -94,6 +96,7 @@ public class mission4Controller : MonoBehaviour
             code4.gameObject.SetActive(true);
             labDoorAnim.SetBool("open", true);
             audioDoor.Play();
+            mision5.initializeAlarms();
             hasFinish = true;
         }
     }

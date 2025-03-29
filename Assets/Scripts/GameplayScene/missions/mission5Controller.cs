@@ -52,8 +52,9 @@ public class mission5Controller : MonoBehaviour
     int lightDecrementation = 0;
     bool finish = false;
     bool isShowing = false;
-    bool solveMission = false;
 
+    [SerializeField] AudioSource alarmSound;
+    float sound = 0;
     [SerializeField] GameObject playerTrigger;
     playerUI ui;
     int opened;
@@ -62,6 +63,9 @@ public class mission5Controller : MonoBehaviour
     // Initializes variables and resets cable colors. 
     void Start()
     {
+        alarmSound.volume = sound;
+        alarmSound.Play();
+        alarmSound.loop = true;
         SwapCameras(1, 0);
         playerAnim = player.GetComponent<Animator>();
         cc = player.GetComponent<CharacterController>();
@@ -97,6 +101,7 @@ public class mission5Controller : MonoBehaviour
             GameManager.GameManagerInstance.LoadProgress();
             GameManager.GameManagerInstance.missionsCompleted[4] = 1;
             GameManager.GameManagerInstance.SaveProgress();
+            alarmSound.Stop();
             desactivateAlarms();
             lightInteraction(true);
             playerAnim.SetBool("wireCutters", false);
@@ -110,7 +115,6 @@ public class mission5Controller : MonoBehaviour
 
         if (finish && !isShowing)
         {
-            solveMission = true;
             StartCoroutine(showPinCode());
         }
     }
@@ -221,7 +225,12 @@ public class mission5Controller : MonoBehaviour
     {
         if (other.gameObject.CompareTag("alarm"))
         {
-            // corte de electricidad 
+            if (sound < 1f)
+            {
+                sound += 0.15f;
+            }
+            alarmSound.volume = sound;
+
             lightInteraction(false);
             ui.useEnergy(15f);
         }

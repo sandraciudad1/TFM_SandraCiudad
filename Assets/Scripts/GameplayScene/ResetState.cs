@@ -133,7 +133,7 @@ public class ResetState : MonoBehaviour
     void Start()
     {
         GameManager.GameManagerInstance.LoadProgress();
-        GameManager.GameManagerInstance.missionsCompleted[3] = 0;
+        GameManager.GameManagerInstance.missionsCompleted[3] = 1;
         GameManager.GameManagerInstance.SaveProgress();
         GameManager.GameManagerInstance.LoadProgress();
 
