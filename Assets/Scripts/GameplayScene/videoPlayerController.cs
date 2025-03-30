@@ -35,6 +35,7 @@ public class videoPlayerController : MonoBehaviour
 
         videoPlayer.loopPointReached += OnVideoFinished;
         audiosource = GetComponent<AudioSource>();
+        GameManager.GameManagerInstance.LoadProgress();
     }
 
 
@@ -111,6 +112,10 @@ public class videoPlayerController : MonoBehaviour
         videoPlayer.Play();
         audiosource.clip = audioClips[index - 1];
         audiosource.Play();
+        GameManager.GameManagerInstance.LoadProgress();
+        GameManager.GameManagerInstance.recordsPlayed[index - 1] = 1;
+        GameManager.GameManagerInstance.SaveProgress();
+        GameManager.GameManagerInstance.LoadProgress();
     }
 
     // Called when video ends, starts coroutine to move player.

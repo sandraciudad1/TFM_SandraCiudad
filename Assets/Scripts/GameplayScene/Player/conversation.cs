@@ -1,5 +1,7 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,110 +9,165 @@ using UnityEngine.Video;
 
 public class conversation : MonoBehaviour
 {
-    [Header("Audio")]
-    public AudioSource audioSource;
+    [SerializeField] GameObject player;
+    CharacterController cc;
+    PlayerMovement playerMov;
+    Vector3 playerPos = new Vector3(119.44f, 20.668f, 50.998f);
+    Quaternion playerRot = Quaternion.Euler(new Vector3(0f, 90f, 0f));
+    bool change = false;
 
-    [Header("Audios de Tierra")]
-    public AudioClip[] tierraInicial; // T1, T2-1, T2-2, T2-3, T3-1, T3-2, T3-3, T4, T5-1, T5-2, T5-3
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip vibration;
+    [SerializeField] AudioClip notification;
+    [SerializeField] AudioClip[] tierraInicial;
+    [SerializeField] AudioClip[] p1;
+    [SerializeField] AudioClip[] p2;
+    [SerializeField] AudioClip[] p3;
+    [SerializeField] AudioClip[] p4;
+    [SerializeField] AudioClip[] t2;
+    [SerializeField] AudioClip[] t3;
+    [SerializeField] AudioClip[] t5;
 
-    [Header("Respuestas del jugador")]
-    public AudioClip[] p1; // P1-1, P1-2, P1-3
-    public AudioClip[] p2; // P2-1, P2-2, P2-3
-    public AudioClip[] p3; // P3-1, P3-2, P3-3
-    public AudioClip[] p4; // P4-1, P4-2, P4-3
+    [SerializeField] TextMeshProUGUI option1;
+    [SerializeField] TextMeshProUGUI option2;
+    [SerializeField] TextMeshProUGUI option3;
+    [SerializeField] GameObject blackScreen;
+    [SerializeField] GameObject lockScreen;
 
-    [Header("Respuestas de Tierra según la elección")]
-    public AudioClip[] t2; // T2-1, T2-2, T2-3
-    public AudioClip[] t3; // T3-1, T3-2, T3-3
-    public AudioClip[] t5; // T5-1, T5-2, T5-3
+    [SerializeField] VideoPlayer videoplayer;
+    [SerializeField] RawImage rawImage;
+    [SerializeField] VideoClip notificationVideo;
+    [SerializeField] VideoClip callVideo;
 
-    [Header("UI")]
-    public TextMeshProUGUI option1;
-    public TextMeshProUGUI option2;
-    public TextMeshProUGUI option3;
-    public GameObject blackScreen;
+    [SerializeField] CinemachineVirtualCamera vcam1;
+    [SerializeField] CinemachineVirtualCamera vcam22;
 
-    private int etapa = 0;
-    private bool esperandoRespuesta = false;
-    private int respuestaElegida = -1;
+    int etapa = 0;
+    bool esperandoRespuesta = false;
+    int respuestaElegida = -1;
+    bool activate = false;
+    bool played = false;
+    [SerializeField] Image fadeImage;
+    float fadeDuration = 2f;
 
+    // Initialize scene setup and player components.
     void Start()
     {
-        StartCoroutine(ReproducirInicio());
+        SwapCameras(1, 0);
+        cc = player.GetComponent<CharacterController>();
+        playerMov = player.GetComponent<PlayerMovement>();
+        audioSource.volume = 1f;
     }
 
+    // Handle input and check game stage progress.
     void Update()
     {
+        if (!played)
+        {
+            GameManager.GameManagerInstance.LoadProgress();
+            played = GameManager.GameManagerInstance.recordsPlayed.All(x => x == 1);
+        }
+
         if (esperandoRespuesta)
         {
             if (Input.GetKeyDown(KeyCode.A))
+            {
                 respuestaElegida = 0;
+            }
             else if (Input.GetKeyDown(KeyCode.B))
+            {
                 respuestaElegida = 1;
+            }
             else if (Input.GetKeyDown(KeyCode.C))
+            {
                 respuestaElegida = 2;
+            }
 
             if (respuestaElegida != -1)
             {
                 esperandoRespuesta = false;
-                OcultarOpciones();
-                StartCoroutine(ContinuarConversacion());
+                ocultarOpciones();
+                StartCoroutine(continuarConversacion());
             }
+        }
+
+        if (etapa >= 3)
+        {
+            //fin del juego
+            StartCoroutine(fadeToBlack());
+            /*SwapCameras(0, 1);
+            playerMov.canMove = true;
+            cc.enabled = true;*/
         }
     }
 
-    IEnumerator ReproducirInicio()
+    // Gradually fade screen to black.
+    public IEnumerator fadeToBlack()
     {
-        yield return ReproducirClip(tierraInicial[0]); // T1
-        MostrarOpcionesEtapa(0);
+        float elapsedTime = 0f;
+        Color color = fadeImage.color;
+
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Clamp01(elapsedTime / fadeDuration);
+            fadeImage.color = new Color(color.r, color.g, color.b, alpha);
+            yield return null;
+        }
+    }
+
+    // Start initial dialogue sequence with Earth.
+    IEnumerator reproducirInicio()
+    {
+        yield return reproducirClip(tierraInicial[0]);
+        videoplayer.gameObject.SetActive(false);
+        mostrarOpcionesEtapa(0);
         esperandoRespuesta = true;
     }
 
-    IEnumerator ContinuarConversacion()
+    // Continue conversation based on player's response.
+    IEnumerator continuarConversacion()
     {
         if (etapa == 0)
         {
-            yield return ReproducirClip(p1[respuestaElegida]); // P1-*
-            yield return ReproducirClip(t2[respuestaElegida]); // T2-*
+            yield return reproducirClip(p1[respuestaElegida]); 
+            yield return reproducirClip(t2[respuestaElegida]); 
         }
         else if (etapa == 1)
         {
-            yield return ReproducirClip(p2[respuestaElegida]); // P2-*
-            yield return ReproducirClip(t3[respuestaElegida]); // T3-*
+            yield return reproducirClip(p2[respuestaElegida]); 
+            yield return reproducirClip(t3[respuestaElegida]); 
+            yield return reproducirClip(p3[respuestaElegida]); 
+            yield return reproducirClip(tierraInicial[7]);
         }
         else if (etapa == 2)
         {
-            yield return ReproducirClip(p3[respuestaElegida]); // P3-*
-            yield return ReproducirClip(tierraInicial[7]);     // T4
-        }
-        else if (etapa == 3)
-        {
-            yield return ReproducirClip(p4[respuestaElegida]); // P4-*
-            yield return ReproducirClip(t5[respuestaElegida]); // T5-*
-            Debug.Log("Conversación finalizada.");
+            yield return reproducirClip(p4[respuestaElegida]); 
+            yield return reproducirClip(t5[respuestaElegida]); 
             yield break;
         }
 
         etapa++;
         respuestaElegida = -1;
-
         yield return new WaitForSeconds(1f);
 
-        if (etapa < 4)
+        if (etapa < 3)
         {
-            MostrarOpcionesEtapa(etapa);
+            mostrarOpcionesEtapa(etapa);
             esperandoRespuesta = true;
         }
     }
 
-    IEnumerator ReproducirClip(AudioClip clip)
+    // Play audio clip and wait for it to finish.
+    IEnumerator reproducirClip(AudioClip clip)
     {
         audioSource.clip = clip;
         audioSource.Play();
-        yield return new WaitForSeconds(clip.length);
+        yield return new WaitForSeconds(clip.length + 0.15f);
     }
 
-    void MostrarOpcionesEtapa(int etapa)
+    // Display options based on current stage.
+    void mostrarOpcionesEtapa(int etapa)
     {
         switch (etapa)
         {
@@ -125,15 +182,11 @@ public class conversation : MonoBehaviour
                 option3.text = "C. No hay rastro de mis compañeros.";
                 break;
             case 2:
-                option1.text = "A. Cooper robó una muestra y saboteó la IA.";
-                option2.text = "B. Solo los he visto en grabaciones. Responden a estímulos.";
-                option3.text = "C. Todo quedó en silencio tras el temblor.";
-                break;
-            case 3:
                 option1.text = "A. Volveré a la Tierra.";
                 option2.text = "B. Me quedo. Necesito entender por qué respondieron.";
                 option3.text = "C. No puedo irme. Debo encontrar a los demás.";
                 break;
+                
         }
 
         option1.gameObject.SetActive(true);
@@ -141,174 +194,68 @@ public class conversation : MonoBehaviour
         option3.gameObject.SetActive(true);
     }
 
-    void OcultarOpciones()
+    // Hide all dialogue options.
+    void ocultarOpciones()
     {
         option1.gameObject.SetActive(false);
         option2.gameObject.SetActive(false);
         option3.gameObject.SetActive(false);
     }
 
-
-
-    /*[SerializeField] AudioSource audioSource;
-    [SerializeField] AudioClip vibration;
-    [SerializeField] AudioClip notification;
-    [SerializeField] AudioClip[] dialogue1;
-    [SerializeField] AudioClip[] dialogue2;
-    [SerializeField] AudioClip[] dialogue3;
-
-    bool notify = false;
-    bool activate = false;
-    [SerializeField] GameObject lockScreen;
-    [SerializeField] VideoPlayer videoplayer;
-    [SerializeField] RawImage rawImage;
-    [SerializeField] VideoClip notificationVideo;
-    [SerializeField] VideoClip callVideo;
-
-    static int dialogue = 0;
-    static int index = 0;
-    bool enableDetection = false;
-    bool updateValues = false;
-    [SerializeField] GameObject blackScreen;
-    [SerializeField] TextMeshProUGUI option1;
-    [SerializeField] TextMeshProUGUI option2;
-    [SerializeField] TextMeshProUGUI option3;
-
-    // 
-    void Start()
+    // Start conversation when player triggers collider.
+    private void OnTriggerStay(Collider other)
     {
-        
-    }
-    static int option = 0;
-    // 
-    void Update()
-    {
-        if (enableDetection)
+        if (other.gameObject.CompareTag("conversation") && played && !activate)
         {
-            if (!updateValues)
+            SwapCameras(0, 1);
+            playerMov.canMove = false;
+            cc.enabled = false;
+            player.transform.position = playerPos;
+            player.transform.rotation = playerRot;
+            if (player.transform.position == playerPos && !change)
             {
-                updateOptions();
-                enableOptions(true);
-                updateValues = true;
-            }
-            
-            
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                playAudio(dialogue1);
-                option = 1;
-            } 
-            else if (Input.GetKeyDown(KeyCode.B))
-            {
-                playAudio(dialogue2);
-                option = 2;
-            }
-            else if (Input.GetKeyDown(KeyCode.C))
-            {
-                playAudio(dialogue3);
-                option = 3;
-            }
-
-            if (!audioSource.isPlaying)
-            {
-                if (option == 1)
-                {
-                    playAudio(dialogue1);
-                } 
-                else if (option == 2)
-                {
-                    playAudio(dialogue2);
-                }
-                else if (option == 3)
-                {
-                    playAudio(dialogue3);
-                }
-                enableDetection = false;
-            }
-            
-        }
-
-        GameManager.GameManagerInstance.LoadProgress();
-        for(int i=0; i< 10; i++)
-        {
-            if (GameManager.GameManagerInstance.missionsCompleted[i] == 1 && !notify)
-            {
-                audioSource.clip = vibration;
-                audioSource.Play();
-                notify = true;
+                lockScreen.SetActive(false);
+                playVideo(notificationVideo);
+                StartCoroutine(waitFinishVideo());
+                change = true;
             }
         }
     }
 
-    void updateOptions()
-    {
-        if (index == 0)
-        {
-            option1.text = "A. Soy el último que queda… creo.";
-            option2.text = "B. No estoy seguro… Necesito asimilar todo lo que ha pasado.";
-            option3.text = "C. Menos mal… pensé que estaba solo para siempre.";
-        }
-    }
-
-    void enableOptions(bool value)
-    {
-        option1.gameObject.SetActive(value);
-        option2.gameObject.SetActive(value);
-        option3.gameObject.SetActive(value);
-    }
-
-    void playAudio(AudioClip[] dialogue)
-    {
-        index++;
-        audioSource.clip = dialogue[index];
-        audioSource.Play();
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("conversation") && notify && !activate)
-        {
-            lockScreen.SetActive(false);
-            playVideo(notificationVideo);
-            StartCoroutine(waitFinishVideo());
-        }
-    }
-
+    // Wait for video and start first conversation.
     IEnumerator waitFinishVideo()
     {
         yield return new WaitForSeconds(3f);
-        audioSource.clip = notification;
-        audioSource.Play();
+        reproducirClip(notification);
         yield return new WaitForSeconds(4f);
         playVideo(callVideo);
-        StartCoroutine(initConversation());
+        blackScreen.SetActive(true);
+        StartCoroutine(reproducirInicio());
         activate = true;
     }
 
+    // Set and prepare video for playback.
     void playVideo(VideoClip newClip)
     {
-        rawImage.enabled = false; 
-        videoplayer.Stop(); 
+        rawImage.enabled = false;
+        videoplayer.Stop();
         videoplayer.clip = newClip;
-        videoplayer.Prepare(); 
+        videoplayer.Prepare();
         videoplayer.prepareCompleted += OnPrepared;
     }
 
+    // Start video once it's prepared.
     void OnPrepared(VideoPlayer vp)
     {
-        rawImage.enabled = true; 
-        vp.Play(); 
-        vp.prepareCompleted -= OnPrepared; 
+        rawImage.enabled = true;
+        vp.Play();
+        vp.prepareCompleted -= OnPrepared;
     }
 
-
-    IEnumerator initConversation()
+    // Swap between virtual cameras.
+    void SwapCameras(int priority1, int priority2)
     {
-        yield return new WaitForSeconds(1f);
-        audioSource.clip = dialogue1[index];
-        audioSource.Play();
-        yield return new WaitForSeconds(4f);
-        blackScreen.SetActive(true);
-        enableDetection = true;
-    }*/
+        vcam1.Priority = priority1;
+        vcam22.Priority = priority2;
+    }
 }
