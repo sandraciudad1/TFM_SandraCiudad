@@ -25,6 +25,11 @@ public class playerUI : MonoBehaviour
     [SerializeField] Transform cameraTransform;
     DepthOfField depthOfField;
 
+    [SerializeField] Image energyIcon;
+    [SerializeField] Sprite[] energy;
+    [SerializeField] Image oxygenIcon;
+    [SerializeField] Sprite[] oxygen;
+
     // Initializes player stats and settings at game start.
     void Start()
     {
@@ -45,7 +50,6 @@ public class playerUI : MonoBehaviour
     {
         if (playerLife > 0 && playerLife < 100)
         {
-            //Debug.Log("aumentando la vida " + playerLife);
             playerLife += regenerationSpeed * Time.deltaTime;
             playerLife = Mathf.Clamp(playerLife, 0, 100);
         }
@@ -57,13 +61,13 @@ public class playerUI : MonoBehaviour
 
         if (playerEnergy < 100)
         {
-            //Debug.Log("aumentando la energia");
             if (!breatheAudio.isPlaying)
             {
                 breatheAudio.Play();
             }
             playerEnergy += (regenerationSpeed / 2) * Time.deltaTime;
             playerEnergy = Mathf.Clamp(playerEnergy, 0, 100);
+            updateIcons(playerEnergy, energyIcon, energy);
         }
         else if (playerEnergy == 100 && breatheAudio.isPlaying)
         {
@@ -73,10 +77,10 @@ public class playerUI : MonoBehaviour
 
         if (playerOxygen < 100)
         {
-            //Debug.Log("aumentando el oxigeno");
             playerOxygen += (regenerationSpeed / 2) * Time.deltaTime;
             playerOxygen = Mathf.Clamp(playerOxygen, 0, 100);
             checkOxygenAlerts();
+            updateIcons(playerOxygen, oxygenIcon, oxygen);
         }
         else if (playerOxygen == 100)
         {
@@ -85,10 +89,30 @@ public class playerUI : MonoBehaviour
         updateOxygenEffects();
     }
 
+    //
+    void updateIcons(float value, Image image, Sprite[] spriteArray)
+    {
+        if (value >= 0 && value < 25)
+        {
+            image.sprite = spriteArray[0];
+        } 
+        else if (value >= 25 && value < 50)
+        {
+            image.sprite = spriteArray[1];
+        }
+        else if (value >= 50 && value < 75)
+        {
+            image.sprite = spriteArray[2];
+        }
+        else if (value >= 75 && value <= 100)
+        {
+            image.sprite = spriteArray[3];
+        }
+    }
+
     // Adjusts screen transparency based on player life.
     void updateLifeTransparency()
     {
-        //Debug.Log("actualizando transparencia");
         float alpha = 1f - (playerLife / 100f);
         Color color = lifeBg.color;
         color.a = alpha;
@@ -98,7 +122,6 @@ public class playerUI : MonoBehaviour
     // Reduces player life when taking damage.
     public void takeDamage(float amount)
     {
-        //Debug.Log("DAÑO " + amount);
         playerLife -= amount;
         playerLife = Mathf.Clamp(playerLife, 0, 100);
     }
@@ -106,7 +129,6 @@ public class playerUI : MonoBehaviour
     // Updates movement speed and breathing volume based on energy.
     void updatePlayerMovement()
     {
-        //Debug.Log("actualizando velocidad movimiento");
         playerMov.speed = Mathf.Lerp(1.0f, 5.0f, playerEnergy / 100f);
         playerMov.jumpHeight = Mathf.Lerp(0.25f, 1.0f, playerEnergy / 100f);
         breatheAudio.volume = Mathf.Lerp(1.0f, 0.0f, playerEnergy / 100f);
@@ -115,7 +137,6 @@ public class playerUI : MonoBehaviour
     // Reduces player energy when used.
     public void useEnergy(float amount)
     {
-       // Debug.Log("ENERGIA");
         playerEnergy -= amount;
         playerEnergy = Mathf.Clamp(playerEnergy, 0, 100);
     }
@@ -167,7 +188,6 @@ public class playerUI : MonoBehaviour
     // Decreases oxygen level when used.
     public void wasteOxygen(float amount)
     {
-        //Debug.Log("OXIGENO");
         playerOxygen -= amount;
         playerOxygen = Mathf.Clamp(playerOxygen, 0, 100);
     }
