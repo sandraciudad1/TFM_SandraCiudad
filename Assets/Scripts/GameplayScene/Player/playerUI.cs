@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class playerUI : MonoBehaviour
@@ -15,6 +16,7 @@ public class playerUI : MonoBehaviour
     public float playerOxygen;
 
     float regenerationSpeed = 3f;
+    bool change;
 
     [SerializeField] Image lifeBg;
     [SerializeField] AudioSource breatheAudio;
@@ -36,6 +38,7 @@ public class playerUI : MonoBehaviour
         playerLife = 100;
         playerEnergy = 100;
         playerOxygen = 100;
+        change = false;
 
         playerMov = player.GetComponent<PlayerMovement>();
         oxygenAlerts = new bool[] { false, false, false, false };
@@ -53,9 +56,10 @@ public class playerUI : MonoBehaviour
             playerLife += regenerationSpeed * Time.deltaTime;
             playerLife = Mathf.Clamp(playerLife, 0, 100);
         }
-        else if (playerLife == 0)
+        else if (playerLife == 0 && !change)
         {
-            // vuelve a la pantalla de inicio
+            changeScene();
+            change = true;
         }
         updateLifeTransparency();
 
@@ -89,7 +93,21 @@ public class playerUI : MonoBehaviour
         updateOxygenEffects();
     }
 
-    //
+    // Changes scene after 3 seconds.
+    IEnumerator changeScene()
+    {
+        yield return new WaitForSeconds(3f);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.LoadScene("presentationScene");
+    }
+
+    // Unsubscribes from the scene load event.
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    // Updates the icon based on the value range.
     void updateIcons(float value, Image image, Sprite[] spriteArray)
     {
         if (value >= 0 && value < 25)

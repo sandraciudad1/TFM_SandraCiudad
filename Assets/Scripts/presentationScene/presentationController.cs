@@ -50,14 +50,29 @@ public class presentationController : MonoBehaviour
     // Starts playing the video if it's prepared; otherwise, waits for preparation to complete.
     public void startBtnPressed()
     {
-        if (videoPlayer.isPrepared)
+        PlayerPrefs.SetInt("reset", 1);
+        int initGame = PlayerPrefs.GetInt("initGame", 0);
+        if (initGame == 0)
         {
-            PlayVideo();
-        }
+            if (videoPlayer.isPrepared)
+            {
+                PlayVideo();
+            }
+            else
+            {
+                videoPlayer.prepareCompleted += OnVideoPrepared;
+            }
+        } 
         else
         {
-            videoPlayer.prepareCompleted += OnVideoPrepared;
+            StartCoroutine(changeScene("gameplayScene"));
         }
+    }
+
+    // Allows to resume a the previous game.
+    public void resumeBtnPressed()
+    {
+        StartCoroutine(changeScene("gameplayScene"));
     }
 
     // Called when the video is prepared; starts playing the video.
@@ -135,7 +150,7 @@ public class presentationController : MonoBehaviour
                 {
                     fadeCanvas.SetActive(true);
                     StartCoroutine(FadeIn());
-                    StartCoroutine(changeScene());
+                    StartCoroutine(changeScene("takeoffScene"));
                 }
 
                 StartCoroutine(initialWait());
@@ -220,11 +235,11 @@ public class presentationController : MonoBehaviour
     }
 
     // Changes scene after 3 seconds.
-    IEnumerator changeScene()
+    IEnumerator changeScene(string name)
     {
         yield return new WaitForSeconds(3f);
         SceneManager.sceneLoaded += OnSceneLoaded;
-        SceneManager.LoadScene("takeoffScene");
+        SceneManager.LoadScene(name);
     }
 
     // Unsubscribes from the scene load event.

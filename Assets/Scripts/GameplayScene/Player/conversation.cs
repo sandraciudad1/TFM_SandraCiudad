@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
@@ -93,11 +94,8 @@ public class conversation : MonoBehaviour
 
         if (etapa >= 3)
         {
-            //fin del juego
             StartCoroutine(fadeToBlack());
-            /*SwapCameras(0, 1);
-            playerMov.canMove = true;
-            cc.enabled = true;*/
+            StartCoroutine(waitUntilFade());
         }
     }
 
@@ -114,6 +112,27 @@ public class conversation : MonoBehaviour
             fadeImage.color = new Color(color.r, color.g, color.b, alpha);
             yield return null;
         }
+    }
+
+    // Waits 2 seconds until fade screen  to black.
+    IEnumerator waitUntilFade()
+    {
+        yield return new WaitForSeconds(2f);
+        changeScene();
+    }
+
+    // Changes scene after 3 seconds.
+    IEnumerator changeScene()
+    {
+        yield return new WaitForSeconds(3f);
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.LoadScene("presentationScene");
+    }
+
+    // Unsubscribes from the scene load event.
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     // Start initial dialogue sequence with Earth.
