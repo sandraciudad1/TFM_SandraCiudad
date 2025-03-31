@@ -12,47 +12,45 @@ public class resetGame : MonoBehaviour
         if (reset == 1)
         {
             GameManager.GameManagerInstance.LoadProgress();
-            GameManager.GameManagerInstance.objectIndex = 0;
-            GameManager.GameManagerInstance.recordIndex = 0;
+            var gm = GameManager.GameManagerInstance;
+            gm.objectIndex = 0;
+            gm.recordIndex = 0;
             for (int i = 0; i < 15; i++)
             {
-                GameManager.GameManagerInstance.objectsUnlocked[i] = 0;
+                gm.objectsUnlocked[i] = 0;
             }
             for (int i = 0; i < 10; i++)
             {
-                GameManager.GameManagerInstance.recordsUnlocked[i] = 0;
+                gm.recordsUnlocked[i] = 0;
             }
-            
-            GameManager.GameManagerInstance.samplesCounter = 0;
+
+            gm.samplesCounter = 0;
             for (int i = 0; i < 4; i++)
             {
-                GameManager.GameManagerInstance.samplesUnlocked[i] = 0;
+                gm.samplesUnlocked[i] = 0;
             }
 
-            GameManager.GameManagerInstance.correctCodeCounter = 0;
+            gm.correctCodeCounter = 0;
             for (int i = 0; i < 10; i++)
             {
-                GameManager.GameManagerInstance.missionsCompleted[i] = 0;
+                gm.missionsCompleted[i] = 0;
             }
             for (int i = 0; i < 15; i++)
             {
-                GameManager.GameManagerInstance.objectsCollected[i] = 0;
+                gm.objectsCollected[i] = 0;
             }
             for (int i = 0; i < 10; i++)
             {
-                GameManager.GameManagerInstance.recordsCollected[i] = 0;
+                gm.recordsCollected[i] = 0;
             }
 
-            GameManager.GameManagerInstance.triggerPassed = 0;
+            gm.triggerPassed = 0;
             for (int i = 0; i < 10; i++)
             {
-                GameManager.GameManagerInstance.recordsPlayed[i] = 0;
+                gm.recordsPlayed[i] = 0;
             }
-            GameManager.GameManagerInstance.SaveProgress();
+            gm.SaveProgress();
             PlayerPrefs.SetInt("reset", 0);
         }
-
-
-        
     }
 }

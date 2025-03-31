@@ -57,18 +57,20 @@ public class videoPlayerController : MonoBehaviour
         }
     }
 
+    bool hasTriggered = false;
     // Detects continuous presence in a trigger area.  
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("recordsObj") && Input.GetKeyDown(KeyCode.X))
+        if (!hasTriggered && other.gameObject.CompareTag("recordsObj") && Input.GetKeyDown(KeyCode.X))
         {
+            hasTriggered = true;
             letterX.SetActive(false);
             SwapCameras(0, 1, 0);
             playerMov.canMove = false;
             cc.enabled = false;
             player.transform.position = firstPos;
             player.transform.rotation = playerRot;
-            if (player.transform.position == firstPos && !change)
+            if (Vector3.Distance(player.transform.position, firstPos) < 0.01f && !change)
             {
                 playerAnim.SetBool("handleRecord", true);
                 StartCoroutine(waitUntilFinishAnim(other.gameObject.name));
@@ -104,8 +106,10 @@ public class videoPlayerController : MonoBehaviour
     // Waits until video is ready, then plays audio and video.
     IEnumerator PlayVideoWhenReady(int index)
     {
-        while (!videoPlayer.isPrepared)
+        float timeout = 5f;
+        while (!videoPlayer.isPrepared && timeout > 0f)
         {
+            timeout -= Time.deltaTime;
             yield return null;
         }
 
@@ -115,7 +119,7 @@ public class videoPlayerController : MonoBehaviour
         GameManager.GameManagerInstance.LoadProgress();
         GameManager.GameManagerInstance.recordsPlayed[index - 1] = 1;
         GameManager.GameManagerInstance.SaveProgress();
-        GameManager.GameManagerInstance.LoadProgress();
+        //GameManager.GameManagerInstance.LoadProgress();
     }
 
     // Called when video ends, starts coroutine to move player.

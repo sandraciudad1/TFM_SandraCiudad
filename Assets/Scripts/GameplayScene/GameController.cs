@@ -10,17 +10,11 @@ public class GameController : MonoBehaviour
     [SerializeField] GameObject initialInfo;
     CanvasGroup canvasGroup;
 
-
+    // Initialize canvasGroup.
     void Start()
     {
         canvasGroup = initialInfo.GetComponent<CanvasGroup>();
         StartCoroutine(waitToShow());
-    }
-
-    
-    void Update()
-    {
-        
     }
 
     // Waits before showing the initial info.

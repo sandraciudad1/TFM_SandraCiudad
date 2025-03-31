@@ -39,7 +39,8 @@ public class checkPlayerPosition : MonoBehaviour
         triggers = new GameObject[] { labTrigger, alarmsTrigger, storeTrigger, techTrigger };
         
         GameManager.GameManagerInstance.LoadProgress();
-        int index = GameManager.GameManagerInstance.triggerPassed;
+        var gm = GameManager.GameManagerInstance;
+        int index = gm.triggerPassed;
         setTriggerState(index);
         setPlayerPosRot(index);
     }
@@ -51,7 +52,7 @@ public class checkPlayerPosition : MonoBehaviour
         cc.enabled = false;
         player.transform.position = playerPositions[index];
         player.transform.rotation = playerRotations[index];
-        if(player.transform.position == playerPositions[index])
+        if (Vector3.Distance(player.transform.position, playerPositions[index]) < 0.01f)
         {
             playerMov.canMove = true;
             cc.enabled = true;
@@ -63,9 +64,10 @@ public class checkPlayerPosition : MonoBehaviour
     {
         if (other.gameObject.CompareTag("position"))
         {
-            GameManager.GameManagerInstance.LoadProgress();
-            GameManager.GameManagerInstance.triggerPassed++;
-            GameManager.GameManagerInstance.SaveProgress();
+            var gm = GameManager.GameManagerInstance;
+            gm.LoadProgress();
+            gm.triggerPassed++;
+            gm.SaveProgress();
             other.gameObject.SetActive(false);
         }
     }

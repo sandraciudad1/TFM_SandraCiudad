@@ -153,6 +153,8 @@ public class inventoryController : MonoBehaviour
     // Handles inventory visibility and section navigation.
     void Update()
     {
+        if (blockInventory) return;
+
         if (inventoryBg.activeInHierarchy)
         {
             playerMov = false;
@@ -376,15 +378,16 @@ public class inventoryController : MonoBehaviour
     void loadProgress()
     {
         GameManager.GameManagerInstance.LoadProgress();
+        var gm = GameManager.GameManagerInstance;
 
-        int objectsIndex = GameManager.GameManagerInstance.objectIndex;
+        int objectsIndex = gm.objectIndex;
         for(int i = 0; i < objectsIndex; i++)
         {
             itemsNames[i] = addItemNames(i);
             collectable3dObjects[i] = add3DItems(i);
         }
 
-        int recordsIndex = GameManager.GameManagerInstance.recordIndex;
+        int recordsIndex = gm.recordIndex;
         for (int i = 0; i < recordsIndex; i++)
         {
             recordsNames[i] = addRecordsNames(i);
@@ -480,23 +483,24 @@ public class inventoryController : MonoBehaviour
     void resetState()
     {
         GameManager.GameManagerInstance.LoadProgress();
+        var gm = GameManager.GameManagerInstance;
 
-        int objectsIndex = GameManager.GameManagerInstance.objectIndex;
+        int objectsIndex = gm.objectIndex;
         for (int i = 0; i < objectsIndex; i++)
         {
             collectableItemsImgs[i].gameObject.SetActive(true);
-            int num = GameManager.GameManagerInstance.objectsCollected[i];
+            int num = gm.objectsCollected[i];
             collectableItemsImgs[i].sprite = objectsSprites[num];
             itemsNames[i] = addItemNames(num);
             collectable3dObjects[i] = add3DItems(num);
             unlockedObjects[i] = true;
         }
 
-        int recordsIndex = GameManager.GameManagerInstance.recordIndex;
+        int recordsIndex = gm.recordIndex;
         for (int i = 0; i < recordsIndex; i++)
         {
             collectableRecordsImgs[i].gameObject.SetActive(true);
-            int num = GameManager.GameManagerInstance.recordsCollected[i];
+            int num = gm.recordsCollected[i];
             collectableRecordsImgs[i].sprite = recordsSprites[num];
             recordsNames[i] = addRecordsNames(num);
             collectable3dRecords[i] = add3DRecords(num);

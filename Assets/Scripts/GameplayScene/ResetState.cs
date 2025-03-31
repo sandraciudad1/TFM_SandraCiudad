@@ -46,33 +46,16 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject crate8;
     [SerializeField] GameObject crate9;
     [SerializeField] GameObject crate10;
-    Animator crate1Anim;
-    Animator crate2Anim;
-    Animator crate3Anim;
-    Animator crate4Anim;
-    Animator crate5Anim;
-    Animator crate6Anim;
-    Animator crate7Anim;
-    Animator crate8Anim;
-    Animator crate9Anim;
-    Animator crate10Anim;
-
+    
     // doors
     [SerializeField] GameObject metallicDoor;
-    Animator metallicDoorAnim;
     [SerializeField] GameObject observationDoor;
-    Animator observationDoorAnim;
     [SerializeField] GameObject labDoor;
-    Animator labDoorAnim;
     [SerializeField] GameObject verticalExitDoor;
-    Animator verticalExitDoorAnim;
     [SerializeField] GameObject scifiCrate;
-    Animator scifiCrateAnim;
     [SerializeField] GameObject verticalDoor;
-    Animator verticalDoorAnim;
 
     int[] missionsCompleted;
-    int[] objectsUnlocked;
     int[] recordsUnlocked;
 
     // inventory
@@ -89,7 +72,6 @@ public class ResetState : MonoBehaviour
     [SerializeField] VideoPlayer unknownSamples;
 
     [SerializeField] GameObject kit;
-    Animator kitAnim;
     [SerializeField] GameObject BandAidRoll;
     [SerializeField] GameObject MedicalPackage;
     [SerializeField] GameObject HydroCream;
@@ -128,53 +110,38 @@ public class ResetState : MonoBehaviour
     [SerializeField] TextMeshProUGUI inputText1;
     [SerializeField] TextMeshProUGUI inputText2;
     [SerializeField] TextMeshProUGUI inputText3;
-    
+
+
+    GameObject[] crates;
+    Animator[] crateAnims;
     // Initializes inventory and updates unlocked objects and records.
     void Start()
     {
+        crates = new GameObject[] { crate1, crate2, crate3, crate4, crate5, crate6, crate7, crate8, crate9, crate10, metallicDoor, observationDoor, labDoor, verticalExitDoor, scifiCrate, verticalDoor, kit };
+
         GameManager.GameManagerInstance.LoadProgress();
-
-        GameManager.GameManagerInstance.objectIndex = 13;
-        GameManager.GameManagerInstance.recordIndex = 10;
-
-        for (int i=0; i<15; i++)
-        {
-            GameManager.GameManagerInstance.objectsUnlocked[i] = 1;
-        }
-
-        for (int i = 0; i < 12; i++)
-        {
-            GameManager.GameManagerInstance.objectsCollected[i] = i;
-        }
-
-        for (int i = 0; i < 10; i++)
-        {
-            GameManager.GameManagerInstance.recordsUnlocked[i] = 1;
-            GameManager.GameManagerInstance.missionsCompleted[i] = 1;
-            GameManager.GameManagerInstance.recordsCollected[i] = i;
-        }
-        GameManager.GameManagerInstance.objectsCollected[12] = 12;
-        GameManager.GameManagerInstance.objectsCollected[13] = 13;
-        GameManager.GameManagerInstance.SaveProgress();
-        GameManager.GameManagerInstance.LoadProgress();
-
+        var gm = GameManager.GameManagerInstance;
         mision5 = playerTrigger.GetComponent<mission5Controller>();
         inventoryObjects = new GameObject[] { crowbar, sample1, sample2, sample3, sample4, spannerwrench, securityCard, wireCutters, clipboard, 
                                               emergencyKit, vacuum, compass, uvLight, tape, null };
-        GameManager.GameManagerInstance.LoadProgress();
-        missionsCompleted = GameManager.GameManagerInstance.missionsCompleted;
-        objectsUnlocked = GameManager.GameManagerInstance.objectsUnlocked;
-        recordsUnlocked = GameManager.GameManagerInstance.recordsUnlocked;
+        missionsCompleted = gm.missionsCompleted;
+        recordsUnlocked = gm.recordsUnlocked;
 
         firstAidKit = new GameObject[] { kit, BandAidRoll, MedicalPackage, HydroCream, MiniAidBox, OxyWater, BurnCream, Scissor, Alcohol };
         firstAidObj = new GameObject[] { BandAidRollObj, MedicalPackageObj, HydroCreamObj, MiniAidBoxObj, OxyWaterObj, BurnCreamObj, ScissorObj, AlcoholObj };
         initializeAnimators();
 
+        StartCoroutine(initializeStates());
+    }
+
+    IEnumerator initializeStates()
+    {
         for (int i = 0; i < 10; i++)
         {
             if (missionsCompleted[i] == 1)
             {
                 resetMissionsStates(i);
+                yield return null;
             }
         }
 
@@ -183,6 +150,7 @@ public class ResetState : MonoBehaviour
             if (recordsUnlocked[i] == 1)
             {
                 checkRecordsIndex(i);
+                yield return null;
             }
         }
     }
@@ -190,40 +158,26 @@ public class ResetState : MonoBehaviour
     // Assigns Animator components to crates and doors.
     void initializeAnimators()
     {
-        // crates Animators
-        crate1Anim = crate1.GetComponent<Animator>();
-        crate2Anim = crate2.GetComponent<Animator>();
-        crate3Anim = crate3.GetComponent<Animator>();
-        crate4Anim = crate4.GetComponent<Animator>();
-        crate5Anim = crate5.GetComponent<Animator>();
-        crate6Anim = crate6.GetComponent<Animator>();
-        crate7Anim = crate7.GetComponent<Animator>();
-        crate8Anim = crate8.GetComponent<Animator>();
-        crate9Anim = crate9.GetComponent<Animator>();
-        crate10Anim = crate10.GetComponent<Animator>();
-
-        // doors Animators
-        metallicDoorAnim = metallicDoor.GetComponent<Animator>();
-        observationDoorAnim = observationDoor.GetComponent<Animator>();
-        labDoorAnim = labDoor.GetComponent<Animator>();
-        verticalExitDoorAnim = verticalExitDoor.GetComponent<Animator>();
-        scifiCrateAnim = scifiCrate.GetComponent<Animator>();
-        verticalDoorAnim = verticalDoor.GetComponent<Animator>();
-        kitAnim = kit.GetComponent<Animator>();
+        crateAnims = new Animator[crates.Length];
+        for (int i = 0; i < crates.Length; i++)
+        {
+            crateAnims[i] = crates[i].GetComponent<Animator>();
+        }
     }
 
     // Executes actions when an object is collected.
     void resetMissionsStates(int index)
     {
+        Debug.Log("index misions " + index);
         switch (index)
         {
             case 0:
                 crowbar.SetActive(false);
                 code1.gameObject.SetActive(true);
                 code1.Play();
-                metallicDoorAnim.SetBool("open", true);
-                observationDoorAnim.SetBool("open", true);
-                Light[] lights = Resources.FindObjectsOfTypeAll<Light>();
+                crateAnims[10].SetBool("open", true);
+                crateAnims[11].SetBool("open", true);
+                Light[] lights = FindObjectsOfType<Light>();
                 foreach (Light light in lights)
                 {
                     light.gameObject.SetActive(true);
@@ -251,7 +205,7 @@ public class ResetState : MonoBehaviour
             case 3:
                 securityCard.SetActive(false);
                 code4.SetActive(true);
-                labDoorAnim.SetBool("open", true);
+                crateAnims[12].SetBool("open", true);
                 mision5.initializeAlarms();
                 break;
             case 4:
@@ -267,7 +221,7 @@ public class ResetState : MonoBehaviour
                 break;
             case 6:
                 emergencyKit.SetActive(false);
-                verticalDoorAnim.SetBool("open", true);
+                crateAnims[15].SetBool("open", true);
                 for (int i = 0; i < firstAidKit.Length; i++)
                 {
                     firstAidKit[i].SetActive(true);
@@ -276,7 +230,7 @@ public class ResetState : MonoBehaviour
                 {
                     firstAidObj[i].SetActive(false);
                 }
-                kitAnim.SetBool("open", true);
+                crateAnims[16].SetBool("open", true);
                 break;
             case 7:
                 vacuum.SetActive(false);
@@ -296,8 +250,8 @@ public class ResetState : MonoBehaviour
                 break;
             case 9:
                 uvLight.SetActive(false);
-                verticalExitDoorAnim.SetBool("open", true);
-                scifiCrateAnim.SetBool("move", true);
+                crateAnims[13].SetBool("open", true);
+                crateAnims[14].SetBool("move", true);
                 break;
             default:
                 break;
@@ -307,46 +261,47 @@ public class ResetState : MonoBehaviour
     // Manages record visibility based on unlocked items.
     void checkRecordsIndex(int index)
     {
+        Debug.Log("index records " + index);
         switch (index)
         {
             case 0:
-                crate4Anim.SetBool("open", true);
+                crateAnims[3].SetBool("open", true);
                 record1.SetActive(false);
                 break;
             case 1:
-                crate2Anim.SetBool("open", true);
+                crateAnims[1].SetBool("open", true);
                 record2.SetActive(false);
                 break;
             case 2:
-                crate3Anim.SetBool("open", true);
+                crateAnims[2].SetBool("open", true);
                 record3.SetActive(false);
                 break;
             case 3:
-                crate5Anim.SetBool("open", true);
+                crateAnims[4].SetBool("open", true);
                 record4.SetActive(false);
                 break;
             case 4:
-                crate1Anim.SetBool("open", true);
+                crateAnims[0].SetBool("open", true);
                 record5.SetActive(false);
                 break;
             case 5:
-                crate6Anim.SetBool("open", true);
+                crateAnims[5].SetBool("open", true);
                 record6.SetActive(false);
                 break;
             case 6:
-                crate7Anim.SetBool("open", true);
+                crateAnims[6].SetBool("open", true);
                 record7.SetActive(false);
                 break;
             case 7:
-                crate8Anim.SetBool("open", true);
+                crateAnims[7].SetBool("open", true);
                 record8.SetActive(false);
                 break;
             case 8:
-                crate9Anim.SetBool("open", true);
+                crateAnims[8].SetBool("open", true);
                 record9.SetActive(false);
                 break;
             case 9:
-                crate10Anim.SetBool("open", true);
+                crateAnims[9].SetBool("open", true);
                 record10.SetActive(false);
                 break;
             default:
