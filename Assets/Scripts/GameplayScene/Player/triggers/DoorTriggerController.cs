@@ -64,31 +64,6 @@ public class DoorTriggerController : MonoBehaviour
     Animator[] doorAnims;
     readonly int[] doorIndices = { 1, 0, 3, 7, 10, 9, 8, 14, 15, 13, 22, 19, 16, 17 };
 
-    /*Animator door1Anim;
-    Animator door2Anim;
-    Animator door3Anim;
-    Animator door4Anim;
-    Animator door5Anim;
-    Animator metallicDoorAnim;
-    Animator switchboardDoorAnim;
-    Animator door6Anim;
-    Animator door7Anim;
-    Animator door8Anim;
-    Animator door9Anim;
-    Animator door10Anim;
-    Animator door11Anim;
-    Animator door12Anim;
-    Animator door13Anim;
-    Animator door14Anim;
-    Animator door15Anim;
-    Animator door16Anim;
-    Animator door17Anim;
-    Animator door18Anim;
-    Animator door19Anim;
-    Animator door20Anim;
-    Animator door21Anim;
-    Animator[] doorsAnim;*/
-
     [SerializeField] GameObject crowbar;
     [SerializeField] GameObject switchboard;
     [SerializeField] GameObject inventory;
@@ -116,42 +91,15 @@ public class DoorTriggerController : MonoBehaviour
         SwapCameras(1, 0);
         cc = player.GetComponent<CharacterController>();
         playerMov = player.GetComponent<PlayerMovement>();
+        playerAnimator = player.GetComponent<Animator>();
 
         doors = new GameObject[] { door1, door2, door3, door4, door5, metallicDoor, switchboardDoor, door6, door7, door8, door9,
                                      door10, door11, door12, door13, door14, door15, door16, door17, door18, door19, door20, door21 };
         doorImages = new Image[] { doorImg1, doorImg2, doorImg3, doorImg4, doorImg5, metallicDoorImg, switchboardDoorImg, doorImg6, doorImg7, doorImg8, doorImg9, 
                                    doorImg10, doorImg11, doorImg12, doorImg13, doorImg14, doorImg15, doorImg16, doorImg17, doorImg18, doorImg19, doorImg20, doorImg21 };
         initializeAnimators();
-
-        /*door1Anim = door1.GetComponent<Animator>();
-        door2Anim = door2.GetComponent<Animator>();
-        door3Anim = door3.GetComponent<Animator>();
-        door4Anim = door4.GetComponent<Animator>();
-        door5Anim = door5.GetComponent<Animator>();
-        metallicDoorAnim = metallicDoor.GetComponent<Animator>();
-        switchboardDoorAnim = switchboardDoor.GetComponent<Animator>();
-        door6Anim = door6.GetComponent<Animator>();
-        door7Anim = door7.GetComponent<Animator>();
-        door8Anim = door8.GetComponent<Animator>();
-        door9Anim = door9.GetComponent<Animator>();
-        door10Anim = door10.GetComponent<Animator>();
-        door11Anim = door11.GetComponent<Animator>();
-        door12Anim = door12.GetComponent<Animator>();
-        door13Anim = door13.GetComponent<Animator>();
-        door14Anim = door14.GetComponent<Animator>();
-        door15Anim = door15.GetComponent<Animator>();
-        door16Anim = door16.GetComponent<Animator>();
-        door17Anim = door17.GetComponent<Animator>();
-        door18Anim = door18.GetComponent<Animator>();
-        door19Anim = door19.GetComponent<Animator>();
-        door20Anim = door20.GetComponent<Animator>();
-        door21Anim = door21.GetComponent<Animator>();
-        doorsAnim = new Animator[] { door1Anim, door2Anim, door3Anim, door4Anim, door5Anim, metallicDoorAnim, switchboardDoorAnim, door6Anim, door7Anim, door8Anim, door9Anim,
-                                     door10Anim, door11Anim, door12Anim, door13Anim, door14Anim, door15Anim, door16Anim, door17Anim, door18Anim, door19Anim, door20Anim, door21Anim };
-        */
         doorsOpen = new bool[doorAnims.Length];
-        playerAnimator = player.GetComponent<Animator>();
-
+        
         GameManager.GameManagerInstance.LoadProgress();
         opened = GameManager.GameManagerInstance.missionsCompleted[0];
 
@@ -216,33 +164,6 @@ public class DoorTriggerController : MonoBehaviour
             }
         }
 
-        /*
-        // mission 1 - crowbar
-        allowCollectObject(doorsOpen[1], 0);
-        // mission 2 - samples: 1, 2, 3, 4
-        allowCollectObject(doorsOpen[0], 1);
-        allowCollectObject(doorsOpen[3], 2);
-        allowCollectObject(doorsOpen[7], 3);
-        allowCollectObject(doorsOpen[10], 4);
-        // mission 3 - spannerwrench
-        allowCollectObject(doorsOpen[9], 5);
-        // mission 4 - securityCard
-        allowCollectObject(doorsOpen[8], 6);
-        // mission 5 - wireCutters
-        allowCollectObject(doorsOpen[14], 7);
-        // mission 6 - clipboard
-        allowCollectObject(doorsOpen[15], 8);
-        // mission 7 - emergencyKit
-        allowCollectObject(doorsOpen[13], 9);
-        // mission 8 - vacuum
-        allowCollectObject(doorsOpen[22], 10);
-        // mission 9 - compass
-        allowCollectObject(doorsOpen[19], 11);
-        // mission 10 - UV light and tape
-        allowCollectObject(doorsOpen[16], 12); // UV light
-        allowCollectObject(doorsOpen[17], 13); // tape
-        */
-
         for (int i = 0; i < doorIndices.Length; i++)
         {
             int doorIndex = doorIndices[i];
@@ -294,7 +215,6 @@ public class DoorTriggerController : MonoBehaviour
         GameManager.GameManagerInstance.SaveProgress();
         switchboardLeverImg.gameObject.SetActive(true);
         doorAnims[6].enabled = false;
-        //switchboardDoorAnim.enabled = false;
         swichtInteraction = true;
     }
 
@@ -309,7 +229,6 @@ public class DoorTriggerController : MonoBehaviour
             cc.enabled = true; 
         }
         doorAnims[6].enabled = true;
-        //switchboardDoorAnim.enabled = true;
         Animator anim = doorAnims[index];
         anim.SetBool("open", false);
     }

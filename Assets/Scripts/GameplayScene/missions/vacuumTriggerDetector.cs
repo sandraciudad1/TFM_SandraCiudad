@@ -5,44 +5,26 @@ using UnityEngine;
 public class vacuumTriggerDetector : MonoBehaviour
 {
     [SerializeField] GameObject playerTrigger;
+    GameObject[] dirtObjects;
     mission8Controller mission8;
+    int activeDirtCount;
     bool finish = false;
+    HashSet<GameObject> fadingDirtObjects = new HashSet<GameObject>();
 
     // Initializes mission8Controller from the playerTrigger component.
     void Start()
     {
         mission8 = playerTrigger.GetComponent<mission8Controller>();
-    }
-
-    // Checks if all dirt objects are disabled to finish the mission.
-    void Update()
-    {
-        if (allDirtDisabled() && !finish)
-        {
-            mission8.finish = true;
-            finish = true;
-        }
-    }
-
-    // Returns true if all dirt objects are inactive.
-    bool allDirtDisabled()
-    {
-        GameObject[] dirtObjects = GameObject.FindGameObjectsWithTag("dirt");
-        foreach (GameObject dirt in dirtObjects)
-        {
-            if (dirt.activeSelf)
-            {
-                return false; 
-            }
-        }
-        return true;
+        dirtObjects = GameObject.FindGameObjectsWithTag("dirt");
+        activeDirtCount = dirtObjects.Length;
     }
 
     // Starts fading out dirt objects when staying in the trigger.
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.CompareTag("dirt") && mission8.enableControl)
+        if (other.gameObject.CompareTag("dirt") && mission8.enableControl && !fadingDirtObjects.Contains(other.gameObject))
         {
+            fadingDirtObjects.Add(other.gameObject);
             StartCoroutine(fadeOutDisable(other.gameObject));
         }
     }
@@ -66,5 +48,14 @@ public class vacuumTriggerDetector : MonoBehaviour
         }
 
         dirtObject.SetActive(false);
+
+        fadingDirtObjects.Remove(dirtObject);
+
+        activeDirtCount--;
+        if (activeDirtCount == 0 && !finish)
+        {
+            mission8.finish = true;
+            finish = true;
+        }
     }
 }

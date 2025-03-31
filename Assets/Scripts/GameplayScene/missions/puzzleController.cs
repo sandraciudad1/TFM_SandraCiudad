@@ -100,10 +100,13 @@ public class puzzleController : MonoBehaviour
             }
         }
         
-        if (isSolution() && !finish)
+        if (movements > 35 && !finish)
         {
-            canMove = false;
-            StartCoroutine(waiitUntilEnd());
+            if (isSolution())
+            {
+                canMove = false;
+                StartCoroutine(waiitUntilEnd());
+            }
         }
     }
 

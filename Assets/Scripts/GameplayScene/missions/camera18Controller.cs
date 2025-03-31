@@ -13,16 +13,15 @@ public class camera18Controller : MonoBehaviour
     // Handles camera movement based on mouse input.
     void Update()
     {
-        if (startMovement)
-        {
-            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-            float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        if (!startMovement) return;
 
-            xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, -verticalClamp, verticalClamp);
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-            transform.localRotation = Quaternion.Euler(xRotation, transform.localRotation.eulerAngles.y, 0f);
-            transform.Rotate(Vector3.up * mouseX, Space.World);
-        }
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -verticalClamp, verticalClamp);
+
+        transform.localRotation = Quaternion.Euler(xRotation, transform.localRotation.eulerAngles.y, 0f);
+        transform.Rotate(Vector3.up * mouseX, Space.World);
     }
 }

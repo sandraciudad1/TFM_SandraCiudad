@@ -12,8 +12,6 @@ public class pinCodeController : MonoBehaviour
     string userInput = "";
     int index;
 
-    bool correct = false;
-
     [SerializeField] GameObject crate1;
     [SerializeField] GameObject crate2;
     [SerializeField] GameObject crate3;
@@ -24,34 +22,26 @@ public class pinCodeController : MonoBehaviour
     [SerializeField] GameObject crate8;
     [SerializeField] GameObject crate9;
     [SerializeField] GameObject crate10;
-    Animator crateAnim1;
-    Animator crateAnim2;
-    Animator crateAnim3;
-    Animator crateAnim4;
-    Animator crateAnim5;
-    Animator crateAnim6;
-    Animator crateAnim7;
-    Animator crateAnim8;
-    Animator crateAnim9;
-    Animator crateAnim10;
-    Animator[] crateAnimators;
+
+    GameObject[] crates;
+    Animator[] crateAnims;
 
     // Initializes the correct codes and gets the crate animator.
     void Start()
     {
         correctCodes = new string[] { "4141", "6375", "4360", "0938", "1235", "0134", "7615", "3962", "8870", "2599" };
+        crates = new GameObject[] { crate1, crate2, crate3, crate4, crate5, crate6, crate7, crate8, crate9, crate10 };
+        initializeAnimators();
+    }
 
-        crateAnim1 = crate1.GetComponent<Animator>();
-        crateAnim2 = crate2.GetComponent<Animator>();
-        crateAnim3 = crate3.GetComponent<Animator>();
-        crateAnim4 = crate4.GetComponent<Animator>();
-        crateAnim5 = crate5.GetComponent<Animator>();
-        crateAnim6 = crate6.GetComponent<Animator>();
-        crateAnim7 = crate7.GetComponent<Animator>();
-        crateAnim8 = crate8.GetComponent<Animator>();
-        crateAnim9 = crate9.GetComponent<Animator>();
-        crateAnim10 = crate10.GetComponent<Animator>();
-        crateAnimators = new Animator[] { crateAnim4, crateAnim2, crateAnim3, crateAnim5, crateAnim1, crateAnim6, crateAnim7, crateAnim8, crateAnim9, crateAnim10 };
+    // Assigns Animator components to crates and doors.
+    void initializeAnimators()
+    {
+        crateAnims = new Animator[crates.Length];
+        for (int i = 0; i < crates.Length; i++)
+        {
+            crateAnims[i] = crates[i].GetComponent<Animator>();
+        }
     }
 
     // Handles user input for the code entry.
@@ -111,10 +101,10 @@ public class pinCodeController : MonoBehaviour
     public void correctCodeAction()
     {
         GameManager.GameManagerInstance.LoadProgress();
-        GameManager.GameManagerInstance.correctCodeCounter++;
-        GameManager.GameManagerInstance.SaveProgress();
-        crateAnimators[index].SetBool("open", true);
-        GameManager.GameManagerInstance.SetArrayUnlocked("records", index, 1);
-        GameManager.GameManagerInstance.SaveProgress();
+        var gm = GameManager.GameManagerInstance;
+        gm.correctCodeCounter++;
+        crateAnims[index].SetBool("open", true);
+        gm.SetArrayUnlocked("records", index, 1);
+        gm.SaveProgress();
     }
 }
