@@ -48,8 +48,12 @@ public class conversation : MonoBehaviour
     int respuestaElegida = -1;
     bool activate = false;
     bool played = false;
+    float nextCheckTime = 0f;
+    float checkInterval = 5f;
+
     [SerializeField] Image fadeImage;
     float fadeDuration = 2f;
+    bool ending = false;
 
     // Initialize scene setup and player components.
     void Start()
@@ -63,8 +67,10 @@ public class conversation : MonoBehaviour
     // Handle input and check game stage progress.
     void Update()
     {
-        if (!played)
+        if (!played && Time.time >= nextCheckTime)
         {
+            nextCheckTime = Time.time + checkInterval;
+
             GameManager.GameManagerInstance.LoadProgress();
             played = GameManager.GameManagerInstance.recordsPlayed.All(x => x == 1);
         }
@@ -92,8 +98,9 @@ public class conversation : MonoBehaviour
             }
         }
 
-        if (etapa >= 3)
+        if (etapa >= 3 && !ending)
         {
+            ending = true;
             StartCoroutine(fadeToBlack());
             StartCoroutine(waitUntilFade());
         }
@@ -231,7 +238,7 @@ public class conversation : MonoBehaviour
             cc.enabled = false;
             player.transform.position = playerPos;
             player.transform.rotation = playerRot;
-            if (player.transform.position == playerPos && !change)
+            if (Vector3.Distance(player.transform.position, playerPos) < 0.01f && !change)
             {
                 lockScreen.SetActive(false);
                 playVideo(notificationVideo);

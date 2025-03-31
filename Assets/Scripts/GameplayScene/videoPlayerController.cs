@@ -119,7 +119,6 @@ public class videoPlayerController : MonoBehaviour
         GameManager.GameManagerInstance.LoadProgress();
         GameManager.GameManagerInstance.recordsPlayed[index - 1] = 1;
         GameManager.GameManagerInstance.SaveProgress();
-        //GameManager.GameManagerInstance.LoadProgress();
     }
 
     // Called when video ends, starts coroutine to move player.

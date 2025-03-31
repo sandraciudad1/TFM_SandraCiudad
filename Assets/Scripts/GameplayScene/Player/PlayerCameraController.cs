@@ -25,17 +25,14 @@ public class PlayerCameraController : MonoBehaviour
 
     void LateUpdate()
     {
-        if (inventoryCont != null && inventoryCont.playerMov && playerMov.canMove)
-        {
-            float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-            float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        if (!playerMov.canMove || !inventoryCont.playerMov) return;
 
-            xRotation -= mouseY;
-            xRotation = Mathf.Clamp(xRotation, -verticalClamp, verticalClamp);
-            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-            playerBody.Rotate(Vector3.up * mouseX);
-        }
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 
-        
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -verticalClamp, verticalClamp);
+        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        playerBody.Rotate(Vector3.up * mouseX);
     }
 }

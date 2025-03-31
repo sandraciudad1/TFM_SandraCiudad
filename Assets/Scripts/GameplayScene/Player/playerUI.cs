@@ -32,6 +32,11 @@ public class playerUI : MonoBehaviour
     [SerializeField] Image oxygenIcon;
     [SerializeField] Sprite[] oxygen;
 
+    float lastLife = -1f;
+    float lastBlurIntensity = -1f;
+    int lastEnergyIconIndex = -1;
+    int lastOxygenIconIndex = -1;
+
     // Initializes player stats and settings at game start.
     void Start()
     {
@@ -71,7 +76,7 @@ public class playerUI : MonoBehaviour
             }
             playerEnergy += (regenerationSpeed / 2) * Time.deltaTime;
             playerEnergy = Mathf.Clamp(playerEnergy, 0, 100);
-            updateIcons(playerEnergy, energyIcon, energy);
+            updateIcons(playerEnergy, energyIcon, energy, ref lastEnergyIconIndex);
         }
         else if (playerEnergy == 100 && breatheAudio.isPlaying)
         {
@@ -84,7 +89,7 @@ public class playerUI : MonoBehaviour
             playerOxygen += (regenerationSpeed / 2) * Time.deltaTime;
             playerOxygen = Mathf.Clamp(playerOxygen, 0, 100);
             checkOxygenAlerts();
-            updateIcons(playerOxygen, oxygenIcon, oxygen);
+            updateIcons(playerOxygen, oxygenIcon, oxygen, ref lastOxygenIconIndex);
         }
         else if (playerOxygen == 100)
         {
@@ -108,29 +113,24 @@ public class playerUI : MonoBehaviour
     }
 
     // Updates the icon based on the value range.
-    void updateIcons(float value, Image image, Sprite[] spriteArray)
+    void updateIcons(float value, Image image, Sprite[] spriteArray, ref int lastIndex)
     {
-        if (value >= 0 && value < 25)
+        int index = Mathf.FloorToInt(value / 25);
+        index = Mathf.Clamp(index, 0, spriteArray.Length - 1);
+
+        if (index != lastIndex)
         {
-            image.sprite = spriteArray[0];
-        } 
-        else if (value >= 25 && value < 50)
-        {
-            image.sprite = spriteArray[1];
-        }
-        else if (value >= 50 && value < 75)
-        {
-            image.sprite = spriteArray[2];
-        }
-        else if (value >= 75 && value <= 100)
-        {
-            image.sprite = spriteArray[3];
+            image.sprite = spriteArray[index];
+            lastIndex = index;
         }
     }
 
     // Adjusts screen transparency based on player life.
     void updateLifeTransparency()
     {
+        if (Mathf.Approximately(playerLife, lastLife)) return;
+
+        lastLife = playerLife;
         float alpha = 1f - (playerLife / 100f);
         Color color = lifeBg.color;
         color.a = alpha;
@@ -165,32 +165,29 @@ public class playerUI : MonoBehaviour
         if (depthOfField != null)
         {
             float blurIntensity = Mathf.Lerp(0.0f, 1.0f, (playerOxygen / 100f));
-            depthOfField.focusDistance.value = blurIntensity;
+
+            // Solo actualiza si el valor ha cambiado de verdad
+            if (!Mathf.Approximately(blurIntensity, lastBlurIntensity))
+            {
+                depthOfField.focusDistance.value = blurIntensity;
+                lastBlurIntensity = blurIntensity;
+            }
         }
     }
 
     // Triggers oxygen alerts when oxygen drops below thresholds.
     void checkOxygenAlerts()
     {
-        if (playerOxygen <= 40 && !oxygenAlerts[0])
+        if (playerOxygen <= 40)
         {
-            lowOxygenAudio.Play();
-            oxygenAlerts[0] = true;
-        }
-        if (playerOxygen <= 30 && !oxygenAlerts[1])
-        {
-            lowOxygenAudio.Play();
-            oxygenAlerts[1] = true;
-        }
-        if (playerOxygen <= 20 && !oxygenAlerts[2])
-        {
-            lowOxygenAudio.Play();
-            oxygenAlerts[2] = true;
-        }
-        if (playerOxygen <= 10 && !oxygenAlerts[3])
-        {
-            lowOxygenAudio.Play();
-            oxygenAlerts[3] = true;
+            int level = Mathf.FloorToInt((40 - playerOxygen) / 10);
+            if (!oxygenAlerts[level])
+            {
+                if (!lowOxygenAudio.isPlaying)
+                    lowOxygenAudio.Play();
+
+                oxygenAlerts[level] = true;
+            }
         }
     }
 

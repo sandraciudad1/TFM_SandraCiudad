@@ -27,41 +27,36 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        if (inventoryCont != null && inventoryCont.playerMov && canMove)
+        if (!canMove || !inventoryCont.playerMov) return;
+
+        isGrounded = controller.isGrounded;
+        if (isGrounded && velocity.y < 0)
         {
-            isGrounded = controller.isGrounded;
-            if (isGrounded && velocity.y < 0)
-            {
-                velocity.y = -2f;
-            }
-
-            float moveX = Input.GetAxis("Horizontal");
-            float moveZ = Input.GetAxis("Vertical");
-            Vector3 move = transform.right * moveX + transform.forward * moveZ;
-            controller.Move(move * speed * Time.deltaTime);
-
-            /*if (moveX != 0 || moveZ != 0)
-            {
-                animator.SetBool("walk", true);
-            }
-            else
-            {
-                animator.SetBool("walk", false);  
-            }*/
-
-            if (Input.GetButtonDown("Jump") && isGrounded)
-            {
-                velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
-                //animator.SetBool("jump", true);
-            }
-            else
-            {
-                //nimator.SetBool("jump", false);
-            }
-
-            velocity.y += gravity * Time.deltaTime;
-            controller.Move(velocity * Time.deltaTime);
+            velocity.y = -2f;
         }
+
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+        Vector3 move = transform.right * moveX + transform.forward * moveZ;
         
+        /*bool isWalking = moveX != 0 || moveZ != 0;
+        if (animator.GetBool("walk") != isWalking)
+        {
+            animator.SetBool("walk", isWalking);
+        }*/
+
+        if (Input.GetButtonDown("Jump") && isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            if (!animator.GetBool("jump")) animator.SetBool("jump", true);
+        }
+        else
+        {
+            if (animator.GetBool("jump")) animator.SetBool("jump", false);
+        }
+
+        velocity.y += gravity * Time.deltaTime;
+        Vector3 totalMovement = move * speed + Vector3.up * velocity.y;
+        controller.Move(totalMovement * Time.deltaTime);
     }
 }
