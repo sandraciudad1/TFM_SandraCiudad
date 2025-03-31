@@ -117,18 +117,18 @@ public class CollectiblesController : MonoBehaviour
     // Manages records collection and pin code validation.
     void recordsManager(int id, GameObject record)
     {
+        GameManager.GameManagerInstance.LoadProgress();
+        var gm = GameManager.GameManagerInstance;
         int index = id - 1;
-        if ((GameManager.GameManagerInstance.GetArrayUnlocked("records", index) == 1))
+        if ((gm.GetArrayUnlocked("records", index) == 1))
         {
             pinCodeCanvas.SetActive(false);
             
             if (Input.GetKeyDown(KeyCode.R))
             {
-                GameManager.GameManagerInstance.LoadProgress();
-                int i = GameManager.GameManagerInstance.recordIndex;
-                GameManager.GameManagerInstance.recordsCollected[i] = index;
-                GameManager.GameManagerInstance.SaveProgress();
-                GameManager.GameManagerInstance.LoadProgress();
+                int i = gm.recordIndex;
+                gm.recordsCollected[i] = index;
+                gm.SaveProgress();
                 record.SetActive(false);
                 addToInventory(1, index);
             }
@@ -144,16 +144,17 @@ public class CollectiblesController : MonoBehaviour
     void canAddToInventory(Collider other, string name, int index, GameObject gameobject)
     {
         GameManager.GameManagerInstance.LoadProgress();
-        if (other.name.Equals(name) && (GameManager.GameManagerInstance.GetArrayUnlocked("objects", GameManager.GameManagerInstance.objectIndex) == 1))
+        var gm = GameManager.GameManagerInstance;
+
+        if (other.name.Equals(name) && (gm.GetArrayUnlocked("objects", gm.objectIndex) == 1))
         {
-            int i = GameManager.GameManagerInstance.objectIndex;
-            GameManager.GameManagerInstance.objectsCollected[i] = index;
-            GameManager.GameManagerInstance.SaveProgress();
-            GameManager.GameManagerInstance.LoadProgress();
+            int i = gm.objectIndex;
+            gm.objectsCollected[i] = index;
+            gm.SaveProgress();
             gameobject.SetActive(false);
             addToInventory(0, index);
         }
-        GameManager.GameManagerInstance.SaveProgress();
+        gm.SaveProgress();
     }
 
     // Clears pin code input when the player enters a record trigger.
@@ -178,20 +179,22 @@ public class CollectiblesController : MonoBehaviour
     public void addToInventory(int type, int id)
     {
         GameManager.GameManagerInstance.LoadProgress();
+        var gm = GameManager.GameManagerInstance;
+
         inventoryController inventoryController = inventory.GetComponent<inventoryController>();
         if (inventoryController != null)
         {
             if (type == 0)
             {
-                inventoryController.addItem(GameManager.GameManagerInstance.objectIndex, id);
-                GameManager.GameManagerInstance.objectIndex++;
+                inventoryController.addItem(gm.objectIndex, id);
+                gm.objectIndex++;
             } 
             else if (type == 1)
             {
-                inventoryController.addRecord(GameManager.GameManagerInstance.recordIndex, id);
-                GameManager.GameManagerInstance.recordIndex++;
+                inventoryController.addRecord(gm.recordIndex, id);
+                gm.recordIndex++;
             }
-            GameManager.GameManagerInstance.SaveProgress();
+            gm.SaveProgress();
         }
     }
 }

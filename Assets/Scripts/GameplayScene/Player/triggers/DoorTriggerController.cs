@@ -60,7 +60,11 @@ public class DoorTriggerController : MonoBehaviour
     [SerializeField] GameObject door20;
     [SerializeField] GameObject door21;
 
-    Animator door1Anim;
+    GameObject[] doors;
+    Animator[] doorAnims;
+    readonly int[] doorIndices = { 1, 0, 3, 7, 10, 9, 8, 14, 15, 13, 22, 19, 16, 17 };
+
+    /*Animator door1Anim;
     Animator door2Anim;
     Animator door3Anim;
     Animator door4Anim;
@@ -83,7 +87,7 @@ public class DoorTriggerController : MonoBehaviour
     Animator door19Anim;
     Animator door20Anim;
     Animator door21Anim;
-    Animator[] doorsAnim;
+    Animator[] doorsAnim;*/
 
     [SerializeField] GameObject crowbar;
     [SerializeField] GameObject switchboard;
@@ -113,10 +117,13 @@ public class DoorTriggerController : MonoBehaviour
         cc = player.GetComponent<CharacterController>();
         playerMov = player.GetComponent<PlayerMovement>();
 
+        doors = new GameObject[] { door1, door2, door3, door4, door5, metallicDoor, switchboardDoor, door6, door7, door8, door9,
+                                     door10, door11, door12, door13, door14, door15, door16, door17, door18, door19, door20, door21 };
         doorImages = new Image[] { doorImg1, doorImg2, doorImg3, doorImg4, doorImg5, metallicDoorImg, switchboardDoorImg, doorImg6, doorImg7, doorImg8, doorImg9, 
                                    doorImg10, doorImg11, doorImg12, doorImg13, doorImg14, doorImg15, doorImg16, doorImg17, doorImg18, doorImg19, doorImg20, doorImg21 };
+        initializeAnimators();
 
-        door1Anim = door1.GetComponent<Animator>();
+        /*door1Anim = door1.GetComponent<Animator>();
         door2Anim = door2.GetComponent<Animator>();
         door3Anim = door3.GetComponent<Animator>();
         door4Anim = door4.GetComponent<Animator>();
@@ -141,7 +148,8 @@ public class DoorTriggerController : MonoBehaviour
         door21Anim = door21.GetComponent<Animator>();
         doorsAnim = new Animator[] { door1Anim, door2Anim, door3Anim, door4Anim, door5Anim, metallicDoorAnim, switchboardDoorAnim, door6Anim, door7Anim, door8Anim, door9Anim,
                                      door10Anim, door11Anim, door12Anim, door13Anim, door14Anim, door15Anim, door16Anim, door17Anim, door18Anim, door19Anim, door20Anim, door21Anim };
-        doorsOpen = new bool[doorsAnim.Length];
+        */
+        doorsOpen = new bool[doorAnims.Length];
         playerAnimator = player.GetComponent<Animator>();
 
         GameManager.GameManagerInstance.LoadProgress();
@@ -154,6 +162,16 @@ public class DoorTriggerController : MonoBehaviour
         }
     }
 
+    // Assigns Animator components to crates and doors.
+    void initializeAnimators()
+    {
+        doorAnims = new Animator[doors.Length];
+        for (int i = 0; i < doors.Length; i++)
+        {
+            doorAnims[i] = doors[i].GetComponent<Animator>();
+        }
+    }
+
     // Toggle door animation when pressing 'E'.
     void Update()
     {
@@ -161,7 +179,7 @@ public class DoorTriggerController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.E) && !doorsOpen[doorNum])
             {
-                Animator anim = doorsAnim[doorNum];
+                Animator anim = doorAnims[doorNum];
                 if (doorNum == 5 && crowbar.activeInHierarchy)
                 {
                     SwapCameras(0, 1);
@@ -169,7 +187,7 @@ public class DoorTriggerController : MonoBehaviour
                     cc.enabled = false;
                     player.transform.position = playerPos;
                     player.transform.rotation = playerRot;
-                    if(player.transform.position == playerPos && !change)
+                    if (Vector3.Distance(player.transform.position, playerPos) < 0.01f && !change)
                     {
                         desactivateImg(5);
                         StartCoroutine(initMission1());
@@ -192,12 +210,13 @@ public class DoorTriggerController : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.E) && doorsOpen[doorNum])
             {
-                Animator anim = doorsAnim[doorNum];
+                Animator anim = doorAnims[doorNum];
                 anim.SetBool("open", false);
                 doorsOpen[doorNum] = false;  
             }
         }
 
+        /*
         // mission 1 - crowbar
         allowCollectObject(doorsOpen[1], 0);
         // mission 2 - samples: 1, 2, 3, 4
@@ -222,7 +241,13 @@ public class DoorTriggerController : MonoBehaviour
         // mission 10 - UV light and tape
         allowCollectObject(doorsOpen[16], 12); // UV light
         allowCollectObject(doorsOpen[17], 13); // tape
+        */
 
+        for (int i = 0; i < doorIndices.Length; i++)
+        {
+            int doorIndex = doorIndices[i];
+            allowCollectObject(doorsOpen[doorIndex], i);
+        }
     }
 
     // Unlocks and saves an object if conditions are met.
@@ -242,7 +267,7 @@ public class DoorTriggerController : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         playerAnimator.SetBool("open", true);
         yield return new WaitForSeconds(1.1f);
-        Animator anim = doorsAnim[5];
+        Animator anim = doorAnims[5];
         anim.SetBool("open", true);
         yield return new WaitForSeconds(1.5f);
         SwapCameras(1, 0);
@@ -268,7 +293,8 @@ public class DoorTriggerController : MonoBehaviour
         GameManager.GameManagerInstance.missionsCompleted[0] = 1;
         GameManager.GameManagerInstance.SaveProgress();
         switchboardLeverImg.gameObject.SetActive(true);
-        switchboardDoorAnim.enabled = false;
+        doorAnims[6].enabled = false;
+        //switchboardDoorAnim.enabled = false;
         swichtInteraction = true;
     }
 
@@ -282,8 +308,9 @@ public class DoorTriggerController : MonoBehaviour
         {
             cc.enabled = true; 
         }
-        switchboardDoorAnim.enabled = true;
-        Animator anim = doorsAnim[index];
+        doorAnims[6].enabled = true;
+        //switchboardDoorAnim.enabled = true;
+        Animator anim = doorAnims[index];
         anim.SetBool("open", false);
     }
 

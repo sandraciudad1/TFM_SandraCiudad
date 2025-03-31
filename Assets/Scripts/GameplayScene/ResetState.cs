@@ -100,9 +100,6 @@ public class ResetState : MonoBehaviour
     [SerializeField] GameObject code3;
     [SerializeField] GameObject code4;
     [SerializeField] GameObject screenCode8;
-    
-
-    GameObject[] inventoryRecords = new GameObject[10];
 
     [SerializeField] GameObject playerTrigger;
     mission5Controller mision5;
@@ -111,9 +108,9 @@ public class ResetState : MonoBehaviour
     [SerializeField] TextMeshProUGUI inputText2;
     [SerializeField] TextMeshProUGUI inputText3;
 
-
     GameObject[] crates;
     Animator[] crateAnims;
+
     // Initializes inventory and updates unlocked objects and records.
     void Start()
     {
