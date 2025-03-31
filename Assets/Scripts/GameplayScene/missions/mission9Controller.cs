@@ -40,7 +40,6 @@ public class mission9Controller : MonoBehaviour
         playerAnim = player.GetComponent<Animator>();
         cc = player.GetComponent<CharacterController>();
         playerMov = player.GetComponent<PlayerMovement>();
-
         canvasGroup = info.GetComponent<CanvasGroup>();
         puzzlecontroller = puzzle.GetComponent<puzzleController>();
 
@@ -56,19 +55,22 @@ public class mission9Controller : MonoBehaviour
     // Updates game state when finished and handles final movement.
     void Update()
     {
-        if (finishGame && !finish)
-        {
-            GameManager.GameManagerInstance.LoadProgress();
-            GameManager.GameManagerInstance.missionsCompleted[8] = 1;
-            GameManager.GameManagerInstance.SaveProgress();
-            SwapCameras(1, 0, 0);
-            player.transform.position = playerFinalPos;
-            playerMov.canMove = true;
-            cc.enabled = true;
-            finish = true;
-        }
+        if (!finishGame || finish) return;
+        CompleteMission();
     }
 
+    // Finalizes mission, unlocks player and sets completion state.
+    void CompleteMission()
+    {
+        GameManager.GameManagerInstance.missionsCompleted[8] = 1;
+        GameManager.GameManagerInstance.SaveProgress();
+
+        SwapCameras(1, 0, 0);
+        player.transform.position = playerFinalPos;
+        playerMov.canMove = true;
+        cc.enabled = true;
+        finish = true;
+    }
 
     // Shows 'X' when leaving grids.  
     private void OnTriggerEnter(Collider other)
@@ -103,7 +105,7 @@ public class mission9Controller : MonoBehaviour
             cc.enabled = false;
             player.transform.position = playerPos;
             player.transform.rotation = playerRot;
-            if (player.transform.position == playerPos && !change)
+            if (Vector3.Distance(player.transform.position, playerPos) < 0.01f && !change)
             {
                 playerAnim.SetBool("compass", true);
                 StartCoroutine(waitUntilFinish());

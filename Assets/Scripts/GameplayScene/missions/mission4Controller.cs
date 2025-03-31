@@ -22,14 +22,7 @@ public class mission4Controller : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam1;
     [SerializeField] CinemachineVirtualCamera vcam7;
 
-    [SerializeField] VideoPlayer cardReader;
-    [SerializeField] VideoPlayer analyzingScreen;
-    [SerializeField] VideoPlayer loadingScreen;
-    [SerializeField] VideoPlayer sequence3;
-    [SerializeField] VideoPlayer sequence4;
-    [SerializeField] VideoPlayer sequence5;
-    [SerializeField] VideoPlayer code4;
-    [SerializeField] VideoPlayer electricalProblem;
+    [SerializeField] VideoPlayer cardReader, analyzingScreen, loadingScreen, sequence3, sequence4, sequence5, code4, electricalProblem;
     bool readSequence = false;
 
     [SerializeField] GameObject info;
@@ -96,7 +89,7 @@ public class mission4Controller : MonoBehaviour
             code4.gameObject.SetActive(true);
             labDoorAnim.SetBool("open", true);
             audioDoor.Play();
-            mision5.initializeAlarms();
+            mision5.InitializeAlarms();
             hasFinish = true;
         }
     }
@@ -183,7 +176,7 @@ public class mission4Controller : MonoBehaviour
             cc.enabled = false;
             player.transform.position = playerPos;
             player.transform.rotation = playerRot;
-            if (player.transform.position == playerPos && !change)
+            if (Vector3.Distance(player.transform.position, playerPos) < 0.01f && !change)
             {
                 playerAnim.SetBool("securityCard", true);
                 StartCoroutine(showVideos());

@@ -28,65 +28,29 @@ public class mission10Controller : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam19;
     camera18Controller cam18Controller;
 
-    [SerializeField] GameObject fp1Object;
-    [SerializeField] GameObject fp2Object;
-    [SerializeField] GameObject fp3Object;
+    [SerializeField] GameObject fp1Object, fp2Object, fp3Object;
     GameObject[] fpObjects;
-
-    [SerializeField] Image fingerprint1Img;
-    [SerializeField] Image fingerprint2Img;
-    [SerializeField] Image fingerprint3Img;
+    [SerializeField] Image fingerprint1Img, fingerprint2Img, fingerprint3Img;
     Image[] fingerprints;
-
-    [SerializeField] Sprite fp11;
-    [SerializeField] Sprite fp12;
-    [SerializeField] Sprite fp13;
-    [SerializeField] Sprite fp14;
-    [SerializeField] Sprite fp21;
-    [SerializeField] Sprite fp22;
-    [SerializeField] Sprite fp23;
-    [SerializeField] Sprite fp24;
-    [SerializeField] Sprite fp31;
-    [SerializeField] Sprite fp32;
-    [SerializeField] Sprite fp33;
-    [SerializeField] Sprite fp34;
-    Sprite[] fp1;
-    Sprite[] fp2;
-    Sprite[] fp3;
-
-    Sprite[] part1;
-    Sprite[] part2;
-    Sprite[] part3;
-    Sprite[] part4;
+    [SerializeField] Sprite fp11, fp12, fp13, fp14;
+    [SerializeField] Sprite fp21, fp22, fp23, fp24;
+    [SerializeField] Sprite fp31, fp32, fp33, fp34;
+    Sprite[][] fingerprintsById;
+    Sprite[] part1, part2, part3, part4;
     List<Sprite[]> spriteList;
 
-    [SerializeField] Image part1Img;
-    [SerializeField] Image part2Img;
-    [SerializeField] Image part3Img;
-    [SerializeField] Image part4Img;
+    [SerializeField] Image part1Img, part2Img, part3Img, part4Img;
     Image[] partsImg;
 
     int frameCounter = 0;
-    [SerializeField] Image frame1;
-    [SerializeField] Image frame2;
-    [SerializeField] Image frame3;
-    [SerializeField] Image frame4;
+    [SerializeField] Image frame1, frame2, frame3, frame4;
     Image[] frames;
-    [SerializeField] GameObject arrows1;
-    [SerializeField] GameObject arrows2;
-    [SerializeField] GameObject arrows3;
-    [SerializeField] GameObject arrows4;
+    [SerializeField] GameObject arrows1, arrows2, arrows3, arrows4;
     GameObject[] arrows;
 
-    [SerializeField] Image rightArrow1;
-    [SerializeField] Image rightArrow2;
-    [SerializeField] Image rightArrow3;
-    [SerializeField] Image rightArrow4;
+    [SerializeField] Image rightArrow1, rightArrow2, rightArrow3, rightArrow4;
     Image[] rightArrows;
-    [SerializeField] Image leftArrow1;
-    [SerializeField] Image leftArrow2;
-    [SerializeField] Image leftArrow3;
-    [SerializeField] Image leftArrow4;
+    [SerializeField] Image leftArrow1, leftArrow2, leftArrow3, leftArrow4;
     Image[] leftArrows;
 
     [SerializeField] Image code10;
@@ -121,22 +85,22 @@ public class mission10Controller : MonoBehaviour
 
         canvasGroup = info.GetComponent<CanvasGroup>();
         cam18Controller = vcam18.GetComponent<camera18Controller>();
+        scifiCrateAnim = scifiCrate.GetComponent<Animator>();
+        doorAnim = verticalExitDoor.GetComponent<Animator>();
+        doorAudio = verticalExitDoor.GetComponent<AudioSource>();
 
         fpObjects = new GameObject[] { fp1Object, fp2Object, fp3Object };
         fingerprints = new Image[] { fingerprint1Img, fingerprint2Img, fingerprint3Img };
         frames = new Image[] { frame1, frame2, frame3, frame4 };
         arrows = new GameObject[] { arrows1, arrows2, arrows3, arrows4 };
-        fp1 = new Sprite[] { fp11, fp12, fp13, fp14 };
-        fp2 = new Sprite[] { fp21, fp22, fp23, fp24 };
-        fp3 = new Sprite[] { fp31, fp32, fp33, fp34 };
         partsImg = new Image[] { part1Img, part2Img, part3Img, part4Img };
-        
         rightArrows = new Image[] { rightArrow1, rightArrow2, rightArrow3, rightArrow4 };
         leftArrows = new Image[] { leftArrow1, leftArrow2, leftArrow3, leftArrow4 };
-
-        scifiCrateAnim = scifiCrate.GetComponent<Animator>();
-        doorAnim = verticalExitDoor.GetComponent<Animator>();
-        doorAudio = verticalExitDoor.GetComponent<AudioSource>();
+        fingerprintsById = new Sprite[][] {
+            new Sprite[] { fp11, fp12, fp13, fp14 },
+            new Sprite[] { fp21, fp22, fp23, fp24 },
+            new Sprite[] { fp31, fp32, fp33, fp34 }
+        };
 
         GameManager.GameManagerInstance.LoadProgress();
         opened = GameManager.GameManagerInstance.missionsCompleted[9];
@@ -168,25 +132,30 @@ public class mission10Controller : MonoBehaviour
                 checkCorrectAnswer();
             }
         }
+    }
 
-        if (frameCounter == 4)
+    // Checks puzzle completion and triggers final sequence if all done.
+    void checkIfCompleted()
+    {
+        if (frameCounter == 4 && !finish)
         {
             cam18Controller.startMovement = true;
             SwapCameras(0, 0, 1, 0);
             completed++;
             resetValues();
-        }
 
-        if (completed >= 3 && !finish)
-        {
-            GameManager.GameManagerInstance.LoadProgress();
-            GameManager.GameManagerInstance.missionsCompleted[9] = 1;
-            GameManager.GameManagerInstance.SaveProgress();
-            StartCoroutine(FadeIn());
-            StartCoroutine(waitUntilMoveDoor());
+            if (completed >= 3)
+            {
+                GameManager.GameManagerInstance.LoadProgress();
+                GameManager.GameManagerInstance.missionsCompleted[9] = 1;
+                GameManager.GameManagerInstance.SaveProgress();
+                StartCoroutine(FadeIn());
+                StartCoroutine(waitUntilMoveDoor());
+            }
         }
     }
 
+    // Tracks Return key presses and triggers alarm after threshold.
     void checkKeyPressed()
     {
         countReturnKey++;
@@ -256,12 +225,17 @@ public class mission10Controller : MonoBehaviour
     // Checks if the selected fingerprint part is correct.
     void checkCorrectAnswer()
     {
-        if (partsImg[frameCounter].sprite == fp1[frameCounter] || partsImg[frameCounter].sprite == fp2[frameCounter] || partsImg[frameCounter].sprite == fp3[frameCounter])
+        var currentSprite = partsImg[frameCounter].sprite;
+        if (fingerprintsById.All(set => set.Length > frameCounter) &&
+            (currentSprite == fingerprintsById[0][frameCounter] ||
+             currentSprite == fingerprintsById[1][frameCounter] ||
+             currentSprite == fingerprintsById[2][frameCounter]))
         {
             frameCounter++;
             updateFrameArrows();
-            imageIndex=0;
-        } 
+            imageIndex = 0;
+            checkIfCompleted();
+        }
         else
         {
             effectsAudio.clip = error;
@@ -300,29 +274,12 @@ public class mission10Controller : MonoBehaviour
             frames[frameCounter].gameObject.SetActive(true);
             arrows[frameCounter].SetActive(true);
         }
-        
     }
 
     // Randomizes fingerprint image parts for selection.
     void initializeFingerprintParts(int index)
     {
-        List<Sprite> imagesToShuffle = new List<Sprite>();
-
-        switch (index)
-        {
-            case 0:
-                imagesToShuffle.AddRange(new Sprite[] { fp11, fp12, fp13, fp14 });
-                break;
-            case 1:
-                imagesToShuffle.AddRange(new Sprite[] { fp21, fp22, fp23, fp24 });
-                break;
-            case 2:
-                imagesToShuffle.AddRange(new Sprite[] { fp31, fp32, fp33, fp34 });
-                break;
-            default:
-                return;
-        }
-
+        List<Sprite> imagesToShuffle = fingerprintsById[index].ToList();
         imagesToShuffle = imagesToShuffle.OrderBy(img => Random.value).ToList();
 
         part1 = new Sprite[] { imagesToShuffle[0], imagesToShuffle[2], imagesToShuffle[1], imagesToShuffle[3] };

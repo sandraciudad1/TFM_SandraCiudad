@@ -55,10 +55,10 @@ public class mission8Controller : MonoBehaviour
         playerAnim = player.GetComponent<Animator>();
         cc = player.GetComponent<CharacterController>();
         playerMov = player.GetComponent<PlayerMovement>();
-
         canvasGroup = info.GetComponent<CanvasGroup>();
         ui = playerTrigger.GetComponent<playerUI>();
         currentTime = startTime;
+        
         GameManager.GameManagerInstance.LoadProgress();
         opened = GameManager.GameManagerInstance.missionsCompleted[7];
         if (opened == 1 && !resetState)
@@ -71,61 +71,67 @@ public class mission8Controller : MonoBehaviour
     // Handles movement and controls the game's finishing sequence.
     void Update()
     {
-        if (enableControl)
-        {
-            float moveY = Input.GetAxis("Vertical") * speed * Time.deltaTime; 
-            float moveZ = -Input.GetAxis("Horizontal") * speed * Time.deltaTime; 
-            vacuumMobile.transform.position += new Vector3(0, moveY, moveZ);
-        }
+        HandleVacuumMovement();
+        HandleTimer();
+        HandleFinish();
+    }
 
+    // Moves vacuum when player has control enabled.
+    void HandleVacuumMovement()
+    {
+        if (!enableControl) return;
+
+        float moveY = Input.GetAxis("Vertical") * speed * Time.deltaTime;
+        float moveZ = -Input.GetAxis("Horizontal") * speed * Time.deltaTime;
+        vacuumMobile.transform.position += new Vector3(0, moveY, moveZ);
+    }
+
+    // Updates countdown timer and triggers effect on zero.
+    void HandleTimer()
+    {
         if (startTimer && !isRunning)
         {
             isRunning = true;
         }
 
-        if (isRunning)
+        if (!isRunning) return;
+
+        currentTime -= Time.deltaTime;
+
+        if (currentTime <= 0)
         {
-            currentTime -= Time.deltaTime;
-
-            if (currentTime <= 0)
-            {
-                currentTime = 0;
-                timerEnded();
-                isRunning = false;
-            }
-
-            int minutes = Mathf.FloorToInt(currentTime / 60);
-            int seconds = Mathf.FloorToInt(currentTime % 60);
-            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-
-            if (currentTime <= 60f)
-            {
-                timerText.color = Color.red;
-            }
-            else
-            {
-                timerText.color = Color.white;
-            }
-        }
-
-        if (finish && !exit)
-        {
-            GameManager.GameManagerInstance.LoadProgress();
-            GameManager.GameManagerInstance.missionsCompleted[7] = 1;
-            GameManager.GameManagerInstance.SaveProgress();
-            startTimer = false;
+            currentTime = 0;
+            timerEnded();
             isRunning = false;
-            timerText.gameObject.SetActive(false);
-            limits.SetActive(false);
-            screen.SetActive(false);
-            screenCode.SetActive(true);
-            vacuumMobile.SetActive(false);
-            playerMov.canMove = true;
-            cc.enabled = true;
-            SwapCameras(1, 0, 0);
-            navigationScreen.SetActive(true);
-            exit = true;
         }
+
+        int minutes = Mathf.FloorToInt(currentTime / 60);
+        int seconds = Mathf.FloorToInt(currentTime % 60);
+        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        timerText.color = currentTime <= 60f ? Color.red : Color.white;
+    }
+
+    // Finalizes mission state and resets player controls.
+    void HandleFinish()
+    {
+        if (!finish || exit) return;
+
+        GameManager.GameManagerInstance.LoadProgress();
+        GameManager.GameManagerInstance.missionsCompleted[7] = 1;
+        GameManager.GameManagerInstance.SaveProgress();
+
+        startTimer = false;
+        isRunning = false;
+        timerText.gameObject.SetActive(false);
+        limits.SetActive(false);
+        screen.SetActive(false);
+        screenCode.SetActive(true);
+        vacuumMobile.SetActive(false);
+        playerMov.canMove = true;
+        cc.enabled = true;
+        SwapCameras(1, 0, 0);
+        navigationScreen.SetActive(true);
+        exit = true;
     }
 
     // Releases particles, consuming energy and wasting oxygen.
@@ -190,7 +196,7 @@ public class mission8Controller : MonoBehaviour
             cc.enabled = false;
             player.transform.position = playerPos;
             player.transform.rotation = playerRot;
-            if (player.transform.position == playerPos && !change)
+            if (Vector3.Distance(player.transform.position, playerPos) < 0.01f && !change)
             {
                 playerAnim.SetBool("vacuum", true);
                 StartCoroutine(waitFinishAnimation());

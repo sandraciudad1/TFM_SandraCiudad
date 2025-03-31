@@ -38,22 +38,8 @@ public class mission7Controller : MonoBehaviour
     bool finish = false;
     static int objectsCollected = 0;
 
-    [SerializeField] GameObject alcohol;
-    [SerializeField] GameObject alcoholKit;
-    [SerializeField] GameObject bandAidRoll;
-    [SerializeField] GameObject bandAidRollKit;
-    [SerializeField] GameObject medicalPackage;
-    [SerializeField] GameObject medicalPackageKit;
-    [SerializeField] GameObject burnCream;
-    [SerializeField] GameObject burnCreamKit;
-    [SerializeField] GameObject oxyWater;
-    [SerializeField] GameObject oxyWaterKit;
-    [SerializeField] GameObject scissor;
-    [SerializeField] GameObject scissorkit;
-    [SerializeField] GameObject miniAidBox;
-    [SerializeField] GameObject miniAidBoxKit;
-    [SerializeField] GameObject hydroCream;
-    [SerializeField] GameObject hydroCreamKit;
+    [SerializeField] GameObject alcohol, bandAidRoll, medicalPackage, burnCream, oxyWater, scissor, miniAidBox, hydroCream;
+    [SerializeField] GameObject alcoholKit, bandAidRollKit, medicalPackageKit, burnCreamKit, oxyWaterKit, scissorkit, miniAidBoxKit, hydroCreamKit;
     GameObject[] objectsArray;
     GameObject[] objectsKitArray;
 
@@ -96,81 +82,86 @@ public class mission7Controller : MonoBehaviour
     // Checks for input and manages object collection and door code input.
     void Update()
     {
+        HandleTimer();
+        HandleDoorCodeInput();
+        HandleFinishCondition();
+    }
+
+    // Updates timer countdown and triggers effects on zero.
+    void HandleTimer()
+    {
         if (startTimer && !isRunning)
-        {
             isRunning = true;
-        }
 
-        if (isRunning)
+        if (!isRunning) return;
+
+        currentTime -= Time.deltaTime;
+
+        if (currentTime <= 0)
         {
-            currentTime -= Time.deltaTime;
-
-            if (currentTime <= 0)
-            {
-                currentTime = 0;
-                timerEnded();
-                isRunning = false;
-            }
-
-            int minutes = Mathf.FloorToInt(currentTime / 60);
-            int seconds = Mathf.FloorToInt(currentTime % 60);
-            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-
-            if (currentTime <= 60f)
-            {
-                timerText.color = Color.red;
-            }
-            else
-            {
-                timerText.color = Color.white;
-            }
-        }
-
-        if (readCode)
-        {
-            foreach (char c in Input.inputString)
-            {
-                if (char.IsDigit(c) && userInput.Length < 4)
-                {
-                    userInput += c;
-                }
-                else if (c == '\b' && userInput.Length > 0)
-                {
-                    userInput = userInput.Substring(0, userInput.Length - 1);
-                }
-                else if (c == '\n' || c == '\r')
-                {
-                    if(userInput == "5726")
-                    {
-                        doorAnimator.SetBool("open", true);
-                        doorAudio.Play();
-                        StartCoroutine(hideDoor());
-                        bg.SetActive(false);
-                        readCode = false;
-                    } 
-                    else
-                    {
-                        userInput = "";
-                    }
-                }
-            }
-            inputText.text = userInput;
-        }
-
-        if (objectsCollected >= 8 && !finish)
-        {
-            GameManager.GameManagerInstance.LoadProgress();
-            GameManager.GameManagerInstance.missionsCompleted[6] = 1;
-            GameManager.GameManagerInstance.SaveProgress();
-            startTimer = false;
+            currentTime = 0;
+            timerEnded();
             isRunning = false;
-            timerText.gameObject.SetActive(false);
-            movePlayer();
-            code.SetActive(true);
-            playerMov.canMove = true;
-            cc.enabled = true;
-            finish = true;
         }
+
+        int minutes = Mathf.FloorToInt(currentTime / 60);
+        int seconds = Mathf.FloorToInt(currentTime % 60);
+        timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        timerText.color = currentTime <= 60f ? Color.red : Color.white;
+    }
+
+    // Reads user input and opens door if code is correct.
+    void HandleDoorCodeInput()
+    {
+        if (!readCode) return;
+
+        foreach (char c in Input.inputString)
+        {
+            if (char.IsDigit(c) && userInput.Length < 4)
+            {
+                userInput += c;
+            }
+            else if (c == '\b' && userInput.Length > 0)
+            {
+                userInput = userInput[..^1];
+            }
+            else if (c == '\n' || c == '\r')
+            {
+                if (userInput == "5726")
+                {
+                    doorAnimator.SetBool("open", true);
+                    doorAudio.Play();
+                    StartCoroutine(hideDoor());
+                    bg.SetActive(false);
+                    readCode = false;
+                }
+                else
+                {
+                    userInput = "";
+                }
+            }
+        }
+
+        inputText.text = userInput;
+    }
+
+    // Checks if mission is complete and finalizes state.
+    void HandleFinishCondition()
+    {
+        if (objectsCollected < 8 || finish) return;
+
+        GameManager.GameManagerInstance.LoadProgress();
+        GameManager.GameManagerInstance.missionsCompleted[6] = 1;
+        GameManager.GameManagerInstance.SaveProgress();
+
+        startTimer = false;
+        isRunning = false;
+        timerText.gameObject.SetActive(false);
+        movePlayer();
+        code.SetActive(true);
+        playerMov.canMove = true;
+        cc.enabled = true;
+        finish = true;
     }
 
     // Restarts mission and applies heavy energy loss.
@@ -248,40 +239,23 @@ public class mission7Controller : MonoBehaviour
             }
         }
 
-        if (other.gameObject.CompareTag("emergencyKit") && canCollect && Input.GetKeyDown(KeyCode.R))
+        if (other.CompareTag("emergencyKit") && canCollect && Input.GetKeyDown(KeyCode.R))
         {
-            if (other.gameObject.name.Equals("Alcohol"))
+            string name = other.name;
+            int index = name switch
             {
-                collectObject(0);
-            }
-            else if (other.gameObject.name.Equals("BandAidRoll"))
-            {
-                collectObject(1);
-            }
-            else if (other.gameObject.name.Equals("MedicalPackage"))
-            {
-                collectObject(2);
-            }
-            else if (other.gameObject.name.Equals("BurnCream"))
-            {
-                collectObject(3);
-            }
-            else if (other.gameObject.name.Equals("OxyWater"))
-            {
-                collectObject(4);
-            }
-            else if (other.gameObject.name.Equals("Scissor1"))
-            {
-                collectObject(5);
-            }
-            else if (other.gameObject.name.Equals("MiniAidBox"))
-            {
-                collectObject(6);
-            }
-            else if (other.gameObject.name.Equals("HydroCream"))
-            {
-                collectObject(7);
-            }
+                "Alcohol" => 0,
+                "BandAidRoll" => 1,
+                "MedicalPackage" => 2,
+                "BurnCream" => 3,
+                "OxyWater" => 4,
+                "Scissor1" => 5,
+                "MiniAidBox" => 6,
+                "HydroCream" => 7,
+                _ => -1
+            };
+
+            if (index >= 0) collectObject(index);
         }
     }
 

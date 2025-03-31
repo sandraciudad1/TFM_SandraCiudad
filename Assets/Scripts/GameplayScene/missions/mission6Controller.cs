@@ -24,24 +24,18 @@ public class mission6Controller : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera vcam9;
     [SerializeField] CinemachineVirtualCamera vcam10;
 
-    [SerializeField] TextMeshProUGUI inputText1;
-    [SerializeField] TextMeshProUGUI inputText2;
-    [SerializeField] TextMeshProUGUI inputText3;
+    [SerializeField] TextMeshProUGUI inputText1, inputText2, inputText3;
     TextMeshProUGUI[] inputTexts;
-    [SerializeField] GameObject textBox1;
-    [SerializeField] GameObject textBox2;
-    [SerializeField] GameObject textBox3;
+    [SerializeField] GameObject textBox1, textBox2, textBox3;
     GameObject[] textBoxs;
 
     string userInput = "";
     string[] correctAnswers = { "C0D1GO", "PU3RT4", "5726" };
     static int wordCounter = 0;
     bool canCheck = true;
-    bool solveMission = false;
 
     [SerializeField] GameObject inventory;
     inventoryController inventoryCont;
-
     int opened;
     bool resetState = false;
 
@@ -52,7 +46,6 @@ public class mission6Controller : MonoBehaviour
         playerAnim = player.GetComponent<Animator>();
         cc = player.GetComponent<CharacterController>();
         playerMov = player.GetComponent<PlayerMovement>();
-
         inputTexts = new TextMeshProUGUI[] { inputText1, inputText2, inputText3 };
         textBoxs = new GameObject[] { textBox1, textBox2, textBox3 };
         inventoryCont = inventory.GetComponent<inventoryController>();
@@ -69,41 +62,48 @@ public class mission6Controller : MonoBehaviour
     // Checks input and manages word validation and movement restrictions.
     void Update()
     {
-        if (wordCounter >= 3)
+        HandleInput();
+        HandleMissionCompletion();
+    }
+
+    // Handles keyboard input and updates answer field.
+    void HandleInput()
+    {
+        if (!change || !canCheck) return;
+
+        foreach (char c in Input.inputString)
         {
-            GameManager.GameManagerInstance.LoadProgress();
-            GameManager.GameManagerInstance.missionsCompleted[5] = 1;
-            GameManager.GameManagerInstance.SaveProgress();
-            solveMission = true;
-            canCheck = false;
-            SwapCameras(1, 0, 0);
-            player.transform.position = endPosition;
-            inventoryCont.blockInventory = false;
-            playerMov.canMove = true;
-            cc.enabled = true;
-            for(int i = 0; i < textBoxs.Length; i++)
-            {
-                textBoxs[i].SetActive(false);
-            }
+            if (c != '\b') userInput += c;
         }
 
-        if (change && canCheck)
+        if (Input.GetKeyDown(KeyCode.Backspace) && userInput.Length > 0)
         {
-            foreach (char c in Input.inputString)
-            {
-                if (c != '\b') 
-                {
-                    userInput += c;
-                }
-            }
+            userInput = userInput[..^1];
+        }
 
-            if (Input.GetKeyDown(KeyCode.Backspace) && userInput.Length > 0)
-            {
-                userInput = userInput.Substring(0, userInput.Length - 1);
-            }
+        inputTexts[wordCounter].text = userInput;
+        checkAnswer(userInput);
+    }
 
-            inputTexts[wordCounter].text = userInput;
-            checkAnswer(userInput);
+    // Completes mission when all answers are correct.
+    void HandleMissionCompletion()
+    {
+        if (wordCounter < 3) return;
+
+        GameManager.GameManagerInstance.LoadProgress();
+        GameManager.GameManagerInstance.missionsCompleted[5] = 1;
+        GameManager.GameManagerInstance.SaveProgress();
+
+        canCheck = false;
+        SwapCameras(1, 0, 0);
+        player.transform.position = endPosition;
+        inventoryCont.blockInventory = false;
+        playerMov.canMove = true;
+        cc.enabled = true;
+
+        foreach (var box in textBoxs)
+        {
+            box.SetActive(false);
         }
     }
 
@@ -160,7 +160,7 @@ public class mission6Controller : MonoBehaviour
             cc.enabled = false;
             player.transform.position = playerPos;
             player.transform.rotation = playerRot;
-            if (player.transform.position == playerPos && !change)
+            if (Vector3.Distance(player.transform.position, playerPos) < 0.01f && !change)
             {
                 inventoryCont.blockInventory = true;
                 playerAnim.SetBool("clipboard", true);
