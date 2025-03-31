@@ -110,10 +110,15 @@ public class ResetState : MonoBehaviour
 
     GameObject[] crates;
     Animator[] crateAnims;
+    Light[] lights;
+    GameObject[] dirtObjects;
 
     // Initializes inventory and updates unlocked objects and records.
     void Start()
     {
+        lights = FindObjectsOfType<Light>();
+        dirtObjects = GameObject.FindGameObjectsWithTag("dirt");
+
         crates = new GameObject[] { crate1, crate2, crate3, crate4, crate5, crate6, crate7, crate8, crate9, crate10, metallicDoor, observationDoor, labDoor, verticalExitDoor, scifiCrate, verticalDoor, kit };
 
         GameManager.GameManagerInstance.LoadProgress();
@@ -174,7 +179,6 @@ public class ResetState : MonoBehaviour
                 code1.Play();
                 crateAnims[10].SetBool("open", true);
                 crateAnims[11].SetBool("open", true);
-                Light[] lights = FindObjectsOfType<Light>();
                 foreach (Light light in lights)
                 {
                     light.gameObject.SetActive(true);
@@ -203,7 +207,7 @@ public class ResetState : MonoBehaviour
                 securityCard.SetActive(false);
                 code4.SetActive(true);
                 crateAnims[12].SetBool("open", true);
-                mision5.initializeAlarms();
+                mision5.InitializeAlarms();
                 break;
             case 4:
                 wireCutters.SetActive(false);
@@ -231,7 +235,6 @@ public class ResetState : MonoBehaviour
                 break;
             case 7:
                 vacuum.SetActive(false);
-                GameObject[] dirtObjects = GameObject.FindGameObjectsWithTag("dirt");
                 foreach (GameObject dirt in dirtObjects)
                 {
                     dirt.SetActive(false);

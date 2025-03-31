@@ -180,6 +180,7 @@ public class mission10Controller : MonoBehaviour
         scifiCrateAnim.SetBool("move", true);
         doorAudio.Play();
         finish = true;
+        this.enabled = false;
     }
 
     // Resets fingerprint detection values.

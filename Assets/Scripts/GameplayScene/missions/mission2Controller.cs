@@ -138,6 +138,7 @@ public class mission2Controller : MonoBehaviour
             unknownSamples.gameObject.SetActive(true);
             unknownSamples.Play();
             waitingVideo.SetActive(false);
+            this.enabled = false;
         }
     }
 
@@ -279,30 +280,15 @@ public class mission2Controller : MonoBehaviour
     // Marks a sample as analyzed and hides it.
     void hideSample()
     {
+        int index = actualSample - 1;
         GameManager.GameManagerInstance.LoadProgress();
-        if (actualSample == 1)
+        GameManager.GameManagerInstance.SetArrayUnlocked("samples", index, 1);
+        GameManager.GameManagerInstance.SaveProgress();
+
+        GameObject[] samples = { sample1, sample2, sample3, sample4 };
+        if (index >= 0 && index < samples.Length)
         {
-            GameManager.GameManagerInstance.SetArrayUnlocked("samples", 0, 1);
-            GameManager.GameManagerInstance.SaveProgress();
-            sample1.SetActive(false);
-        } 
-        else if (actualSample == 2)
-        {
-            GameManager.GameManagerInstance.SetArrayUnlocked("samples", 1, 1);
-            GameManager.GameManagerInstance.SaveProgress();
-            sample2.SetActive(false);
-        } 
-        else if (actualSample == 3) 
-        {
-            GameManager.GameManagerInstance.SetArrayUnlocked("samples", 2, 1);
-            GameManager.GameManagerInstance.SaveProgress();
-            sample3.SetActive(false);
-        }
-        else if (actualSample == 4)
-        {
-            GameManager.GameManagerInstance.SetArrayUnlocked("samples", 3, 1);
-            GameManager.GameManagerInstance.SaveProgress();
-            sample4.SetActive(false);
+            samples[index].SetActive(false);
         }
     }
 
@@ -326,39 +312,27 @@ public class mission2Controller : MonoBehaviour
     // Increases the analyzed sample counter and updates UI.
     void incrementSamplesCounter()
     {
-        GameManager.GameManagerInstance.LoadProgress();
-        GameManager.GameManagerInstance.samplesCounter++;
-        GameManager.GameManagerInstance.SaveProgress();
-
-        GameManager.GameManagerInstance.LoadProgress();
-        counterAnalyzer.text = GameManager.GameManagerInstance.samplesCounter.ToString() + "/4";
-        linelBar.fillAmount = (float)GameManager.GameManagerInstance.samplesCounter / 4;
+        var gm = GameManager.GameManagerInstance;
+        gm.samplesCounter++;
+        gm.SaveProgress();
+        gm.LoadProgress();
+        counterAnalyzer.text = gm.samplesCounter.ToString() + "/4";
+        linelBar.fillAmount = (float)gm.samplesCounter / 4;
     }
 
     // Returns the currently active sample.
     int sampleActive()
     {
-        if(sample1.activeInHierarchy)
-        {   
-            actualSample = 1;
-            return 1;
-        } 
-        else if(sample2.activeInHierarchy)
+        GameObject[] samples = { sample1, sample2, sample3, sample4 };
+        for (int i = 0; i < samples.Length; i++)
         {
-            actualSample = 2;
-            return 2;
+            if (samples[i].activeInHierarchy)
+            {
+                actualSample = i + 1;
+                return actualSample;
+            }
         }
-        else if (sample3.activeInHierarchy)
-        {
-            actualSample = 3;
-            return 3;
-        }
-        else if (sample4.activeInHierarchy)
-        {
-            actualSample = 4;
-            return 4;
-        } 
-        else { return -1; }
+        return -1;
     }
 
     // Swap between virtual cameras.

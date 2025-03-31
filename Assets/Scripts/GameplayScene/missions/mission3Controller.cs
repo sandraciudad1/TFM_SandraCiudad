@@ -37,11 +37,7 @@ public class mission3Controller : MonoBehaviour
     static float counter = 3;
     int solved = 0;
 
-    [SerializeField] GameObject smoke1;
-    [SerializeField] GameObject smoke2;
-    [SerializeField] GameObject smoke3;
-    [SerializeField] GameObject smoke4;
-
+    [SerializeField] GameObject smoke1, smoke2, smoke3, smoke4;
     [SerializeField] GameObject code3;
     [SerializeField] GameObject spaceKeyInfo;
     CanvasGroup canvasGroup;
@@ -100,49 +96,53 @@ public class mission3Controller : MonoBehaviour
             }
         }
 
-        if (solved == 1 && !updatePos && !stopped)
+        if (!updatePos)
         {
-            player.transform.position = secondPos;
-            SwapCameras(0, 0, 1, 0);
-            start = true;
-            updatePos = true;
-        } 
-        else if (solved == 2 && !updatePos)
-        {
-            player.transform.position = thirdPos;
-            SwapCameras(0, 0, 0, 1);
-            start = true;
-            updatePos = true;
-        } 
-        else if (solved == 3 && !updatePos)
-        {
-            spannerwrench.SetActive(false);
-            GameManager.GameManagerInstance.LoadProgress();
-            GameManager.GameManagerInstance.missionsCompleted[2] = 1;
-            GameManager.GameManagerInstance.SaveProgress();
-            gradientBg.SetActive(false);
-            code3.SetActive(true);
-            SwapCameras(1, 0, 0, 0);
-            playerMov.canMove = true;
-            cc.enabled = true;
-            updatePos = true;
+            if (solved == 1 && !stopped)
+            {
+                player.transform.position = secondPos;
+                SwapCameras(0, 0, 1, 0);
+                start = true;
+                updatePos = true;
+            }
+            else if (solved == 2)
+            {
+                player.transform.position = thirdPos;
+                SwapCameras(0, 0, 0, 1);
+                start = true;
+                updatePos = true;
+            }
+            else if (solved == 3)
+            {
+                spannerwrench.SetActive(false);
+                GameManager.GameManagerInstance.LoadProgress();
+                GameManager.GameManagerInstance.missionsCompleted[2] = 1;
+                GameManager.GameManagerInstance.SaveProgress();
+                gradientBg.SetActive(false);
+                code3.SetActive(true);
+                SwapCameras(1, 0, 0, 0);
+                playerMov.canMove = true;
+                cc.enabled = true;
+                updatePos = true;
+                this.enabled = false;
+            }
         }
     }
 
     // Recalculates player position based on solved state.
     void recalculatePlayerPos()
     {
-        if (solved == 0)
+        switch (solved)
         {
-            player.transform.position = firstPos;
-        } 
-        else if (solved == 1)
-        {
-            player.transform.position = secondPos;
-        } 
-        else if (solved == 2)
-        {
-            player.transform.position = thirdPos;
+            case 0:
+                player.transform.position = firstPos;
+                break;
+            case 1:
+                player.transform.position = secondPos;
+                break;
+            case 2:
+                player.transform.position = thirdPos;
+                break;
         }
     }
 
@@ -189,20 +189,21 @@ public class mission3Controller : MonoBehaviour
     // Updates smoke effect based on the value passed.
     void updateSmoke(float value)
     {
+        Vector3 newPosition = new Vector3(value, value, value);
         playerAnim.SetBool("wrench", true);
         StartCoroutine(waitUntilFinishAnim());
         if (solved == 0)
         {
-            smoke1.transform.localScale -= new Vector3(value, value, value);
+            smoke1.transform.localScale -= newPosition;
         } 
         else if (solved == 1)
         {
-            smoke2.transform.localScale -= new Vector3(value, value, value);
-            smoke3.transform.localScale -= new Vector3(value, value, value);
+            smoke2.transform.localScale -= newPosition;
+            smoke3.transform.localScale -= newPosition;
         } 
         else if (solved == 2)
         {
-            smoke4.transform.localScale -= new Vector3(value, value, value);
+            smoke4.transform.localScale -= newPosition;
         }
     }
 
@@ -226,18 +227,10 @@ public class mission3Controller : MonoBehaviour
     {
         float step = flechaSpeed * Time.deltaTime;
 
-        if (movingRight)
-        {
-            arrow.anchoredPosition += new Vector2(step, 0);
-            if (arrow.anchoredPosition.x >= maxX)
-                movingRight = false;
-        }
-        else
-        {
-            arrow.anchoredPosition -= new Vector2(step, 0);
-            if (arrow.anchoredPosition.x <= minX)
-                movingRight = true;
-        }
+        arrow.anchoredPosition += movingRight ? new Vector2(step, 0) : new Vector2(-step, 0);
+
+        if (arrow.anchoredPosition.x >= maxX) movingRight = false;
+        else if (arrow.anchoredPosition.x <= minX) movingRight = true;
     }
 
     // Resets values and stops game actions.
@@ -284,7 +277,7 @@ public class mission3Controller : MonoBehaviour
             cc.enabled = false;
             player.transform.position = firstPos;
             player.transform.rotation = playerRot;
-            if (player.transform.position == firstPos && !change)
+            if (Vector3.Distance(player.transform.position, firstPos) < 0.01f && !change)
             {
                 gradientBg.SetActive(true);
                 start = true;

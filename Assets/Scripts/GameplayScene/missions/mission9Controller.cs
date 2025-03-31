@@ -70,6 +70,7 @@ public class mission9Controller : MonoBehaviour
         playerMov.canMove = true;
         cc.enabled = true;
         finish = true;
+        this.enabled = false;
     }
 
     // Shows 'X' when leaving grids.  

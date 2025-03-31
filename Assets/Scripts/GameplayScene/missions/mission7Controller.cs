@@ -162,6 +162,7 @@ public class mission7Controller : MonoBehaviour
         playerMov.canMove = true;
         cc.enabled = true;
         finish = true;
+        this.enabled = false;
     }
 
     // Restarts mission and applies heavy energy loss.

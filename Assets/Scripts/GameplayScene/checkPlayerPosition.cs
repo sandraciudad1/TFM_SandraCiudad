@@ -64,6 +64,7 @@ public class checkPlayerPosition : MonoBehaviour
     {
         if (other.gameObject.CompareTag("position"))
         {
+            //enable and disable scripts
             var gm = GameManager.GameManagerInstance;
             gm.LoadProgress();
             gm.triggerPassed++;

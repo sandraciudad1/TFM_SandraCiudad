@@ -105,6 +105,8 @@ public class mission6Controller : MonoBehaviour
         {
             box.SetActive(false);
         }
+        //habilitar 7
+        this.enabled = false;
     }
 
     // Enables the text box for the next input.

@@ -91,6 +91,7 @@ public class mission4Controller : MonoBehaviour
             audioDoor.Play();
             mision5.InitializeAlarms();
             hasFinish = true;
+            this.enabled = false;
         }
     }
 

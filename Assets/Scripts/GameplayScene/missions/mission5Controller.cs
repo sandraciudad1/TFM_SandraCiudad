@@ -48,6 +48,8 @@ public class mission5Controller : MonoBehaviour
     int opened;
     bool resetState = false;
 
+    Light[] lights;
+
     // Initializes variables and resets cable colors. 
     void Start()
     {
@@ -74,6 +76,7 @@ public class mission5Controller : MonoBehaviour
             letterX.gameObject.SetActive(false);
             resetState = true;
         }
+        lights = FindObjectsOfType<Light>();
     }
 
     // Manages game state and updates player position and UI.
@@ -224,7 +227,6 @@ public class mission5Controller : MonoBehaviour
     // Adjust lights intensity and alarm lights state
     void lightInteraction(bool active)
     {
-        Light[] lights = FindObjectsOfType<Light>();
         foreach (Light light in lights)
         {
             if (!active)

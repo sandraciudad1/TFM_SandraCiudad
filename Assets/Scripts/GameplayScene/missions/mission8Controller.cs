@@ -132,6 +132,7 @@ public class mission8Controller : MonoBehaviour
         SwapCameras(1, 0, 0);
         navigationScreen.SetActive(true);
         exit = true;
+        this.enabled = false;
     }
 
     // Releases particles, consuming energy and wasting oxygen.

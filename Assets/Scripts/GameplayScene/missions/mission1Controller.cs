@@ -22,12 +22,7 @@ public class mission1Controller : MonoBehaviour
     float rotationSpeed = 100f;
     float rotationLerpTime = 0f;
 
-    [SerializeField] GameObject btn0;
-    [SerializeField] GameObject btn1;
-    [SerializeField] GameObject btn2;
-    [SerializeField] GameObject btn3;
-    [SerializeField] GameObject btn4;
-    [SerializeField] GameObject btn5;
+    [SerializeField] GameObject btn0, btn1, btn2, btn3, btn4, btn5;
     GameObject[] buttons;
 
     [SerializeField] CinemachineVirtualCamera vcam1;
@@ -46,6 +41,10 @@ public class mission1Controller : MonoBehaviour
     [SerializeField] AudioSource effectsAudio;
     [SerializeField] AudioClip sparks;
 
+    Light[] lights;
+    Vector3 position = new Vector3(151.34f, 25.74532f, 55.18f);
+    Quaternion rotation = Quaternion.Euler(0, -180, 0);
+
     // Initializes variables and sets up the button states.
     void Start()
     {
@@ -62,20 +61,20 @@ public class mission1Controller : MonoBehaviour
         }
         observationDoorAnim = observationDoor.GetComponent<Animator>();
         audioDoor = observationDoor.GetComponent<AudioSource>();
+        lights = FindObjectsOfType<Light>();
     }
 
     // Checks for player interaction with the switchboard.
     void Update()
     {
-        if (doorController != null && doorController.swichtInteraction)
+        if (!doorController.swichtInteraction) return;
+
+        if (!lockMov)
         {
-            if (!lockMov)
-            {
-                lockPlayerMov();
-            }
-            checkButtons();
-            checkFailCondition();
+            lockPlayerMov();
         }
+        checkButtons();
+        checkFailCondition();
     }
 
     // Checks key presses and applies damage if threshold passed.
@@ -150,8 +149,8 @@ public class mission1Controller : MonoBehaviour
             cc.enabled = false; 
         }
         SwapCameras(0, 1);
-        player.transform.position = new Vector3(151.34f, 25.74532f, 55.18f);
-        player.transform.rotation = Quaternion.Euler(0, -180, 0);
+        player.transform.position = position;
+        player.transform.rotation = rotation;
         lockMov = true;
     }
 
@@ -245,7 +244,6 @@ public class mission1Controller : MonoBehaviour
     // Activates all light objects in the scene.
     void ActivateAllLights()
     {
-        Light[] lights = Resources.FindObjectsOfTypeAll<Light>();
         foreach (Light light in lights)
         {
             light.gameObject.SetActive(true); 
@@ -258,5 +256,6 @@ public class mission1Controller : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         SwapCameras(1, 0);
         playerMov.canMove = true;
+        this.enabled = false;
     }
 }
