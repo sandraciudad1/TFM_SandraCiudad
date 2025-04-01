@@ -27,6 +27,19 @@ public class checkPlayerPosition : MonoBehaviour
     [SerializeField] GameObject storeTrigger;
     [SerializeField] GameObject techTrigger;
     GameObject[] triggers;
+    static int triggerAmount;
+
+    // scripts
+    MonoBehaviour mission1, mission2, mission3, mission4, mission5, mission6, mission7, mission8, mission9, mission10;
+    MonoBehaviour camera18, fpDetector, puzzleCont, vacuumDetector;
+    MonoBehaviour[] scriptControllers;
+
+    // objects
+    [SerializeField] GameObject mission1Obj;
+    [SerializeField] GameObject vcam18;
+    [SerializeField] GameObject spotLight;
+    [SerializeField] GameObject puzzle;
+    [SerializeField] GameObject vacuum;
 
     // Initializes components and sets player position from saved data.
     void Start()
@@ -37,12 +50,35 @@ public class checkPlayerPosition : MonoBehaviour
         playerPositions = new Vector3[] { observationPos, laboratoryPos, alarmsPos, storePos, technologyPos };
         playerRotations = new Quaternion[] { observationRot, laboratoryRot, alarmsRot, storeRot, technologyRot };
         triggers = new GameObject[] { labTrigger, alarmsTrigger, storeTrigger, techTrigger };
-        
+        initializeScripts();
+
         GameManager.GameManagerInstance.LoadProgress();
         var gm = GameManager.GameManagerInstance;
         int index = gm.triggerPassed;
+        triggerAmount = index;
         setTriggerState(index);
         setPlayerPosRot(index);
+        manageScripts();
+    }
+
+    void initializeScripts()
+    {
+        mission1 = mission1Obj.GetComponent<mission1Controller>();
+        mission2 = GetComponent<mission2Controller>();
+        mission3 = GetComponent<mission3Controller>();
+        mission4 = GetComponent<mission4Controller>();
+        mission5 = GetComponent<mission5Controller>();
+        mission6 = GetComponent<mission6Controller>();
+        mission7 = GetComponent<mission7Controller>();
+        mission8 = GetComponent<mission8Controller>();
+        mission9 = GetComponent<mission9Controller>();
+        mission10 = GetComponent<mission10Controller>();
+        camera18 = vcam18.GetComponent<camera18Controller>();
+        fpDetector = spotLight.GetComponent<fingerprintDetector>();
+        puzzleCont = puzzle.GetComponent<puzzleController>();
+        vacuumDetector = vacuum.GetComponent<vacuumTriggerDetector>();
+        scriptControllers = new MonoBehaviour[] { mission1, mission2, mission3, mission4, mission5, mission6, mission7, mission8,
+                                                  mission9, mission10, camera18, fpDetector, puzzleCont, vacuumDetector }; 
     }
 
     // Sets player position and rotation, disables movement during transition.
@@ -62,14 +98,65 @@ public class checkPlayerPosition : MonoBehaviour
     // Handles trigger activation and updates saved progress.
     private void OnTriggerEnter(Collider other)
     {
+        if(triggerAmount >= 4) return;
+
         if (other.gameObject.CompareTag("position"))
         {
             //enable and disable scripts
             var gm = GameManager.GameManagerInstance;
             gm.LoadProgress();
             gm.triggerPassed++;
+            triggerAmount++;
             gm.SaveProgress();
             other.gameObject.SetActive(false);
+            manageScripts();
+        }
+    }
+
+    void manageScripts()
+    {
+        for(int i = 0; i < scriptControllers.Length; i++)
+        {
+            scriptControllers[i].enabled = false;
+        }
+        if (triggerAmount == 0) // si no ha pasado ningun trigger
+        {
+            mission1.enabled = true;
+        } else if (triggerAmount == 1)
+        {
+            mission2.enabled = true;
+            mission3.enabled = true;
+            mission4.enabled = true;
+        } 
+        else if (triggerAmount == 2)
+        {
+            mission5.enabled = true;
+        } 
+        else if (triggerAmount == 3)
+        {
+            mission6.enabled = true;
+            mission7.enabled = true;
+        }
+        else if (triggerAmount == 4)
+        {
+            mission8.enabled = true;
+            vacuumDetector.enabled = true;
+            mission9.enabled = true;
+            puzzleCont.enabled = true;
+            mission10.enabled = true;
+            camera18.enabled = true;
+            fpDetector.enabled = true;
+        }
+
+        for (int i = 0; i < scriptControllers.Length; i++)
+        {
+            if (scriptControllers[i].enabled)
+            {
+                Debug.Log(i + " habilitado");
+            }
+            {
+                Debug.Log(i+ " deshabilitado");
+            }
         }
     }
 
