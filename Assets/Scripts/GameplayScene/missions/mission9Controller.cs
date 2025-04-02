@@ -32,6 +32,7 @@ public class mission9Controller : MonoBehaviour
 
     int opened;
     bool resetState = false;
+    bool enableCapture = false;
 
     // Initializes components and sets up initial camera view.
     void Start()
@@ -57,6 +58,27 @@ public class mission9Controller : MonoBehaviour
     {
         if (!finishGame || finish) return;
         CompleteMission();
+        manageKeyPressed();
+    }
+
+    // Starts compass interaction when 'X' is pressed.
+    void manageKeyPressed()
+    {
+        if (enableCapture && compass.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        {
+            letterX.SetActive(false);
+            SwapCameras(0, 1, 0);
+            playerMov.canMove = false;
+            cc.enabled = false;
+            player.transform.position = playerPos;
+            player.transform.rotation = playerRot;
+            if (Vector3.Distance(player.transform.position, playerPos) < 0.01f && !change)
+            {
+                playerAnim.SetBool("compass", true);
+                StartCoroutine(waitUntilFinish());
+                change = true;
+            }
+        }
     }
 
     // Finalizes mission, unlocks player and sets completion state.
@@ -81,6 +103,7 @@ public class mission9Controller : MonoBehaviour
         if (other.gameObject.CompareTag("console") && opened == 0)
         {
             letterX.SetActive(true);
+            enableCapture = true;
         }
     }
 
@@ -90,28 +113,6 @@ public class mission9Controller : MonoBehaviour
         if (other.gameObject.CompareTag("console"))
         {
             letterX.SetActive(false);
-        }
-    }
-
-    // Detects continuous presence in a trigger area.  
-    private void OnTriggerStay(Collider other)
-    {
-        GameManager.GameManagerInstance.LoadProgress();
-        opened = GameManager.GameManagerInstance.missionsCompleted[8];
-        if (other.gameObject.CompareTag("console") && compass.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
-        {
-            letterX.SetActive(false);
-            SwapCameras(0, 1, 0);
-            playerMov.canMove = false;
-            cc.enabled = false;
-            player.transform.position = playerPos;
-            player.transform.rotation = playerRot;
-            if (Vector3.Distance(player.transform.position, playerPos) < 0.01f && !change)
-            {
-                playerAnim.SetBool("compass", true);
-                StartCoroutine(waitUntilFinish());
-                change = true;
-            }
         }
     }
 

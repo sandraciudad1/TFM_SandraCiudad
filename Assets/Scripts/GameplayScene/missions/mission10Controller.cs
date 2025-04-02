@@ -73,6 +73,7 @@ public class mission10Controller : MonoBehaviour
     playerUI ui;
     int opened;
     bool resetState = false;
+    bool enableCapture = false;
 
     // Initializes variables and assigns components.
     void Start()
@@ -130,6 +131,28 @@ public class mission10Controller : MonoBehaviour
             {
                 checkKeyPressed();
                 checkCorrectAnswer();
+            }
+        }
+        manageKeyPressed();
+    }
+
+    // Starts UV light interaction when 'X' is pressed.
+    void manageKeyPressed()
+    {
+        if (enableCapture && uvLight.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        {
+            letterX.SetActive(false);
+            SwapCameras(0, 1, 0, 0);
+            playerMov.canMove = false;
+            cc.enabled = false;
+            player.transform.position = firstPos;
+            player.transform.rotation = playerRot;
+            if (player.transform.position == firstPos && !change)
+            {
+                StartCoroutine(waitToShow());
+                playerAnim.SetBool("uvLight", true);
+                StartCoroutine(waitFinishAnimation());
+                change = true;
             }
         }
     }
@@ -300,6 +323,7 @@ public class mission10Controller : MonoBehaviour
         if (other.gameObject.CompareTag("fpDetector") && opened == 0)
         {
             letterX.SetActive(true);
+            enableCapture = true;
         }
     }
 
@@ -309,29 +333,6 @@ public class mission10Controller : MonoBehaviour
         if (other.gameObject.CompareTag("fpDetector"))
         {
             letterX.SetActive(false);
-        }
-    }
-
-    // Detects continuous presence in a trigger area.  
-    private void OnTriggerStay(Collider other)
-    {
-        GameManager.GameManagerInstance.LoadProgress();
-        opened = GameManager.GameManagerInstance.missionsCompleted[9];
-        if (other.gameObject.CompareTag("fpDetector") && uvLight.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
-        {
-            letterX.SetActive(false);
-            SwapCameras(0, 1, 0, 0);
-            playerMov.canMove = false;
-            cc.enabled = false;
-            player.transform.position = firstPos;
-            player.transform.rotation = playerRot;
-            if (player.transform.position == firstPos && !change)
-            {
-                StartCoroutine(waitToShow());
-                playerAnim.SetBool("uvLight", true);
-                StartCoroutine(waitFinishAnimation());
-                change = true;
-            }
         }
     }
 

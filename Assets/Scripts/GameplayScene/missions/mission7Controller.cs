@@ -52,6 +52,7 @@ public class mission7Controller : MonoBehaviour
     bool startTimer = false, isRunning = false;
     int opened;
     bool resetState = false;
+    bool enableCapture = false;
 
     // Initializes references and sets up objects at the start of the game.
     void Start()
@@ -85,6 +86,27 @@ public class mission7Controller : MonoBehaviour
         HandleTimer();
         HandleDoorCodeInput();
         HandleFinishCondition();
+        manageKeyPressed();
+    }
+
+    // Starts kit interaction and timer when 'X' is pressed.
+    void manageKeyPressed()
+    {
+        if (enableCapture && emergencyKit.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        {
+            startTimer = true;
+            timerText.gameObject.SetActive(true);
+            timerText.text = "05:00";
+            letterX.SetActive(false);
+            movePlayer();
+            if (player.transform.position == playerPos && !change)
+            {
+                SwapCameras(0, 1);
+                playerAnim.SetBool("kit", true);
+                StartCoroutine(waitFinishAnim());
+                change = true;
+            }
+        }
     }
 
     // Updates timer countdown and triggers effects on zero.
@@ -220,24 +242,6 @@ public class mission7Controller : MonoBehaviour
         {
             bg.SetActive(true);
             readCode = true;            
-        }
-
-        GameManager.GameManagerInstance.LoadProgress();
-        opened = GameManager.GameManagerInstance.missionsCompleted[6];
-        if (other.gameObject.CompareTag("kit") && emergencyKit.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
-        {
-            startTimer = true;
-            timerText.gameObject.SetActive(true);
-            timerText.text = "05:00";
-            letterX.SetActive(false);
-            movePlayer();
-            if (player.transform.position == playerPos && !change)
-            {
-                SwapCameras(0, 1);
-                playerAnim.SetBool("kit", true);
-                StartCoroutine(waitFinishAnim());
-                change = true;
-            }
         }
 
         if (other.CompareTag("emergencyKit") && canCollect && Input.GetKeyDown(KeyCode.R))

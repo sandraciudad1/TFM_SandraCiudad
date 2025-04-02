@@ -44,6 +44,7 @@ public class mission4Controller : MonoBehaviour
     playerUI ui;
     int opened;
     bool resetState = false;
+    bool enableCapture = false;
 
     // Initializes components and sets up the game state.
     void Start()
@@ -69,14 +70,20 @@ public class mission4Controller : MonoBehaviour
         }
     }
 
-    // Checks user input and triggers mission completion events.
+    // Handles sequence input, key press, and mission ending.
     void Update()
     {
         if (readSequence)
         {
             readUserInput();
         }
+        manageKeyPressed();
+        manageFinal();
+    }
 
+    // Ends mission and triggers final events if input is complete.
+    void manageFinal()
+    {
         if (charCounter > 5 && !hasFinish)
         {
             GameManager.GameManagerInstance.LoadProgress();
@@ -92,6 +99,26 @@ public class mission4Controller : MonoBehaviour
             mision5.InitializeAlarms();
             hasFinish = true;
             this.enabled = false;
+        }
+    }
+
+    // Starts interaction when 'X' is pressed near security card.
+    void manageKeyPressed()
+    {
+        if (enableCapture && securityCard.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        {
+            letterX.SetActive(false);
+            SwapCameras(0, 1);
+            playerMov.canMove = false;
+            cc.enabled = false;
+            player.transform.position = playerPos;
+            player.transform.rotation = playerRot;
+            if (Vector3.Distance(player.transform.position, playerPos) < 0.01f && !change)
+            {
+                playerAnim.SetBool("securityCard", true);
+                StartCoroutine(showVideos());
+                change = true;
+            }
         }
     }
 
@@ -152,6 +179,7 @@ public class mission4Controller : MonoBehaviour
         if (other.gameObject.CompareTag("scifi_terminal") && opened == 0)
         {
             letterX.SetActive(true);
+            enableCapture = true;
         }
     }
 
@@ -161,28 +189,6 @@ public class mission4Controller : MonoBehaviour
         if (other.gameObject.CompareTag("scifi_terminal"))
         {
             letterX.SetActive(false);
-        }
-    }
-
-    // Manages actions when staying near scifi terminal.
-    private void OnTriggerStay(Collider other)
-    {
-        GameManager.GameManagerInstance.LoadProgress();
-        opened = GameManager.GameManagerInstance.missionsCompleted[3];
-        if (other.gameObject.CompareTag("scifi_terminal") && securityCard.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
-        {
-            letterX.SetActive(false);
-            SwapCameras(0, 1);
-            playerMov.canMove = false;
-            cc.enabled = false;
-            player.transform.position = playerPos;
-            player.transform.rotation = playerRot;
-            if (Vector3.Distance(player.transform.position, playerPos) < 0.01f && !change)
-            {
-                playerAnim.SetBool("securityCard", true);
-                StartCoroutine(showVideos());
-                change = true;
-            }
         }
     }
 

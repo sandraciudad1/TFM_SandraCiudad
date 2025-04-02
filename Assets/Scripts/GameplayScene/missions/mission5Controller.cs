@@ -41,14 +41,14 @@ public class mission5Controller : MonoBehaviour
     bool finish = false;
     bool isShowing = false;
 
+    Light[] lights;
     [SerializeField] AudioSource alarmSound;
     float sound = 0;
     [SerializeField] GameObject playerTrigger;
     playerUI ui;
     int opened;
     bool resetState = false;
-
-    Light[] lights;
+    bool enableCapture = false;
 
     // Initializes variables and resets cable colors. 
     void Start()
@@ -79,8 +79,19 @@ public class mission5Controller : MonoBehaviour
         lights = FindObjectsOfType<Light>();
     }
 
-    // Manages game state and updates player position and UI.
+    // Manages cables, key input, and shows final code.
     void Update()
+    {
+        manageCableCounter();
+        manageKeyPressed();
+        if (finish && !isShowing)
+        {
+            StartCoroutine(showPinCode());
+        }
+    }
+
+    // Updates progress and ends mission when all cables are cut.
+    void manageCableCounter()
     {
         if (cableCounter >= 0 && cableCounter <= 3)
         {
@@ -103,10 +114,26 @@ public class mission5Controller : MonoBehaviour
             cc.enabled = true;
             finish = true;
         }
+    }
 
-        if (finish && !isShowing)
+    // Starts wire cutting when 'X' is pressed near cutters.
+    void manageKeyPressed()
+    {
+        if (enableCapture && wireCutters.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
         {
-            StartCoroutine(showPinCode());
+            letterX.SetActive(false);
+            SwapCameras(0, 1);
+            playerMov.canMove = false;
+            cc.enabled = false;
+            player.transform.position = playerPos;
+            player.transform.rotation = playerRot;
+            if (player.transform.position == playerPos && !change)
+            {
+                StartCoroutine(waitToShow());
+                playerAnim.SetBool("wireCutters", true);
+                StartCoroutine(waitUntilMove());
+                change = true;
+            }
         }
     }
 
@@ -221,6 +248,7 @@ public class mission5Controller : MonoBehaviour
         if (other.gameObject.CompareTag("securitySystem") && opened == 0)
         {
             letterX.SetActive(true);
+            enableCapture = true;
         }
     }
 
@@ -252,29 +280,6 @@ public class mission5Controller : MonoBehaviour
         if (other.gameObject.CompareTag("securitySystem"))
         {
             letterX.SetActive(false);
-        }
-    }
-
-    // Detects continuous presence in a trigger area.  
-    private void OnTriggerStay(Collider other)
-    {
-        GameManager.GameManagerInstance.LoadProgress();
-        opened = GameManager.GameManagerInstance.missionsCompleted[4];
-        if (other.gameObject.CompareTag("securitySystem") && wireCutters.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
-        {
-            letterX.SetActive(false);
-            SwapCameras(0, 1);
-            playerMov.canMove = false;
-            cc.enabled = false;
-            player.transform.position = playerPos;
-            player.transform.rotation = playerRot;
-            if (player.transform.position == playerPos && !change)
-            {
-                StartCoroutine(waitToShow());
-                playerAnim.SetBool("wireCutters", true);
-                StartCoroutine(waitUntilMove());
-                change = true;
-            }
         }
     }
 

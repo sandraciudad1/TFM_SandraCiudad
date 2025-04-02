@@ -38,6 +38,7 @@ public class mission6Controller : MonoBehaviour
     inventoryController inventoryCont;
     int opened;
     bool resetState = false;
+    bool enableCapture = false;
 
     // Initializes references and sets up objects at the start of the game.
     void Start()
@@ -64,6 +65,7 @@ public class mission6Controller : MonoBehaviour
     {
         HandleInput();
         HandleMissionCompletion();
+        manageKeyPressed();
     }
 
     // Handles keyboard input and updates answer field.
@@ -105,8 +107,29 @@ public class mission6Controller : MonoBehaviour
         {
             box.SetActive(false);
         }
-        //habilitar 7
         this.enabled = false;
+    }
+
+    // Starts clipboard interaction when 'X' is pressed.
+    void manageKeyPressed()
+    {
+        if (enableCapture && clipboard.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        {
+            letterX.SetActive(false);
+            SwapCameras(0, 1, 0);
+            playerMov.canMove = false;
+            cc.enabled = false;
+            player.transform.position = playerPos;
+            player.transform.rotation = playerRot;
+            if (Vector3.Distance(player.transform.position, playerPos) < 0.01f && !change)
+            {
+                inventoryCont.blockInventory = true;
+                playerAnim.SetBool("clipboard", true);
+                StartCoroutine(waitEndAnimation());
+                change = true;
+                StartCoroutine(clearInputBuffer());
+            }
+        }
     }
 
     // Enables the text box for the next input.
@@ -137,6 +160,7 @@ public class mission6Controller : MonoBehaviour
         if (other.gameObject.CompareTag("book") && opened == 0)
         {
             letterX.SetActive(true);
+            enableCapture = true;
         }
     }
 
@@ -146,30 +170,6 @@ public class mission6Controller : MonoBehaviour
         if (other.gameObject.CompareTag("book"))
         {
             letterX.SetActive(false);
-        }
-    }
-
-    // Detects continuous presence in a trigger area.  
-    private void OnTriggerStay(Collider other)
-    {
-        GameManager.GameManagerInstance.LoadProgress();
-        opened = GameManager.GameManagerInstance.missionsCompleted[5];
-        if (other.gameObject.CompareTag("book") && clipboard.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
-        {
-            letterX.SetActive(false);
-            SwapCameras(0, 1, 0);
-            playerMov.canMove = false;
-            cc.enabled = false;
-            player.transform.position = playerPos;
-            player.transform.rotation = playerRot;
-            if (Vector3.Distance(player.transform.position, playerPos) < 0.01f && !change)
-            {
-                inventoryCont.blockInventory = true;
-                playerAnim.SetBool("clipboard", true);
-                StartCoroutine(waitEndAnimation());
-                change = true;
-                StartCoroutine(clearInputBuffer());
-            }
         }
     }
 

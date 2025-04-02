@@ -46,12 +46,12 @@ public class mission2Controller : MonoBehaviour
     [SerializeField] TextMeshProUGUI timerText;
     bool startTimer = false, isRunning = false;
 
+    [SerializeField] ParticleSystem lightingParticles;
     [SerializeField] GameObject sampleAnalyzedInfo;
     CanvasGroup canvasGroup;
     int opened;
     bool resetState = false;
-
-    [SerializeField] ParticleSystem lightingParticles;
+    bool enableCapture = false;
 
     // Initializes variables and resets sample progress.
     void Start()
@@ -60,14 +60,6 @@ public class mission2Controller : MonoBehaviour
         playerAnim = player.GetComponent<Animator>();
         playerMov = player.GetComponent<PlayerMovement>();
         cc = player.GetComponent<CharacterController>();
-
-        GameManager.GameManagerInstance.LoadProgress();
-        for (int i=0; i<GameManager.GameManagerInstance.samplesUnlocked.Length; i++)
-        {
-            GameManager.GameManagerInstance.SetArrayUnlocked("samples", i, 0);
-        }
-        GameManager.GameManagerInstance.samplesCounter = 0;
-        GameManager.GameManagerInstance.SaveProgress();
 
         ui = playerTrigger.GetComponent<playerUI>();
         counterAnalyzer.text = GameManager.GameManagerInstance.samplesCounter.ToString() + "/4";
@@ -84,8 +76,17 @@ public class mission2Controller : MonoBehaviour
         }
     }
 
-    // Handles player repositioning and checks mission completion.
+    // Calls all game management methods every frame.
     void Update()
+    {
+        manageTimer();
+        manageKeyPressed();
+        managePosition();
+        manageFinal();
+    }
+
+    // Handles countdown timer and updates UI color.
+    void manageTimer()
     {
         if (startTimer && !isRunning)
         {
@@ -113,18 +114,50 @@ public class mission2Controller : MonoBehaviour
             }
             else
             {
-                timerText.color = Color.white; 
+                timerText.color = Color.white;
             }
         }
+    }
 
+    // Checks key input and starts analysis sequence.
+    void manageKeyPressed()
+    {
+        if(enableCapture && sampleActive() > 0 && Input.GetKeyDown(KeyCode.X))
+        {
+            if (checkSample(sampleActive()))
+            {
+                startTimer = true;
+                timerText.gameObject.SetActive(true);
+                timerText.text = "05:00";
+                playerMov.canMove = false;
+                cc.enabled = false;
+                player.transform.position = playerPos;
+                player.transform.rotation = playerRot;
+                if (player.transform.position == playerPos && !swap)
+                {
+                    SwapCameras(0, 1);
+                    StartCoroutine(waitAnalyzeAnim());
+                    swap = true;
+                }
+            }
+        }
+    }
+
+    // Resets player position when changePos is true.
+    void managePosition()
+    {
         if (changePos)
         {
-            cc.enabled = false;  
-            player.transform.position = initialPos;  
-            cc.enabled = true;   
+            cc.enabled = false;
+            player.transform.position = initialPos;
+            cc.enabled = true;
             changePos = false;
         }
+    }
 
+    // Ends mission when all samples are completed.
+    void manageFinal()
+    {
         if (GameManager.GameManagerInstance.samplesCounter == 4)
         {
             GameManager.GameManagerInstance.LoadProgress();
@@ -168,6 +201,7 @@ public class mission2Controller : MonoBehaviour
         if (other.gameObject.CompareTag("analyticalInstrument") && opened == 0)
         {
             letterX.SetActive(true);
+            enableCapture = true;
         }
     }
 
@@ -177,33 +211,6 @@ public class mission2Controller : MonoBehaviour
         if (other.gameObject.CompareTag("analyticalInstrument"))
         {
             letterX.SetActive(false);
-        }
-    }
-
-
-    // Analyzes a sample when pressing 'X' near an instrument.
-    private void OnTriggerStay(Collider other)
-    {
-        GameManager.GameManagerInstance.LoadProgress();
-        opened = GameManager.GameManagerInstance.missionsCompleted[1];
-        if (other.gameObject.CompareTag("analyticalInstrument") && sampleActive()>0 && Input.GetKeyDown(KeyCode.X) && opened == 0)
-        {
-            if (checkSample(sampleActive()))
-            {
-                startTimer = true;
-                timerText.gameObject.SetActive(true);
-                timerText.text = "05:00";
-                playerMov.canMove = false;
-                cc.enabled = false;
-                player.transform.position = playerPos;
-                player.transform.rotation = playerRot;
-                if (player.transform.position == playerPos && player.transform.rotation == playerRot && !swap)
-                {
-                    SwapCameras(0, 1);
-                    StartCoroutine(waitAnalyzeAnim());
-                    swap = true;
-                }
-            }
         }
     }
 

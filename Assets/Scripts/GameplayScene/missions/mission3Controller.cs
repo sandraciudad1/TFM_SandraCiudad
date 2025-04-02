@@ -46,6 +46,7 @@ public class mission3Controller : MonoBehaviour
     playerUI ui;
     int opened;
     bool resetState = false;
+    bool enableCapture = false;
 
     // Initializes necessary components and calculates limits.
     void Start()
@@ -82,8 +83,16 @@ public class mission3Controller : MonoBehaviour
         maxX = halfWidth - 20f;
     }
 
-    // Updates game logic and checks input actions.
+    // Calls arrow, position, and input management every frame.
     void Update()
+    {
+        manageArrowMovement();
+        managePosition();
+        manageKeyPressed();
+    }
+
+    // Moves arrow and checks spacebar input to stop it.
+    void manageArrowMovement()
     {
         if (start && !stopped)
         {
@@ -95,7 +104,11 @@ public class mission3Controller : MonoBehaviour
                 stopped = true;
             }
         }
+    }
 
+    // Changes player position based on puzzle progress.
+    void managePosition()
+    {
         if (!updatePos)
         {
             if (solved == 1 && !stopped)
@@ -125,6 +138,27 @@ public class mission3Controller : MonoBehaviour
                 cc.enabled = true;
                 updatePos = true;
                 this.enabled = false;
+            }
+        }
+    }
+
+    // Starts mini-game when 'X' is pressed near wrench.
+    void manageKeyPressed()
+    {
+        if (enableCapture && spannerwrench.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        {
+            StartCoroutine(waitToShow());
+            letterX.SetActive(false);
+            SwapCameras(0, 1, 0, 0);
+            playerMov.canMove = false;
+            cc.enabled = false;
+            player.transform.position = firstPos;
+            player.transform.rotation = playerRot;
+            if (Vector3.Distance(player.transform.position, firstPos) < 0.01f && !change)
+            {
+                gradientBg.SetActive(true);
+                start = true;
+                change = true;
             }
         }
     }
@@ -251,6 +285,7 @@ public class mission3Controller : MonoBehaviour
         if (other.gameObject.CompareTag("modularPipes") && opened == 0)
         {
             letterX.SetActive(true);
+            enableCapture = true;
         }
     }
 
@@ -260,29 +295,6 @@ public class mission3Controller : MonoBehaviour
         if (other.gameObject.CompareTag("modularPipes"))
         {
             letterX.SetActive(false);
-        }
-    }
-
-    // Manages actions when staying near modular pipes.
-    private void OnTriggerStay(Collider other)
-    {
-        GameManager.GameManagerInstance.LoadProgress();
-        opened = GameManager.GameManagerInstance.missionsCompleted[2];
-        if (other.gameObject.CompareTag("modularPipes") && spannerwrench.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
-        {
-            StartCoroutine(waitToShow());
-            letterX.SetActive(false);
-            SwapCameras(0, 1, 0, 0);
-            playerMov.canMove = false;
-            cc.enabled = false;
-            player.transform.position = firstPos;
-            player.transform.rotation = playerRot;
-            if (Vector3.Distance(player.transform.position, firstPos) < 0.01f && !change)
-            {
-                gradientBg.SetActive(true);
-                start = true;
-                change = true;
-            }
         }
     }
 

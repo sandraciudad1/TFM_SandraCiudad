@@ -43,6 +43,7 @@ public class mission8Controller : MonoBehaviour
     bool startTimer = false, isRunning = false;
     int opened;
     bool resetState = false;
+    bool enableCapture = false;
 
     [SerializeField] ParticleSystem[] smokeParticles;
     [SerializeField] AudioSource effectsAudio;
@@ -74,6 +75,30 @@ public class mission8Controller : MonoBehaviour
         HandleVacuumMovement();
         HandleTimer();
         HandleFinish();
+        manageKeyPressed();
+    }
+
+    // Starts vacuum task and timer when 'X' is pressed.
+    void manageKeyPressed()
+    {
+        if (enableCapture && vacuum.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
+        {
+            startTimer = true;
+            timerText.gameObject.SetActive(true);
+            timerText.text = "05:00";
+            letterX.SetActive(false);
+            SwapCameras(0, 1, 0);
+            playerMov.canMove = false;
+            cc.enabled = false;
+            player.transform.position = playerPos;
+            player.transform.rotation = playerRot;
+            if (Vector3.Distance(player.transform.position, playerPos) < 0.01f && !change)
+            {
+                playerAnim.SetBool("vacuum", true);
+                StartCoroutine(waitFinishAnimation());
+                change = true;
+            }
+        }
     }
 
     // Moves vacuum when player has control enabled.
@@ -169,6 +194,7 @@ public class mission8Controller : MonoBehaviour
         if (other.gameObject.CompareTag("grids") && opened == 0)
         {
             letterX.SetActive(true);
+            enableCapture = true;
         }
     }
 
@@ -178,31 +204,6 @@ public class mission8Controller : MonoBehaviour
         if (other.gameObject.CompareTag("grids"))
         {
             letterX.SetActive(false);
-        }
-    }
-
-    // Detects continuous presence in a trigger area.  
-    private void OnTriggerStay(Collider other)
-    {
-        GameManager.GameManagerInstance.LoadProgress();
-        opened = GameManager.GameManagerInstance.missionsCompleted[7];
-        if (other.gameObject.CompareTag("grids") && vacuum.activeInHierarchy && Input.GetKeyDown(KeyCode.X) && opened == 0)
-        {
-            startTimer = true;
-            timerText.gameObject.SetActive(true);
-            timerText.text = "05:00";
-            letterX.SetActive(false);
-            SwapCameras(0, 1, 0);
-            playerMov.canMove = false;
-            cc.enabled = false;
-            player.transform.position = playerPos;
-            player.transform.rotation = playerRot;
-            if (Vector3.Distance(player.transform.position, playerPos) < 0.01f && !change)
-            {
-                playerAnim.SetBool("vacuum", true);
-                StartCoroutine(waitFinishAnimation());
-                change = true;
-            }
         }
     }
 
