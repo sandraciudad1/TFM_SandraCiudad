@@ -13,7 +13,7 @@ public class resetGame : MonoBehaviour
         {
             GameManager.GameManagerInstance.LoadProgress();
             var gm = GameManager.GameManagerInstance;
-            /*gm.objectIndex = 0;
+            gm.objectIndex = 0;
             gm.recordIndex = 0;
             for (int i = 0; i < 15; i++)
             {
@@ -29,28 +29,28 @@ public class resetGame : MonoBehaviour
             {
                 gm.samplesUnlocked[i] = 0;
             }
-            */
+            
             gm.correctCodeCounter = 0;
             for (int i = 0; i < 10; i++)
             {
                 gm.missionsCompleted[i] = 0;
             }
-            /*
+            
             for (int i = 0; i < 15; i++)
             {
                 gm.objectsCollected[i] = 0;
             }
-            */
+            
             for (int i = 0; i < 10; i++)
             {
                 gm.recordsCollected[i] = 0;
             }
             
-            /*gm.triggerPassed = 0;
+            gm.triggerPassed = 0;
             for (int i = 0; i < 10; i++)
             {
                 gm.recordsPlayed[i] = 0;
-            }*/
+            }
             gm.SaveProgress();
             PlayerPrefs.SetInt("reset", 0);
         }

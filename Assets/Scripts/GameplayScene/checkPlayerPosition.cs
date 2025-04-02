@@ -102,7 +102,6 @@ public class checkPlayerPosition : MonoBehaviour
 
         if (other.gameObject.CompareTag("position"))
         {
-            //enable and disable scripts
             var gm = GameManager.GameManagerInstance;
             gm.LoadProgress();
             gm.triggerPassed++;
@@ -119,10 +118,12 @@ public class checkPlayerPosition : MonoBehaviour
         {
             scriptControllers[i].enabled = false;
         }
-        if (triggerAmount == 0) // si no ha pasado ningun trigger
+        Debug.Log("trigger amount " + triggerAmount);
+        if (triggerAmount == 0) 
         {
             mission1.enabled = true;
-        } else if (triggerAmount == 1)
+        } 
+        else if (triggerAmount == 1)
         {
             mission2.enabled = true;
             mission3.enabled = true;
