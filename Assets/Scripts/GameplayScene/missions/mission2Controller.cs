@@ -163,6 +163,8 @@ public class mission2Controller : MonoBehaviour
             GameManager.GameManagerInstance.LoadProgress();
             GameManager.GameManagerInstance.missionsCompleted[1] = 1;
             GameManager.GameManagerInstance.SaveProgress();
+            player.transform.position = initialPos;
+            cc.enabled = true;
             startTimer = false;
             isRunning = false;
             timerText.gameObject.SetActive(false);

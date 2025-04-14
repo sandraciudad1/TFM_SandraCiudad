@@ -12,36 +12,24 @@ public class pinCodeController : MonoBehaviour
     string userInput = "";
     int index;
 
-    [SerializeField] GameObject crate1;
-    [SerializeField] GameObject crate2;
-    [SerializeField] GameObject crate3;
-    [SerializeField] GameObject crate4;
-    [SerializeField] GameObject crate5;
-    [SerializeField] GameObject crate6;
-    [SerializeField] GameObject crate7;
-    [SerializeField] GameObject crate8;
-    [SerializeField] GameObject crate9;
-    [SerializeField] GameObject crate10;
+    [SerializeField] Animator crate1;
+    [SerializeField] Animator crate2;
+    [SerializeField] Animator crate3;
+    [SerializeField] Animator crate4;
+    [SerializeField] Animator crate5;
+    [SerializeField] Animator crate6;
+    [SerializeField] Animator crate7;
+    [SerializeField] Animator crate8;
+    [SerializeField] Animator crate9;
+    [SerializeField] Animator crate10;
 
-    GameObject[] crates;
-    Animator[] crateAnims;
+    Animator[] cratesAnims;
 
     // Initializes the correct codes and gets the crate animator.
     void Start()
     {
         correctCodes = new string[] { "4141", "6375", "4360", "0938", "1235", "0134", "7615", "3962", "8870", "2599" };
-        crates = new GameObject[] { crate1, crate2, crate3, crate4, crate5, crate6, crate7, crate8, crate9, crate10 };
-        initializeAnimators();
-    }
-
-    // Assigns Animator components to crates and doors.
-    void initializeAnimators()
-    {
-        crateAnims = new Animator[crates.Length];
-        for (int i = 0; i < crates.Length; i++)
-        {
-            crateAnims[i] = crates[i].GetComponent<Animator>();
-        }
+        cratesAnims = new Animator[] { crate1, crate2, crate3, crate4, crate5, crate6, crate7, crate8, crate9, crate10 };
     }
 
     // Handles user input for the code entry.
@@ -102,8 +90,8 @@ public class pinCodeController : MonoBehaviour
     {
         GameManager.GameManagerInstance.LoadProgress();
         var gm = GameManager.GameManagerInstance;
+        cratesAnims[gm.correctCodeCounter].SetBool("open", true);
         gm.correctCodeCounter++;
-        crateAnims[index].SetBool("open", true);
         gm.SetArrayUnlocked("records", index, 1);
         gm.SaveProgress();
     }

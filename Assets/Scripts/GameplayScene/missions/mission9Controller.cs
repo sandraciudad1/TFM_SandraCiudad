@@ -51,14 +51,16 @@ public class mission9Controller : MonoBehaviour
             letterX.gameObject.SetActive(false);
             resetState = true;
         }
+        navigationScreen.SetActive(true);
     }
 
     // Updates game state when finished and handles final movement.
     void Update()
     {
-        if (!finishGame || finish) return;
-        CompleteMission();
         manageKeyPressed();
+        if (!(finishGame && !finish)) return;
+        CompleteMission();
+        
     }
 
     // Starts compass interaction when 'X' is pressed.

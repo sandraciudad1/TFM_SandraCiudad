@@ -235,11 +235,13 @@ public class presentationController : MonoBehaviour
     }
 
     // Changes scene after 3 seconds.
-    IEnumerator changeScene(string name)
+    IEnumerator changeScene(string sceneName)
     {
-        yield return new WaitForSeconds(3f);
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        SceneManager.LoadScene(name);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+        while (!asyncLoad.isDone)
+        {
+            yield return null;
+        }
     }
 
     // Unsubscribes from the scene load event.

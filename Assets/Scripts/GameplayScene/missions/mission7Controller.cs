@@ -219,6 +219,7 @@ public class mission7Controller : MonoBehaviour
         if (other.gameObject.CompareTag("kit") && opened == 0)
         {
             letterX.SetActive(true);
+            enableCapture = true;
         }
     }
 

@@ -118,7 +118,7 @@ public class checkPlayerPosition : MonoBehaviour
         {
             scriptControllers[i].enabled = false;
         }
-        Debug.Log("trigger amount " + triggerAmount);
+
         if (triggerAmount == 0) 
         {
             mission1.enabled = true;
@@ -147,17 +147,6 @@ public class checkPlayerPosition : MonoBehaviour
             mission10.enabled = true;
             camera18.enabled = true;
             fpDetector.enabled = true;
-        }
-
-        for (int i = 0; i < scriptControllers.Length; i++)
-        {
-            if (scriptControllers[i].enabled)
-            {
-                Debug.Log(i + " habilitado");
-            }
-            {
-                Debug.Log(i+ " deshabilitado");
-            }
         }
     }
 

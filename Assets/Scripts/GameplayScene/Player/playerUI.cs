@@ -56,6 +56,9 @@ public class playerUI : MonoBehaviour
     // Updates player stats, oxygen, and movement each frame.
     void Update()
     {
+        updateIcons(playerEnergy, energyIcon, energy, ref lastEnergyIconIndex);
+        updateIcons(playerOxygen, oxygenIcon, oxygen, ref lastOxygenIconIndex);
+
         if (playerLife > 0 && playerLife < 100)
         {
             playerLife += regenerationSpeed * Time.deltaTime;
@@ -76,7 +79,7 @@ public class playerUI : MonoBehaviour
             }
             playerEnergy += (regenerationSpeed / 2) * Time.deltaTime;
             playerEnergy = Mathf.Clamp(playerEnergy, 0, 100);
-            updateIcons(playerEnergy, energyIcon, energy, ref lastEnergyIconIndex);
+            
         }
         else if (playerEnergy == 100 && breatheAudio.isPlaying)
         {
@@ -89,7 +92,7 @@ public class playerUI : MonoBehaviour
             playerOxygen += (regenerationSpeed / 2) * Time.deltaTime;
             playerOxygen = Mathf.Clamp(playerOxygen, 0, 100);
             checkOxygenAlerts();
-            updateIcons(playerOxygen, oxygenIcon, oxygen, ref lastOxygenIconIndex);
+            
         }
         else if (playerOxygen == 100)
         {

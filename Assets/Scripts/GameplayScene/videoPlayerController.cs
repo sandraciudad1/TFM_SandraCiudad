@@ -36,6 +36,7 @@ public class videoPlayerController : MonoBehaviour
         videoPlayer.loopPointReached += OnVideoFinished;
         audiosource = GetComponent<AudioSource>();
         GameManager.GameManagerInstance.LoadProgress();
+
     }
 
 
@@ -113,9 +114,18 @@ public class videoPlayerController : MonoBehaviour
             yield return null;
         }
 
-        videoPlayer.Play();
+        // Asegura que no haya audio del VideoPlayer
+        videoPlayer.audioOutputMode = VideoAudioOutputMode.None;
+
+        // Asegura que el audio anterior se detenga
+        audiosource.Stop();
         audiosource.clip = audioClips[index - 1];
+        audiosource.time = 0f;
+
+        // Reproduce ambos sincronizados
         audiosource.Play();
+        videoPlayer.Play();
+
         GameManager.GameManagerInstance.LoadProgress();
         GameManager.GameManagerInstance.recordsPlayed[index - 1] = 1;
         GameManager.GameManagerInstance.SaveProgress();
@@ -135,6 +145,8 @@ public class videoPlayerController : MonoBehaviour
         SwapCameras(1, 0, 0);
         playerMov.canMove = true;
         cc.enabled = true;
+        change = false;
+        hasTriggered = false;
     }
     
     // Swap between virtual cameras.

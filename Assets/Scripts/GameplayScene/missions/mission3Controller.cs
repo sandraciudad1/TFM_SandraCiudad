@@ -183,24 +183,26 @@ public class mission3Controller : MonoBehaviour
     // Checks the arrow's value and updates game state.
     void checkValue(float value)
     {
-        if (value > 296.25f && value < 493.75f)
-        {
-            updateSmoke(0.1f);
-            counter -= 1;  
-        }
-        else if ((value > 128.38f && value <= 296.25f) || (value >= 493.75f && value < 661.63f))
+        if ((value > 724f && value <= 864f) || (value >= 544f && value < 404f))
         {
             ui.takeDamage(15f);
             ui.wasteOxygen(15f);
             updateSmoke(0.05f);
             counter -= 0.5f;
         }
-        else if(value <= 128.38f || value >= 661.63f) 
+        else if(value <= 404f || value >= 864f) 
         {
             ui.takeDamage(30f);
             ui.wasteOxygen(30f);
-            StartCoroutine(waitToReset());
+            updateSmoke(0.01f);
         }
+        else
+        {
+            updateSmoke(0.1f);
+            counter -= 1;
+        }
+
+        Debug.Log("counter " + counter);
 
         if (counter <= 0)
         {   
@@ -224,6 +226,8 @@ public class mission3Controller : MonoBehaviour
     void updateSmoke(float value)
     {
         Vector3 newPosition = new Vector3(value, value, value);
+        playerMov.canMove = false;
+        cc.enabled = true;
         playerAnim.SetBool("wrench", true);
         StartCoroutine(waitUntilFinishAnim());
         if (solved == 0)
@@ -245,6 +249,8 @@ public class mission3Controller : MonoBehaviour
     IEnumerator waitUntilFinishAnim()
     {
         yield return new WaitForSeconds(9.1f);
+        playerMov.canMove = false;
+        cc.enabled = false;
         StartCoroutine(waitToReset());
     }
 

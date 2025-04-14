@@ -28,6 +28,7 @@ public class mission6Controller : MonoBehaviour
     TextMeshProUGUI[] inputTexts;
     [SerializeField] GameObject textBox1, textBox2, textBox3;
     GameObject[] textBoxs;
+    [SerializeField] GameObject pointLight;
 
     string userInput = "";
     string[] correctAnswers = { "C0D1GO", "PU3RT4", "5726" };
@@ -102,6 +103,7 @@ public class mission6Controller : MonoBehaviour
         inventoryCont.blockInventory = false;
         playerMov.canMove = true;
         cc.enabled = true;
+        pointLight.SetActive(false);
 
         foreach (var box in textBoxs)
         {
@@ -115,6 +117,7 @@ public class mission6Controller : MonoBehaviour
     {
         if (enableCapture && clipboard.activeInHierarchy && Input.GetKeyDown(KeyCode.X))
         {
+            pointLight.SetActive(true);
             letterX.SetActive(false);
             SwapCameras(0, 1, 0);
             playerMov.canMove = false;

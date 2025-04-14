@@ -100,6 +100,7 @@ public class conversation : MonoBehaviour
 
         if (etapa >= 3 && !ending)
         {
+            Debug.Log("end");
             ending = true;
             StartCoroutine(fadeToBlack());
             StartCoroutine(waitUntilFade());

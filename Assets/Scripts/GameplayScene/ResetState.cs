@@ -170,7 +170,6 @@ public class ResetState : MonoBehaviour
     // Executes actions when an object is collected.
     void resetMissionsStates(int index)
     {
-        Debug.Log("index misions " + index);
         switch (index)
         {
             case 0:
